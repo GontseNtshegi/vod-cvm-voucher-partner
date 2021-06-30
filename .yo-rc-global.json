@@ -1,0 +1,8 @@
+{
+  "generator-jhipster:7.0.1": {
+    "promptValues": {
+      "packageName": "za.co.vodacom.cvm",
+      "nativeLanguage": "en"
+    }
+  }
+}

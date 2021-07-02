@@ -77,3 +77,5 @@ relationship ManyToOne {
   VPCampaignVouchers{CampaignId} to VPCampaign{Id}
   VPCampaignVouchers{ProductId} to VPVoucherDef{ProductId}
 }
+
+service all with serviceImpl

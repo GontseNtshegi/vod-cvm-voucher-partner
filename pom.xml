@@ -6,25 +6,43 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>za.co.vodacom.cvm</groupId>
-    <artifactId>voucherpartner</artifactId>
+    <artifactId>cp-voucher-partner</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Voucherpartner</name>
 
     <repositories>
+      <repository>
+        <id>maven-group</id>
+        <url>http://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/maven-group/</url>
+      </repository>
         <!-- jhipster-needle-maven-repository -->
     </repositories>
 
     <pluginRepositories>
         <!-- jhipster-needle-maven-plugin-repository -->
+        <pluginRepository>
+            <id>maven-group</id>
+            <url>http://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/maven-group/</url>
+        </pluginRepository>
     </pluginRepositories>
 
     <!-- jhipster-needle-distribution-management -->
+    <distributionManagement>
+        <repository>
+            <id>maven</id>
+            <url>http://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/cvm-voucher-partner-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>maven</id>
+            <url>http://nexus-cvm-microservices-prod.app.prod.tc.ocp.vodacom.corp/repository/cvm-voucher-partner-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <properties>
         <!-- Build properties -->
         <maven.version>3.3.9</maven.version>
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
@@ -342,6 +360,18 @@
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
         </dependency>
+      <dependency>
+          <groupId>io.zipkin.brave</groupId>
+          <artifactId>brave</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>com.hazelcast</groupId>
+          <artifactId>hazelcast-hibernate53</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>org.springframework.cloud</groupId>
+          <artifactId>spring-cloud-starter-sleuth</artifactId>
+      </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
 
@@ -770,6 +800,8 @@
                     <version>${maven-surefire-plugin.version}</version>
                     <configuration>
                         <!-- Force alphabetical order to have a reproducible build -->
+<argLine>@{argLine}</argLine>
+                        <argLine>@{argLine}</argLine>
                         <runOrder>alphabetical</runOrder>
                         <excludes>
                             <exclude>**/*IT*</exclude>
@@ -786,6 +818,8 @@
                              See https://github.com/spring-projects/spring-boot/issues/6254 -->
                         <classesDirectory>${project.build.outputDirectory}</classesDirectory>
                         <!-- Force alphabetical order to have a reproducible build -->
+<argLine>@{argLine}</argLine>
+                        <argLine>@{argLine}</argLine>
                         <runOrder>alphabetical</runOrder>
                         <includes>
                             <include>**/*IT*</include>
@@ -949,6 +983,48 @@
             </properties>
         </profile>
         <profile>
+            <id>test</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-undertow</artifactId>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>target/classes/static/</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>build-info</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>pl.project13.maven</groupId>
+                        <artifactId>git-commit-id-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <!-- default Spring profiles -->
+                <spring.profiles.active>test{profile.api-docs}${profile.tls}${profile.no-liquibase}</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
             <id>war</id>
             <build>
                 <plugins>
@@ -1058,6 +1134,48 @@
                 </pluginManagement>
             </build>
         </profile>
+      <profile>
+          <id>test</id>
+          <dependencies>
+              <dependency>
+                  <groupId>org.springframework.boot</groupId>
+                  <artifactId>spring-boot-starter-undertow</artifactId>
+              </dependency>
+          </dependencies>
+          <build>
+              <plugins>
+                  <plugin>
+                      <artifactId>maven-clean-plugin</artifactId>
+                      <configuration>
+                          <filesets>
+                              <fileset>
+                                  <directory>target/classes/static/</directory>
+                              </fileset>
+                          </filesets>
+                      </configuration>
+                  </plugin>
+                  <plugin>
+                      <groupId>org.springframework.boot</groupId>
+                      <artifactId>spring-boot-maven-plugin</artifactId>
+                      <executions>
+                          <execution>
+                              <goals>
+                                  <goal>build-info</goal>
+                              </goals>
+                          </execution>
+                      </executions>
+                  </plugin>
+                  <plugin>
+                      <groupId>pl.project13.maven</groupId>
+                      <artifactId>git-commit-id-plugin</artifactId>
+                  </plugin>
+              </plugins>
+          </build>
+          <properties>
+              <!-- default Spring profiles -->
+              <spring.profiles.active>test${profile.api-docs}${profile.tls}${profile.no-liquibase}</spring.profiles.active>
+          </properties>
+      </profile>
         <!-- jhipster-needle-maven-add-profile -->
     </profiles>
 </project>

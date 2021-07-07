@@ -267,13 +267,13 @@ public class VPVoucherDef implements Serializable {
     public VPVoucherDef productIds(Set<VPVouchers> vPVouchers) {
         this.setProductIds(vPVouchers);
         return this;
-    }*/
+    }
 
     public VPVoucherDef addProductId(VPVouchers vPVouchers) {
         this.productIds.add(vPVouchers);
         vPVouchers.setProductId(this);
         return this;
-    }
+    }*/
 
    /* public VPVoucherDef removeProductId(VPVouchers vPVouchers) {
         this.productIds.remove(vPVouchers);

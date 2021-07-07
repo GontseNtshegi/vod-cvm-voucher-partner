@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity VPCampaignVouchers.
+    -->
+    <changeSet id="20210707160146-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="campaign_id_id"
+                                 baseTableName="vp_campaign_vouchers"
+                                 constraintName="fk_vp_campaign_vouchers__campaign_id_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="vp_campaign"/>
+
+        <addForeignKeyConstraint baseColumnNames="product_id_id"
+                                 baseTableName="vp_campaign_vouchers"
+                                 constraintName="fk_vp_campaign_vouchers__product_id_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="vp_voucher_def"/>
+    </changeSet>
+</databaseChangeLog>

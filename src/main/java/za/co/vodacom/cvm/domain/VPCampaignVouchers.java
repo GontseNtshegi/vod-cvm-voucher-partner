@@ -44,13 +44,13 @@ public class VPCampaignVouchers implements Serializable {
     @Column(name = "active_yn", length = 1, nullable = false)
     private String activeYN;
 
-    @ManyToOne
+    /*@ManyToOne
     @JsonIgnoreProperties(value = { "ids" }, allowSetters = true)
     private VPCampaign campaignId;
 
     @ManyToOne
     @JsonIgnoreProperties(value = { "productIds", "productIds" }, allowSetters = true)
-    private VPVoucherDef productId;
+    private VPVoucherDef productId;*/
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -131,16 +131,16 @@ public class VPCampaignVouchers implements Serializable {
         this.activeYN = activeYN;
     }
 
-    public VPCampaign getCampaignId() {
+    /*public VPCampaign getCampaignId() {
         return this.campaignId;
     }
 
     public VPCampaignVouchers campaignId(VPCampaign vPCampaign) {
         this.setCampaignId(vPCampaign);
         return this;
-    }
+    }*/
 
-    public void setCampaignId(VPCampaign vPCampaign) {
+    /*public void setCampaignId(VPCampaign vPCampaign) {
         this.campaignId = vPCampaign;
     }
 
@@ -151,11 +151,11 @@ public class VPCampaignVouchers implements Serializable {
     public VPCampaignVouchers productId(VPVoucherDef vPVoucherDef) {
         this.setProductId(vPVoucherDef);
         return this;
-    }
+    }*/
 
-    public void setProductId(VPVoucherDef vPVoucherDef) {
+    /*public void setProductId(VPVoucherDef vPVoucherDef) {
         this.productId = vPVoucherDef;
-    }
+    }*/
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

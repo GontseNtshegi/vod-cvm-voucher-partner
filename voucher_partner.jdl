@@ -1,5 +1,5 @@
 entity VPCampaign {
-    Id Integer required unique,
+    //Id Integer required unique,
     Name String maxlength(100) required,
     StartDate ZonedDateTime required,
     EndDate ZonedDateTime required

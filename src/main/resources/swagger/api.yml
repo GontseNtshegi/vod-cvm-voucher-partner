@@ -1,29 +1,321 @@
-# API-first development with OpenAPI
-# This file will be used at compile time to generate Spring-MVC endpoint stubs using openapi-generator
-openapi: '3.0.1'
+openapi: 3.0.1
 info:
-  title: 'voucherpartner'
-  version: 0.0.1
+    title: Voucher Partner API
+    version: 1.0.1
 servers:
-  - url: http://localhost:8087/api
-    description: Development server
-  - url: https://localhost:8087/api
-    description: Development server with TLS Profile
-paths: {}
+- url: 'http://localhost:8087/api/voucher'
+  description: Development server
+- url: 'https://localhost:8087/api/voucher'
+  description: Development server with TLS Profile
+paths:
+    /allocation:
+        post:
+            tags:
+            - voucher
+            summary: Customer voucher reservation
+            operationId: updateVoucherToReserved
+            description: Reserve a voucher for a customer.
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/VoucherAllocationRequest'
+            responses:
+                '200':
+                    description: Sucessful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/VoucherAllocationResponse'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad Request
+                '404':
+                    description: Not Found
+                '405':
+                    description: Method Not Allowed
+                '500':
+                    description: Internal Server Error
+    /return/{voucherId}:
+        put:
+           tags:
+           - voucher
+           summary: Return a voucher which was issued
+           operationId: updateVoucherToReturned
+           description: Return a voucher which was issued
+           parameters:
+            - name: voucherId
+              in: path
+              required: true
+              description: The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher
+              schema:
+                  type: number
+           requestBody:
+               content:
+                   application/json:
+                       schema:
+                           $ref: '#/components/schemas/VoucherReturnRequest'
+           responses:
+                '200':
+                    description: Successful Operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/VoucherReturnResponse'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad Request
+                '404':
+                    description: Not Found
+                '405':
+                    description: Method Not Allowed
+                '500':
+                    description: Internal Server Error
+    /validation/{productId}:
+        get:
+           tags:
+           - product
+           summary: Check whether the given voucher based product has stock.
+           operationId: updateVoucherToValid
+           description: Check whether the given voucher based product has stock
+           parameters:
+            - name: productId
+              in: path
+              required: true
+              description: The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher
+              schema:
+                  type: number
+            - name: origin
+              in: query
+              required: true
+              description: origin identifier
+              schema:
+                  type: string
+            - name: campaign
+              in: query
+              required: true
+              description: campaign identifier
+              schema:
+                  type: string
+           responses:
+                '200':
+                    description: Successful Operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ProductValidationResponse'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad Request
+                '404':
+                    description: Not Found
+                '405':
+                    description: Method Not Allowed
+                '500':
+                    description: Internal Server Error
 components:
-  responses:
-    Problem:
-      description: error occurred - see status code and problem object for more information.
-      content:
-        'application/problem+json':
-          schema:
-            $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
+    schemas:
+        VoucherAllocationRequest:
+            type: object
+            properties:
+                origin:
+                    description: Origin Identifier
+                    type: string
+                productId:
+                    description: Product identifier
+                    type: string
+                subIdType:
+                    description: Subcriber Id Type
+                    type: string
+                subId:
+                    description: Subcriber Id Type
+                    type: string
+                msisdn:
+                    description: Subcriber Id Type
+                    type: string
+                campaign:
+                    description: campaign identifier
+                    type: string
+                trxId:
+                    description: Subcriber Id Type
+                    type: string
+                cost:
+                    description: Subcriber Id Type
+                    type: number
+                value:
+                    description: Subcriber Id Type
+                    type: number
+            required:
+            - origin
+            - productId
+            - subIdType
+            - subId
+            - msisdn
+            - campaign
+            - trxId
+            - cost
+            - value
+        VoucherAllocationResponse:
+            type: object
+            properties:
+                voucherId:
+                    description: The unique id which shall be logged by CP-VOUCHERS for tracing
+                    type: number
+                voucherCode:
+                    description: >-
+                        The voucher
+                    type: string
+                voucherDescription:
+                    description: >-
+                        The description of the voucher which was reserved, eg 'R50 Nando's
+                        voucher'
+                    type: string
+                voucherType:
+                    description: The Type, eg GiftCard, OnlineVoucher
+                    type: string
+                voucherCategory:
+                    description: 'The categor, eg food'
+                    type: string
+                voucherVendor:
+                    description: 'The vendor, eg Nando''s'
+                    type: string
+                collectpoint:
+                    description: An optional field that indicates where the voucher can be redeemed
+                    type: string
+                expiryDate:
+                    description: The date by which the voucher has to be redeemed
+                    type: string
+                    format: date-time
+                trxId:
+                    description: The incoming trxId
+                    type: string
+        VoucherReturnRequest:
+            type: object
+            properties:
+                productId:
+                    description: The product being returned
+                    type: string
+                reason:
+                    description: The reason for the cancellation/return
+                    type: string
+                msisdn:
+                    description: The 11 digit msisdn of the original transaction
+                    type: string
+                trxId:
+                    description: Transaction Id Type
+                    type: string
+            required:
+            - productId
+            - reason
+            - msisdn
+            - trxId
+        VoucherReturnResponse:
+            type: object
+            properties:
+                voucherId:
+                    description: The unique voucher id/seq
+                    type: number
+                voucherDescription:
+                    description: >-
+                        The description of the voucher which was reserved, eg 'R50 Nando's
+                        voucher'
+                    type: string
+                trxId:
+                    description: The incoming trx id
+                    type: string
+        ProductValidationResponse:
+            type: object
+            properties:
+                voucherType:
+                    description: The Type, eg GiftCard, OnlineVoucher
+                    type: string
+                voucherCategory:
+                    description: 'The categor, eg food'
+                    type: string
+                voucherDescription:
+                    description: >-
+                        The description of the voucher which was reserved, eg 'R50 Nando's
+                        voucher'
+                    type: string
+                voucherQuantity:
+                    description: 'The available vouchers'
+                    type: number
+                voucherVendor:
+                    description: 'The vendor, eg Nandos'
+                    type: string
+                minExpiry:
+                    description: 'The minimum expiry date'
+                    type: string
+                    format: date-time
+        Problem:
+            type: object
+            properties:
+                type:
+                    type: string
+                    format: uri
+                    description: >
+                        An absolute URI that identifies the problem type.  When
+                        dereferenced,
 
-  securitySchemes:
-    jwt:
-      type: http
-      description: JWT Authentication
-      scheme: bearer
-      bearerFormat: JWT
+                        it SHOULD provide human-readable documentation for the problem type
+
+                        (e.g., using HTML).
+                    default: 'about:blank'
+                    example: 'https://zalando.github.io/problem/constraint-violation'
+                title:
+                    type: string
+                    description: >
+                        A short, summary of the problem type. Written in english and
+                        readable
+
+                        for engineers (usually not suited for non technical stakeholders and
+
+                        not localized);
+                    example: Service Unavailable
+                status:
+                    type: integer
+                    format: int32
+                    description: >
+                        The HTTP status code generated by the origin server for this
+                        occurrence
+
+                        of the problem.
+                    minimum: 100
+                    maximum: 600
+                    exclusiveMaximum: true
+                    example: 503
+                detail:
+                    type: string
+                    description: |
+                        A human readable explanation specific to this occurrence of the
+                        problem.
+                    example: Connection to database timed out
+                instance:
+                    type: string
+                    format: uri
+                    description: >
+                        An absolute URI that identifies the specific occurrence of the
+                        problem.
+
+                        It may or may not yield further information if dereferenced.
+    responses:
+        Problem:
+            description: >-
+                error occurred - see status code and problem object for more
+                information.
+            content:
+                application/problem+json:
+                    schema:
+                        $ref: '#/components/schemas/Problem'
+    securitySchemes:
+        jwt:
+            type: http
+            description: JWT Authentication
+            scheme: bearer
+            bearerFormat: JWT
 security:
-  - jwt: []
+- jwt: []
+

@@ -1134,48 +1134,6 @@
                 </pluginManagement>
             </build>
         </profile>
-      <profile>
-          <id>test</id>
-          <dependencies>
-              <dependency>
-                  <groupId>org.springframework.boot</groupId>
-                  <artifactId>spring-boot-starter-undertow</artifactId>
-              </dependency>
-          </dependencies>
-          <build>
-              <plugins>
-                  <plugin>
-                      <artifactId>maven-clean-plugin</artifactId>
-                      <configuration>
-                          <filesets>
-                              <fileset>
-                                  <directory>target/classes/static/</directory>
-                              </fileset>
-                          </filesets>
-                      </configuration>
-                  </plugin>
-                  <plugin>
-                      <groupId>org.springframework.boot</groupId>
-                      <artifactId>spring-boot-maven-plugin</artifactId>
-                      <executions>
-                          <execution>
-                              <goals>
-                                  <goal>build-info</goal>
-                              </goals>
-                          </execution>
-                      </executions>
-                  </plugin>
-                  <plugin>
-                      <groupId>pl.project13.maven</groupId>
-                      <artifactId>git-commit-id-plugin</artifactId>
-                  </plugin>
-              </plugins>
-          </build>
-          <properties>
-              <!-- default Spring profiles -->
-              <spring.profiles.active>test${profile.api-docs}${profile.tls}${profile.no-liquibase}</spring.profiles.active>
-          </properties>
-      </profile>
         <!-- jhipster-needle-maven-add-profile -->
     </profiles>
 </project>

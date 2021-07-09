@@ -24,8 +24,8 @@ import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
  * REST controller for managing {@link za.co.vodacom.cvm.domain.VPCampaign}.
  */
 @RestController
-@RequestMapping("/api")
-@Profile("crud")
+@RequestMapping("/v2/api")
+//@Profile("crud")
 public class VPCampaignResource {
 
     private final Logger log = LoggerFactory.getLogger(VPCampaignResource.class);
@@ -83,13 +83,13 @@ public class VPCampaignResource {
         if (vPCampaign.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, vPCampaign.getId())) {
+        /*if (!Objects.equals(id, vPCampaign.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
         if (!vPCampaignRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
+        }*/
 
         VPCampaign result = vPCampaignService.save(vPCampaign);
         return ResponseEntity
@@ -118,13 +118,13 @@ public class VPCampaignResource {
         if (vPCampaign.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, vPCampaign.getId())) {
+        /*if (!Objects.equals(id, vPCampaign.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
         if (!vPCampaignRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
+        }*/
 
         Optional<VPCampaign> result = vPCampaignService.partialUpdate(vPCampaign);
 

@@ -37,12 +37,12 @@ public interface VPUsersService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<VPUsers> findOne(Long id);
+    Optional<VPUsers> findOne(String id);
 
     /**
      * Delete the "id" vPUsers.
      *
      * @param id the id of the entity.
      */
-    void delete(Long id);
+    void delete(String id);
 }

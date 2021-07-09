@@ -22,7 +22,7 @@ public class VPUsers implements Serializable {
     @NotNull
     @Size(max = 100)
     @Column(name = "user_id", length = 100, nullable = false, unique = true)
-    private Long id;
+    private String id;
 
     /*@NotNull
     @Size(max = 100)
@@ -43,15 +43,15 @@ public class VPUsers implements Serializable {
     private String activeYN;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public VPUsers id(Long id) {
+    public VPUsers id(String id) {
         this.id = id;
         return this;
     }

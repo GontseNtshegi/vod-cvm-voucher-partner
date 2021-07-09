@@ -24,7 +24,7 @@ import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
  * REST controller for managing {@link za.co.vodacom.cvm.domain.VPVouchers}.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/v2/api")
 @Profile("crud")
 public class VPVouchersResource {
 
@@ -83,13 +83,13 @@ public class VPVouchersResource {
         if (vPVouchers.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, vPVouchers.getId())) {
+       /* if (!Objects.equals(id, vPVouchers.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
         if (!vPVouchersRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
+        }*/
 
         VPVouchers result = vPVouchersService.save(vPVouchers);
         return ResponseEntity
@@ -118,13 +118,13 @@ public class VPVouchersResource {
         if (vPVouchers.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, vPVouchers.getId())) {
+        /*if (!Objects.equals(id, vPVouchers.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
         if (!vPVouchersRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
+        }*/
 
         Optional<VPVouchers> result = vPVouchersService.partialUpdate(vPVouchers);
 

@@ -24,8 +24,8 @@ import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
  * REST controller for managing {@link za.co.vodacom.cvm.domain.VPUsers}.
  */
 @RestController
-@RequestMapping("/api")
-@Profile("crud")
+@RequestMapping("/v2/api")
+//@Profile("crud")
 public class VPUsersResource {
 
     private final Logger log = LoggerFactory.getLogger(VPUsersResource.class);
@@ -76,20 +76,20 @@ public class VPUsersResource {
      */
     @PutMapping("/vp-users/{id}")
     public ResponseEntity<VPUsers> updateVPUsers(
-        @PathVariable(value = "id", required = false) final Long id,
+        @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody VPUsers vPUsers
     ) throws URISyntaxException {
         log.debug("REST request to update VPUsers : {}, {}", id, vPUsers);
         if (vPUsers.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, vPUsers.getId())) {
+        /*if (!Objects.equals(id, vPUsers.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
         if (!vPUsersRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
+        }*/
 
         VPUsers result = vPUsersService.save(vPUsers);
         return ResponseEntity
@@ -111,20 +111,20 @@ public class VPUsersResource {
      */
     @PatchMapping(value = "/vp-users/{id}", consumes = "application/merge-patch+json")
     public ResponseEntity<VPUsers> partialUpdateVPUsers(
-        @PathVariable(value = "id", required = false) final Long id,
+        @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody VPUsers vPUsers
     ) throws URISyntaxException {
         log.debug("REST request to partial update VPUsers partially : {}, {}", id, vPUsers);
         if (vPUsers.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, vPUsers.getId())) {
+        /*if (!Objects.equals(id, vPUsers.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
         if (!vPUsersRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
+        }*/
 
         Optional<VPUsers> result = vPUsersService.partialUpdate(vPUsers);
 
@@ -152,7 +152,7 @@ public class VPUsersResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the vPUsers, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/vp-users/{id}")
-    public ResponseEntity<VPUsers> getVPUsers(@PathVariable Long id) {
+    public ResponseEntity<VPUsers> getVPUsers(@PathVariable String id) {
         log.debug("REST request to get VPUsers : {}", id);
         Optional<VPUsers> vPUsers = vPUsersService.findOne(id);
         return ResponseUtil.wrapOrNotFound(vPUsers);
@@ -165,7 +165,7 @@ public class VPUsersResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/vp-users/{id}")
-    public ResponseEntity<Void> deleteVPUsers(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteVPUsers(@PathVariable String id) {
         log.debug("REST request to delete VPUsers : {}", id);
         vPUsersService.delete(id);
         return ResponseEntity

@@ -24,8 +24,8 @@ import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
  * REST controller for managing {@link za.co.vodacom.cvm.domain.VPBatch}.
  */
 @RestController
-@RequestMapping("/api")
-@Profile("crud")
+@RequestMapping("/v2/api")
+//@Profile("crud")
 public class VPBatchResource {
 
     private final Logger log = LoggerFactory.getLogger(VPBatchResource.class);
@@ -83,13 +83,13 @@ public class VPBatchResource {
         if (vPBatch.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, vPBatch.getId())) {
+        /*if (!Objects.equals(id, vPBatch.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
         if (!vPBatchRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
+        }*/
 
         VPBatch result = vPBatchService.save(vPBatch);
         return ResponseEntity
@@ -118,13 +118,13 @@ public class VPBatchResource {
         if (vPBatch.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, vPBatch.getId())) {
+        /*if (!Objects.equals(id, vPBatch.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
         if (!vPBatchRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
+        }*/
 
         Optional<VPBatch> result = vPBatchService.partialUpdate(vPBatch);
 

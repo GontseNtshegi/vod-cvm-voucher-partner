@@ -24,7 +24,7 @@ public class VPCampaignVouchers implements Serializable {
 
     @NotNull
     @Column(name = "campaign_id", nullable = false)
-    private Integer campaignId;
+    private Long campaignId;
 
     @NotNull
     @Size(max = 30)
@@ -66,16 +66,16 @@ public class VPCampaignVouchers implements Serializable {
         return this;
     }
 
-    public Integer getCampaignId() {
+    public Long getCampaignId() {
         return this.campaignId;
     }
 
-    public VPCampaignVouchers campaignId(Integer campaignId) {
+    public VPCampaignVouchers campaignId(Long campaignId) {
         this.campaignId = campaignId;
         return this;
     }
 
-    public void setCampaignId(Integer campaignId) {
+    public void setCampaignId(Long campaignId) {
         this.campaignId = campaignId;
     }
 

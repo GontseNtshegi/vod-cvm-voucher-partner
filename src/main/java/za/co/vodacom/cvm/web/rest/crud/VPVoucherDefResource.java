@@ -24,8 +24,8 @@ import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
  * REST controller for managing {@link za.co.vodacom.cvm.domain.VPVoucherDef}.
  */
 @RestController
-@RequestMapping("/api")
-@Profile("crud")
+@RequestMapping("/v2/api")
+//@Profile("crud")
 public class VPVoucherDefResource {
 
     private final Logger log = LoggerFactory.getLogger(VPVoucherDefResource.class);
@@ -83,13 +83,13 @@ public class VPVoucherDefResource {
         if (vPVoucherDef.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, vPVoucherDef.getId())) {
+        /*if (!Objects.equals(id, vPVoucherDef.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
         if (!vPVoucherDefRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
+        }*/
 
         VPVoucherDef result = vPVoucherDefService.save(vPVoucherDef);
         return ResponseEntity
@@ -118,13 +118,13 @@ public class VPVoucherDefResource {
         if (vPVoucherDef.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, vPVoucherDef.getId())) {
+        /*if (!Objects.equals(id, vPVoucherDef.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
         if (!vPVoucherDefRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
+        }*/
 
         Optional<VPVoucherDef> result = vPVoucherDefService.partialUpdate(vPVoucherDef);
 

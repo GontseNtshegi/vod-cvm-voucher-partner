@@ -24,8 +24,8 @@ import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
  * REST controller for managing {@link za.co.vodacom.cvm.domain.VPFileLoad}.
  */
 @RestController
-@RequestMapping("/api")
-@Profile("crud")
+@RequestMapping("/v2/api")
+//@Profile("crud")
 public class VPFileLoadResource {
 
     private final Logger log = LoggerFactory.getLogger(VPFileLoadResource.class);
@@ -83,13 +83,13 @@ public class VPFileLoadResource {
         if (vPFileLoad.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, vPFileLoad.getId())) {
+        /*if (!Objects.equals(id, vPFileLoad.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
         if (!vPFileLoadRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
+        }*/
 
         VPFileLoad result = vPFileLoadService.save(vPFileLoad);
         return ResponseEntity
@@ -118,13 +118,13 @@ public class VPFileLoadResource {
         if (vPFileLoad.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, vPFileLoad.getId())) {
+        /*if (!Objects.equals(id, vPFileLoad.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
         if (!vPFileLoadRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
-        }
+        }*/
 
         Optional<VPFileLoad> result = vPFileLoadService.partialUpdate(vPFileLoad);
 

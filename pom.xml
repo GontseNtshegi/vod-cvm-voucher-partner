@@ -365,10 +365,6 @@
           <artifactId>brave</artifactId>
       </dependency>
       <dependency>
-          <groupId>com.hazelcast</groupId>
-          <artifactId>hazelcast-hibernate53</artifactId>
-      </dependency>
-      <dependency>
           <groupId>org.springframework.cloud</groupId>
           <artifactId>spring-cloud-starter-sleuth</artifactId>
       </dependency>

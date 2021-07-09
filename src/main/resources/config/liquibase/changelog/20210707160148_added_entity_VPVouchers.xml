@@ -20,7 +20,7 @@
             <column name="file_id" type="integer">
                 <constraints nullable="true" />
             </column>
-            <column name="product_id" type="varchar(20)">
+            <column name="product_id" type="varchar(30)">
                 <constraints nullable="false" />
             </column>
             <column name="voucher_code" type="varchar(60)">
@@ -56,10 +56,10 @@
             <column name="quantity" type="integer">
                 <constraints nullable="false" />
             </column>
-            <column name="product_id_id" type="bigint">
+            <!--<column name="product_id_id" type="bigint">
                 <constraints nullable="true" />
             </column>
-            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+             jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
         <dropDefaultValue tableName="vp_vouchers" columnName="create_date" columnDataType="${datetimeType}"/>
         <dropDefaultValue tableName="vp_vouchers" columnName="start_date" columnDataType="${datetimeType}"/>

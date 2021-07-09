@@ -6,18 +6,18 @@
     <!--
         Added the constraints for entity VPCampaignVouchers.
     -->
-    <changeSet id="20210707160146-2" author="jhipster">
+    <changeSet id="20210707160146-2" author="Gontse">
 
-        <addForeignKeyConstraint baseColumnNames="campaign_id_id"
+        <addForeignKeyConstraint baseColumnNames="campaign_id"
                                  baseTableName="vp_campaign_vouchers"
-                                 constraintName="fk_vp_campaign_vouchers__campaign_id_id"
+                                 constraintName="fk_vp_campaign_vouchers__campaign_id"
                                  referencedColumnNames="id"
                                  referencedTableName="vp_campaign"/>
 
-        <addForeignKeyConstraint baseColumnNames="product_id_id"
+        <addForeignKeyConstraint baseColumnNames="product_id"
                                  baseTableName="vp_campaign_vouchers"
-                                 constraintName="fk_vp_campaign_vouchers__product_id_id"
-                                 referencedColumnNames="id"
+                                 constraintName="fk_vp_campaign_vouchers__product_id"
+                                 referencedColumnNames="product_id"
                                  referencedTableName="vp_voucher_def"/>
     </changeSet>
 </databaseChangeLog>

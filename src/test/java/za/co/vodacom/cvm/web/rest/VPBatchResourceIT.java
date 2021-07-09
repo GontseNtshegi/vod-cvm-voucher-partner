@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.IntegrationTest;
 import za.co.vodacom.cvm.domain.VPBatch;
 import za.co.vodacom.cvm.repository.VPBatchRepository;
+import za.co.vodacom.cvm.web.rest.crud.VPBatchResource;
 
 /**
  * Integration tests for the {@link VPBatchResource} REST controller.

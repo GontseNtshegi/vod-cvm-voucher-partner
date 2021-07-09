@@ -1,4 +1,4 @@
-package za.co.vodacom.cvm.web.rest;
+package za.co.vodacom.cvm.web.rest.crud;
 
 import java.net.URI;
 import java.net.URISyntaxException;

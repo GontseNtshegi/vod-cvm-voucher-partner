@@ -9,12 +9,12 @@
     <!--
         Added the entity VPCampaignVouchers.
     -->
-    <changeSet id="20210707160146-1" author="jhipster">
+    <changeSet id="20210707160146-1" author="Gontse">
         <createTable tableName="vp_campaign_vouchers">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="campaign_id" type="integer">
+            <column name="campaign_id" type="bigint">
                 <constraints nullable="false" />
             </column>
             <column name="product_id" type="varchar(30)">
@@ -29,12 +29,12 @@
             <column name="active_yn" type="varchar(1)">
                 <constraints nullable="false" />
             </column>
-            <column name="campaign_id_id" type="bigint">
+            <!--<column name="campaign_id_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <column name="product_id_id" type="bigint">
                 <constraints nullable="true" />
-            </column>
+            </column>-->
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
         <dropDefaultValue tableName="vp_campaign_vouchers" columnName="create_date" columnDataType="${datetimeType}"/>
@@ -57,7 +57,7 @@
                   separator=";"
                   tableName="vp_campaign_vouchers">
             <column name="id" type="numeric"/>
-            <column name="campaign_id" type="numeric"/>
+            <column name="campaign_id" type="bigint"/>
             <column name="product_id" type="string"/>
             <column name="create_date" type="${datetimeType}"/>
             <column name="modified_date" type="${datetimeType}"/>

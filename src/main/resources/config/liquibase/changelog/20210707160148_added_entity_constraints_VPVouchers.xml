@@ -6,12 +6,12 @@
     <!--
         Added the constraints for entity VPVouchers.
     -->
-    <changeSet id="20210707160148-2" author="jhipster">
+    <changeSet id="20210707160148-2" author="Gontse">
 
-        <addForeignKeyConstraint baseColumnNames="product_id_id"
+        <addForeignKeyConstraint baseColumnNames="product_id"
                                  baseTableName="vp_vouchers"
-                                 constraintName="fk_vp_vouchers__product_id_id"
-                                 referencedColumnNames="id"
+                                 constraintName="fk_vp_vouchers__product_id"
+                                 referencedColumnNames="product_id"
                                  referencedTableName="vp_voucher_def"/>
     </changeSet>
 </databaseChangeLog>

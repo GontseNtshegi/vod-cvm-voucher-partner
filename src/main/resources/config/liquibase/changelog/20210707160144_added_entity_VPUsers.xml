@@ -9,13 +9,13 @@
     <!--
         Added the entity VPUsers.
     -->
-    <changeSet id="20210707160144-1" author="jhipster">
+    <changeSet id="20210707160144-1" author="Gontse">
         <createTable tableName="vp_users">
             <!--<column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>-->
             <column name="user_id" type="varchar(100)">
-                <constraints nullable="false" unique="true" uniqueConstraintName="ux_vp_users__user_id" />
+                <constraints primaryKey="true" nullable="false" unique="true" uniqueConstraintName="ux_vp_users__user_id" />
             </column>
             <column name="create_date" type="${datetimeType}">
                 <constraints nullable="false" />
@@ -47,7 +47,7 @@
                   file="config/liquibase/fake-data/vp_users.csv"
                   separator=";"
                   tableName="vp_users">
-            <column name="id" type="numeric"/>
+            <!--<column name="id" type="numeric"/>-->
             <column name="user_id" type="string"/>
             <column name="create_date" type="${datetimeType}"/>
             <column name="modified_date" type="${datetimeType}"/>

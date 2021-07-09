@@ -55,7 +55,7 @@ entity VPFileLoad {
 entity VPVouchers {
   BatchId Integer required,
   FileId Integer, 
-  ProductId String maxlength(20) required,
+  ProductId String maxlength(30) required,
   VoucherCode String maxlength(60) required,
   Description String maxlength(100) required,
   CreateDate ZonedDateTime required,

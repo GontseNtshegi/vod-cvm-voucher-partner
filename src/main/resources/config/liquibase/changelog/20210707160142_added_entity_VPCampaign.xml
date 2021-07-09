@@ -9,7 +9,7 @@
     <!--
         Added the entity VPCampaign.
     -->
-    <changeSet id="20210707160142-1" author="jhipster">
+    <changeSet id="20210707160142-1" author="Gontse">
         <createTable tableName="vp_campaign">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>

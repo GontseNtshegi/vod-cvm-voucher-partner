@@ -15,7 +15,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>-->
             <column name="product_id" type="varchar(30)">
-                <constraints nullable="false" unique="true" uniqueConstraintName="ux_vp_voucher_def__product_id" />
+                <constraints primaryKey="true" nullable="false" unique="true" uniqueConstraintName="ux_vp_voucher_def__product_id" />
             </column>
             <column name="description" type="varchar(100)">
                 <constraints nullable="false" />
@@ -70,7 +70,7 @@
                   file="config/liquibase/fake-data/vp_voucher_def.csv"
                   separator=";"
                   tableName="vp_voucher_def">
-            <column name="id" type="numeric"/>
+           <!-- <column name="id" type="numeric"/>-->
             <column name="product_id" type="string"/>
             <column name="description" type="string"/>
             <column name="type" type="string"/>

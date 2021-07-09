@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.IntegrationTest;
 import za.co.vodacom.cvm.domain.VPVoucherDef;
 import za.co.vodacom.cvm.repository.VPVoucherDefRepository;
+import za.co.vodacom.cvm.web.rest.crud.VPVoucherDefResource;
 
 /**
  * Integration tests for the {@link VPVoucherDefResource} REST controller.

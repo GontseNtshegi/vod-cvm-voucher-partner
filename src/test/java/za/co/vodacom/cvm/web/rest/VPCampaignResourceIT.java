@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.IntegrationTest;
 import za.co.vodacom.cvm.domain.VPCampaign;
 import za.co.vodacom.cvm.repository.VPCampaignRepository;
+import za.co.vodacom.cvm.web.rest.crud.VPCampaignResource;
 
 /**
  * Integration tests for the {@link VPCampaignResource} REST controller.

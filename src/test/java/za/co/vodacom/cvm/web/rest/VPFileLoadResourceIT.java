@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.IntegrationTest;
 import za.co.vodacom.cvm.domain.VPFileLoad;
 import za.co.vodacom.cvm.repository.VPFileLoadRepository;
+import za.co.vodacom.cvm.web.rest.crud.VPFileLoadResource;
 
 /**
  * Integration tests for the {@link VPFileLoadResource} REST controller.

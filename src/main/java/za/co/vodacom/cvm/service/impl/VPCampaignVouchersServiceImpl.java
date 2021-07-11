@@ -80,4 +80,9 @@ public class VPCampaignVouchersServiceImpl implements VPCampaignVouchersService 
         log.debug("Request to delete VPCampaignVouchers : {}", id);
         vPCampaignVouchersRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<VPCampaignVouchers> findByProductId(String productId) {
+        return vPCampaignVouchersRepository.findByProductId(productId);
+    }
 }

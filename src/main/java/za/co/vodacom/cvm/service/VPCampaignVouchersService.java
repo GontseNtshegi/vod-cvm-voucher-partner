@@ -45,4 +45,11 @@ public interface VPCampaignVouchersService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Find by product Id
+     * @param productId
+     * @return
+     */
+    Optional<VPCampaignVouchers> findByProductId(String productId);
 }

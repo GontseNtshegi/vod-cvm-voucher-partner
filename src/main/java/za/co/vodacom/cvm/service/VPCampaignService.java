@@ -45,4 +45,11 @@ public interface VPCampaignService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Find by campaign name
+     * @param name
+     * @return
+     */
+    Optional<VPCampaign> findByName(String name);
 }

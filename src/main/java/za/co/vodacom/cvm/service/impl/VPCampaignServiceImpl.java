@@ -74,4 +74,9 @@ public class VPCampaignServiceImpl implements VPCampaignService {
         log.debug("Request to delete VPCampaign : {}", id);
         vPCampaignRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<VPCampaign> findByName(String name) {
+        return vPCampaignRepository.findByName(name);
+    }
 }

@@ -31,6 +31,7 @@ import org.zalando.problem.spring.web.advice.security.SecurityAdviceTrait;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.web.util.HeaderUtil;
+import za.co.vodacom.cvm.exception.AllocationException;
 
 /**
  * Controller advice to translate the server side exceptions to client-friendly json structures.
@@ -185,5 +186,9 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
     private boolean containsPackageName(String message) {
         // This list is for sure not complete
         return StringUtils.containsAny(message, "org.", "java.", "net.", "javax.", "com.", "io.", "de.", "za.co.vodacom.cvm");
+    }
+    @ExceptionHandler
+    public ResponseEntity<Problem> handleAllocationException(AllocationException ex, NativeWebRequest request){
+        return create(ex, request, HeaderUtil.createFailureAlert(applicationName, false, "", ex.getMessage(), ex.getMessage()));
     }
 }

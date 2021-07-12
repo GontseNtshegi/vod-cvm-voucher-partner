@@ -43,6 +43,9 @@
     "backend_port": "8087",
     "packaging": "jar"
   },
+  "dependencies": {
+    "@openapitools/openapi-generator-cli": "^2.3.6"
+  },
   "devDependencies": {
     "generator-jhipster": "7.0.1",
     "husky": "4.3.8",

@@ -1,0 +1,14 @@
+.openapi-generator-ignore
+README.md
+pom.xml
+src/main/java/org/openapitools/configuration/ApiKeyRequestInterceptor.java
+src/main/java/org/openapitools/configuration/ClientConfiguration.java
+src/main/java/za/co/vodacom/cvm/client/wigroup/api/CouponsApi.java
+src/main/java/za/co/vodacom/cvm/client/wigroup/api/CouponsApiClient.java
+src/main/java/za/co/vodacom/cvm/client/wigroup/model/CouponsDelResponse.java
+src/main/java/za/co/vodacom/cvm/client/wigroup/model/CouponsGetResponse.java
+src/main/java/za/co/vodacom/cvm/client/wigroup/model/CouponsGetResponseCoupon.java
+src/main/java/za/co/vodacom/cvm/client/wigroup/model/CouponsRequest.java
+src/main/java/za/co/vodacom/cvm/client/wigroup/model/CouponsResponse.java
+src/main/java/za/co/vodacom/cvm/client/wigroup/model/CouponsResponseCoupon.java
+src/main/java/za/co/vodacom/cvm/client/wigroup/model/Problem.java

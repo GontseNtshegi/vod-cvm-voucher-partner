@@ -6,19 +6,10 @@
 package za.co.vodacom.cvm.client.wigroup.api;
 
 import io.swagger.annotations.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.multipart.MultipartFile;
-import springfox.documentation.annotations.ApiIgnore;
 import za.co.vodacom.cvm.client.wigroup.model.CouponsDelResponse;
 import za.co.vodacom.cvm.client.wigroup.model.CouponsGetResponse;
 import za.co.vodacom.cvm.client.wigroup.model.CouponsRequest;

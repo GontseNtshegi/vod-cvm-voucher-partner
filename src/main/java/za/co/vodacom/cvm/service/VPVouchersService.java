@@ -45,4 +45,18 @@ public interface VPVouchersService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Get a valid voucher
+     * @param productId
+     * @return
+     */
+    Optional<VPVouchers> getValidVoucher(String productId);
+
+    /**
+     * Issue voucher
+     * @param incomingTrxId
+     * @param id
+     */
+    void issueVoucher(String incomingTrxId,  Long id);
 }

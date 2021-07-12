@@ -77,6 +77,7 @@ public class VPCampaignServiceImpl implements VPCampaignService {
 
     @Override
     public Optional<VPCampaign> findByName(String name) {
+        log.debug("Request to find by name in VPCampaign : {}", name);
         return vPCampaignRepository.findByName(name);
     }
 }

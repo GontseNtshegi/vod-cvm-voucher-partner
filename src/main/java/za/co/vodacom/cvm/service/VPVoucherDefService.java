@@ -45,4 +45,11 @@ public interface VPVoucherDefService {
      * @param id the id of the entity.
      */
     void delete(String id);
+
+    /**
+     * Acquire a lock for productId
+     * @param id
+     * @return
+     */
+    Optional<VPVoucherDef> findByProductId(String id);
 }

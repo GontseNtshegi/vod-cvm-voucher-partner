@@ -105,4 +105,17 @@ public class VPVouchersServiceImpl implements VPVouchersService {
         log.debug("Request to delete VPVouchers : {}", id);
         vPVouchersRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<VPVouchers> getValidVoucher(String productId) {
+        log.debug("Request to get Valid VPVouchers : {}", productId);
+        return vPVouchersRepository.getValidVoucher(productId);
+    }
+
+    @Override
+    public void issueVoucher(String incomingTrxId, Long id) {
+        log.debug("Request to issue VPVouchers : {}, {}", incomingTrxId, id);
+        vPVouchersRepository.issueVoucher(incomingTrxId, id);
+    }
 }

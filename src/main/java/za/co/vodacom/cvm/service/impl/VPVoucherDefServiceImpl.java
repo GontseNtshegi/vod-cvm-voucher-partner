@@ -101,4 +101,9 @@ public class VPVoucherDefServiceImpl implements VPVoucherDefService {
         log.debug("Request to delete VPVoucherDef : {}", id);
         vPVoucherDefRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<VPVoucherDef> findByProductId(String id) {
+        return vPVoucherDefRepository.findByProductId(id);
+    }
 }

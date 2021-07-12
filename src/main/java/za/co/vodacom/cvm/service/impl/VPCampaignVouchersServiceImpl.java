@@ -83,6 +83,7 @@ public class VPCampaignVouchersServiceImpl implements VPCampaignVouchersService 
 
     @Override
     public Optional<VPCampaignVouchers> findByProductId(String productId) {
+        log.debug("Request to find by productIdin VPCampaignVouchers : {}", productId);
         return vPCampaignVouchersRepository.findByProductId(productId);
     }
 }

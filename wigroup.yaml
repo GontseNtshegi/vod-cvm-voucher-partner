@@ -8,7 +8,7 @@ servers:
 - url: 'https://za-vsp-int.wigroup.co/cvs-issuer/rest'
   description: Development server with TLS Profile
 paths:
-    /coupons/{issueWiCode}:
+    '/coupons/{issueWiCode}':
         post:
             tags:
             - coupons
@@ -19,7 +19,9 @@ paths:
             - name: issueWiCode
               in: path
               required: true
-              description: The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher
+              description: >-
+                  The original wigroup voucher id or VP_VOUCHER.ID used to issued the
+                  voucher
               schema:
                   type: boolean
                   default: true
@@ -45,7 +47,7 @@ paths:
                     description: Method Not Allowed
                 '500':
                     description: Internal Server Error
-    /coupons/{id}:
+    '/coupons/{id}':
         get:
             tags:
             - coupons
@@ -56,7 +58,9 @@ paths:
             - name: id
               in: path
               required: true
-              description: The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher
+              description: >-
+                  The original wigroup voucher id or VP_VOUCHER.ID used to issued the
+                  voucher
               schema:
                   type: integer
                   format: int64
@@ -77,7 +81,7 @@ paths:
                     description: Method Not Allowed
                 '500':
                     description: Internal Server Error
-    /coupons/{idd}:
+    '/coupons/{idd}':
         delete:
             tags:
             - coupons
@@ -118,13 +122,19 @@ components:
                     description: The id of the campaign to issue against.
                     type: string
                 userRef:
-                    description: A unique user reference as on the issuer channel system. This reference will be used to restrict user limits on campaigns.
+                    description: >-
+                        A unique user reference as on the issuer channel system. This
+                        reference will be used to restrict user limits on campaigns.
                     type: string
                 mobileNumber:
-                    description:  The mobile number. The mobile number must be presented in International format.
+                    description: >-
+                        The mobile number. The mobile number must be presented in
+                        International format.
                     type: string
                 smsMessage:
-                    description: The message to override original sms message with. Used in request only.
+                    description: >-
+                        The message to override original sms message with. Used in request
+                        only.
                     type: string
                 sendSMS:
                     description: Indicates whether an SMS must be sent on issue or not.
@@ -147,7 +157,9 @@ components:
                             type: integer
                             format: int64
                         userRef:
-                            description: A unique user reference as on the issuer channel system. This reference will be used to restrict user limits on campaigns.
+                            description: >-
+                                A unique user reference as on the issuer channel system. This
+                                reference will be used to restrict user limits on campaigns.
                             type: string
                         campaignId:
                             description: campaignId
@@ -159,7 +171,7 @@ components:
                             description: The type of campaign.
                             type: string
                         termsAndConditions:
-                            description: 'The terms and conditions of the coupon.'
+                            description: The terms and conditions of the coupon.
                             type: string
                         createDate:
                             description: The date the couponCampaign was created.
@@ -205,7 +217,9 @@ components:
                             type: integer
                             format: int64
                         userRef:
-                            description: A unique user reference as on the issuer channel system. This reference will be used to restrict user limits on campaigns.
+                            description: >-
+                                A unique user reference as on the issuer channel system. This
+                                reference will be used to restrict user limits on campaigns.
                             type: string
                         campaignId:
                             description: campaignId
@@ -217,7 +231,7 @@ components:
                             description: The type of campaign.
                             type: string
                         termsAndConditions:
-                            description: 'The terms and conditions of the coupon.'
+                            description: The terms and conditions of the coupon.
                             type: string
                         createDate:
                             description: The date the couponCampaign was created.
@@ -242,7 +256,7 @@ components:
                             description: The possible coupon redemption amount.
                             type: number
                         mobileNumber:
-                            description: The users mobile number, if available.
+                            description: 'The users mobile number, if available.'
                             type: string
                         imageUrl:
                             description: The image url of the coupon.
@@ -251,9 +265,15 @@ components:
                             description: The amount redeemed on the coupon.
                             type: number
                         stateId:
-                            description: The current state of the coupon. A (Active) D (Deactivated) E (Expired) R (Redeemed)
+                            description: >-
+                                The current state of the coupon. A (Active) D (Deactivated) E
+                                (Expired) R (Redeemed)
                             type: string
-                            enum: [A, D, E, R]
+                            enum:
+                            - A
+                            - D
+                            - E
+                            - R
                         redeemedDate:
                             description: The date on which the coupon was redeemed (if it was expire)
                             type: string

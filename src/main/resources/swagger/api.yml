@@ -3,15 +3,15 @@ info:
   title: Voucher Partner API
   version: 1.0.1
 servers:
-- url: 'http://localhost:8087/api'
-  description: Development server
-- url: 'https://localhost:8087/api'
-  description: Development server with TLS Profile
+  - url: 'http://localhost:8087/api'
+    description: Development server
+  - url: 'https://localhost:8087/api'
+    description: Development server with TLS Profile
 paths:
   /voucher/allocation:
     post:
       tags:
-      - voucher
+        - voucher
       summary: Customer voucher reservation
       operationId: updateVoucherToReserved
       description: Reserve a voucher for a customer.
@@ -40,17 +40,18 @@ paths:
   /voucher/return/{voucherId}:
     put:
       tags:
-      - voucher
+        - voucher
       summary: Return a voucher which was issued
       operationId: updateVoucherToReturned
       description: Return a voucher which was issued
       parameters:
-      - name: voucherId
-        in: path
-        required: true
-        description: The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher
-        schema:
-          type: number
+        - name: voucherId
+          in: path
+          required: true
+          description: The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher
+          schema:
+            type: integer
+            format: int64
       requestBody:
         content:
           application/json:
@@ -76,29 +77,29 @@ paths:
   /product/validation/{productId}:
     get:
       tags:
-      - product
+        - product
       summary: Check whether the given voucher based product has stock.
       operationId: updateVoucherToValid
       description: Check whether the given voucher based product has stock
       parameters:
-      - name: productId
-        in: path
-        required: true
-        description: The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher
-        schema:
-          type: number
-      - name: origin
-        in: query
-        required: true
-        description: origin identifier
-        schema:
-          type: string
-      - name: campaign
-        in: query
-        required: true
-        description: campaign identifier
-        schema:
-          type: string
+        - name: productId
+          in: path
+          required: true
+          description: The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher
+          schema:
+            type: string
+        - name: origin
+          in: query
+          required: true
+          description: origin identifier
+          schema:
+            type: string
+        - name: campaign
+          in: query
+          required: true
+          description: campaign identifier
+          schema:
+            type: string
       responses:
         '200':
           description: Successful Operation
@@ -128,7 +129,7 @@ components:
           description: Product identifier
           type: string
         subIdType:
-          description:  Subscriber type, either VS, OM or Vodapay
+          description: Subscriber type, either VS, OM or Vodapay
           type: string
           enum: [VP, OM, VS]
         subId:
@@ -150,15 +151,15 @@ components:
           description: Subcriber Id Type
           type: number
       required:
-      - origin
-      - productId
-      - subIdType
-      - subId
-      - msisdn
-      - campaign
-      - trxId
-      - cost
-      - value
+        - origin
+        - productId
+        - subIdType
+        - subId
+        - msisdn
+        - campaign
+        - trxId
+        - cost
+        - value
     VoucherAllocationResponse:
       type: object
       properties:
@@ -182,7 +183,7 @@ components:
           description: 'The categor, eg food'
           type: string
         voucherVendor:
-          description: 'The vendor, eg Nando''s'
+          description: "The vendor, eg Nando's"
           type: string
         collectpoint:
           description: An optional field that indicates where the voucher can be redeemed
@@ -210,10 +211,10 @@ components:
           description: Transaction Id Type
           type: string
       required:
-      - productId
-      - reason
-      - msisdn
-      - trxId
+        - productId
+        - reason
+        - msisdn
+        - trxId
     VoucherReturnResponse:
       type: object
       properties:
@@ -319,4 +320,4 @@ components:
       scheme: bearer
       bearerFormat: JWT
 security:
-- jwt: []
+  - jwt: []

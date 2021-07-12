@@ -5,30 +5,20 @@ import feign.RequestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import za.co.vodacom.cvm.config.ApplicationProperties;
 
 @Component
 public class WiGroupRequestInterceptor implements RequestInterceptor {
 
     @Autowired
-    @Value("${application.coupons.name:}")
-    private String name;
-
-    @Autowired
-    @Value("${application.coupons.apiId:}")
-    private String apiId;
-
-    @Autowired
-    @Value("${application.coupons.apiPassword:}")
-    private String apiPassword;
+    private ApplicationProperties applicationProperties;
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
         String wigroup = requestTemplate.feignTarget().name();
-        if (
-            wigroup.equalsIgnoreCase(this.name)
-        ) { //Add wigroup Authentication
-            requestTemplate.header("apiId", apiId);
-            requestTemplate.header("apiPassword", apiPassword);
+        if (wigroup.equalsIgnoreCase(applicationProperties.getCoupons().getName())) { //Add wigroup Authentication
+            requestTemplate.header("apiId", applicationProperties.getCoupons().getApiId());
+            requestTemplate.header("apiPassword", applicationProperties.getCoupons().getApiPassword());
         }
     }
 }

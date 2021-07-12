@@ -164,7 +164,8 @@ components:
       properties:
         voucherId:
           description: The unique id which shall be logged by CP-VOUCHERS for tracing
-          type: number
+          type: integer
+          format: int64
         voucherCode:
           description: >-
             The voucher

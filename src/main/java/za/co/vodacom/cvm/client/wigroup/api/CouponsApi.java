@@ -26,7 +26,7 @@ import za.co.vodacom.cvm.client.wigroup.model.CouponsResponse;
 
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2021-07-12T19:37:08.616+02:00[Africa/Harare]"
+    date = "2021-07-12T21:30:03.237+02:00[Africa/Harare]"
 )
 @Validated
 @Api(value = "Coupons", description = "the Coupons API")
@@ -49,7 +49,6 @@ public interface CouponsApi {
         nickname = "updateVoucherToReserved",
         notes = "Reserve a voucher for a customer.",
         response = CouponsResponse.class,
-        authorizations = { @Authorization(value = "jwt") },
         tags = { "coupons" }
     )
     @ApiResponses(
@@ -89,7 +88,6 @@ public interface CouponsApi {
         nickname = "updateVoucherToReturned",
         notes = "Return a voucher which was issued",
         response = CouponsGetResponse.class,
-        authorizations = { @Authorization(value = "jwt") },
         tags = { "coupons" }
     )
     @ApiResponses(
@@ -126,7 +124,6 @@ public interface CouponsApi {
         nickname = "updateVoucherToValid",
         notes = "Check whether the given voucher based product has stock",
         response = CouponsDelResponse.class,
-        authorizations = { @Authorization(value = "jwt") },
         tags = { "coupons" }
     )
     @ApiResponses(

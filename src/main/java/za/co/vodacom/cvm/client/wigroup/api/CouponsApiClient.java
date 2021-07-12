@@ -1,7 +1,11 @@
 package za.co.vodacom.cvm.client.wigroup.api;
 
+import org.openapitools.configuration.ClientConfiguration;
 import org.springframework.cloud.openfeign.FeignClient;
-import za.co.vodacom.cvm.client.ClientConfiguration;
 
-@FeignClient(name = "${application.coupons.name}", url = "${application.coupons.url}") //, configuration = ClientConfiguration.class)
+@FeignClient(
+    name = "${coupons.name:coupons}",
+    url = "${coupons.url:https://za-vsp-int.wigroup.co/cvs-issuer/rest}",
+    configuration = ClientConfiguration.class
+)
 public interface CouponsApiClient extends CouponsApi {}

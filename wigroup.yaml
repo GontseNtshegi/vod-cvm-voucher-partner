@@ -353,11 +353,3 @@ components:
                 application/problem+json:
                     schema:
                         $ref: '#/components/schemas/Problem'
-    securitySchemes:
-        jwt:
-            type: http
-            description: JWT Authentication
-            scheme: bearer
-            bearerFormat: JWT
-security:
-- jwt: []

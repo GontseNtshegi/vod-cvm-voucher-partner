@@ -1,7 +1,6 @@
 package za.co.vodacom.cvm.web.rest;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import java.math.BigDecimal;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
+import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
 import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPCampaign;
 import za.co.vodacom.cvm.domain.VPCampaignVouchers;
@@ -27,9 +27,9 @@ import za.co.vodacom.cvm.web.api.model.VoucherAllocationResponse;
 import za.co.vodacom.cvm.web.api.model.VoucherReturnRequest;
 import za.co.vodacom.cvm.web.api.model.VoucherReturnResponse;
 
-public class AllocationServiceImpl implements VoucherApiDelegate {
+public class VoucherServiceImpl implements VoucherApiDelegate {
 
-    public static final Logger log = LoggerFactory.getLogger(AllocationServiceImpl.class);
+    public static final Logger log = LoggerFactory.getLogger(VoucherServiceImpl.class);
 
     @Autowired
     private final VPCampaignService vpCampaignService;
@@ -43,7 +43,10 @@ public class AllocationServiceImpl implements VoucherApiDelegate {
     @Autowired
     private final VPVouchersService vpVouchersService;
 
-    AllocationServiceImpl(
+    @Autowired
+    CouponsApiClient couponsApiClient;
+
+    VoucherServiceImpl(
         VPCampaignService vpCampaignService,
         VPCampaignVouchersService vpCampaignVouchersService,
         VPVoucherDefService vpVoucherDefService,

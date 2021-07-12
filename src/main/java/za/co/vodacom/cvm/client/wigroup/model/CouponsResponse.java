@@ -15,7 +15,7 @@ import za.co.vodacom.cvm.client.wigroup.model.CouponsResponseCoupon;
  */
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
-    date = "2021-07-12T19:37:08.616+02:00[Africa/Harare]"
+    date = "2021-07-12T21:30:03.237+02:00[Africa/Harare]"
 )
 public class CouponsResponse {
 

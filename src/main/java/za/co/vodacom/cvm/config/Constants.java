@@ -9,6 +9,8 @@ public final class Constants {
     public static final String VOUCHER = "Voucher";
     public static final String GENERIC_VOUCHER = "GenericVoucher";
     public static final String ONLINE_VOUCHER = "OnlineVoucher";
+    public static final String RESPONSE_CODE = "-1";
+    public static final String RESPONSE_DESC = "Success";
 
     private Constants() {}
 }

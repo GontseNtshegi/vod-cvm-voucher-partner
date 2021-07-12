@@ -9,13 +9,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
+import za.co.vodacom.cvm.client.wigroup.model.CouponsRequest;
+import za.co.vodacom.cvm.client.wigroup.model.CouponsResponse;
 import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPCampaign;
 import za.co.vodacom.cvm.domain.VPCampaignVouchers;
 import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.exception.AllocationException;
+import za.co.vodacom.cvm.exception.WiGroupException;
 import za.co.vodacom.cvm.service.VPCampaignService;
 import za.co.vodacom.cvm.service.VPCampaignVouchersService;
 import za.co.vodacom.cvm.service.VPVoucherDefService;
@@ -146,6 +150,42 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                     }
                                     break;
                                 case Constants.ONLINE_VOUCHER:
+                                    CouponsRequest couponsRequest = new CouponsRequest();
+                                    couponsRequest.setCampaignId(vpVoucherDef.getExtId());
+                                    couponsRequest.setMobileNumber(voucherAllocationRequest.getMsisdn());
+                                    couponsRequest.sendSMS(false);
+                                    couponsRequest.setUserRef(voucherAllocationRequest.getMsisdn());
+                                    couponsRequest.setSmsMessage("");
+                                    //call wi group
+                                    ResponseEntity<CouponsResponse> couponsResponseResponseEntity = couponsApiClient.issueVoucher(
+                                        true,
+                                        couponsRequest
+                                    );
+                                    //success
+                                    CouponsResponse couponsResponse = couponsResponseResponseEntity.getBody();
+                                    if (
+                                        couponsResponse.getResponseCode().equals(Constants.RESPONSE_CODE) ||
+                                        couponsResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
+                                    ) {
+                                        //set response
+                                        voucherAllocationResponse.setCollectpoint(couponsResponse.getCoupon().getCampaignType());
+                                        voucherAllocationResponse.setExpiryDate(couponsResponse.getCoupon().getCreateDate());
+                                        voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
+                                        voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
+                                        voucherAllocationResponse.setVoucherCode(couponsResponse.getCoupon().getWiCode() + "");
+                                        voucherAllocationResponse.setVoucherDescription(couponsResponse.getCoupon().getDescription());
+                                        voucherAllocationResponse.setVoucherId(couponsResponse.getCoupon().getId());
+                                        voucherAllocationResponse.setVoucherType(couponsResponse.getCoupon().getCampaignType());
+                                        voucherAllocationResponse.setVoucherVendor(vpVoucherDef.getVendor());
+
+                                        log.debug(voucherAllocationResponse.toString());
+                                        log.info(voucherAllocationResponse.toString());
+                                    } else { //failed
+                                        throw new WiGroupException(
+                                            couponsResponseResponseEntity.getBody().getResponseDesc(),
+                                            Status.INTERNAL_SERVER_ERROR
+                                        );
+                                    }
                                     break;
                             }
                         }

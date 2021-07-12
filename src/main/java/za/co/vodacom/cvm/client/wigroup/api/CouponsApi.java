@@ -53,7 +53,7 @@ public interface CouponsApi {
         }
     )
     @PostMapping(value = "/coupons/{issueWiCode}", produces = "application/json", consumes = "application/json")
-    ResponseEntity<CouponsResponse> updateVoucherToReserved(
+    ResponseEntity<CouponsResponse> issueVoucher(
         @ApiParam(
             value = "The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher",
             required = true,
@@ -92,7 +92,7 @@ public interface CouponsApi {
         }
     )
     @GetMapping(value = "/coupons/{id}", produces = "application/json")
-    ResponseEntity<CouponsGetResponse> updateVoucherToReturned(
+    ResponseEntity<CouponsGetResponse> getVoucher(
         @ApiParam(value = "The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher", required = true) @PathVariable(
             "id"
         ) Long id
@@ -128,7 +128,7 @@ public interface CouponsApi {
         }
     )
     @DeleteMapping(value = "/coupons/{idd}", produces = "application/json")
-    ResponseEntity<CouponsDelResponse> updateVoucherToValid(
+    ResponseEntity<CouponsDelResponse> deleteVoucher(
         @ApiParam(value = "The original wigroup voucher id", required = true) @PathVariable("idd") Long idd
     );
 }

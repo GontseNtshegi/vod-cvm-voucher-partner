@@ -287,7 +287,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
         log.debug(voucherReturnResponse.toString());
         log.info(voucherReturnResponse.toString());
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(voucherReturnResponse, HttpStatus.OK);
     }
 
     //retry once

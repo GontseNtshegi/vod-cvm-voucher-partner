@@ -47,7 +47,7 @@ public class VPVouchersServiceImpl implements VPVouchersService {
                     }
                     if (vPVouchers.getId() != null) {
                         //existingVPVouchers.setProductId(vPVouchers.getId (vPVouchers.getVoucherCode() != null) {
-                       // existingVPVouchers.setVoucherCode(vPVouchers.getVoucherCode());
+                        // existingVPVouchers.setVoucherCode(vPVouchers.getVoucherCode());
                     }
                     if (vPVouchers.getDescription() != null) {
                         existingVPVouchers.setDescription(vPVouchers.getDescription());
@@ -117,5 +117,16 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     public void issueVoucher(String incomingTrxId, Long id) {
         log.debug("Request to issue VPVouchers : {}, {}", incomingTrxId, id);
         vPVouchersRepository.issueVoucher(incomingTrxId, id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<VPVouchers> getValidVoucherForReturn(String productId, Long id, String trxId) {
+        return vPVouchersRepository.getValidVoucherForReturn(productId, id, trxId);
+    }
+
+    @Override
+    public void updateReturnedVoucher(Long id) {
+        vPVouchersRepository.updateReturnedVoucher(id);
     }
 }

@@ -220,7 +220,8 @@ components:
       properties:
         voucherId:
           description: The unique voucher id/seq
-          type: number
+          type: integer
+          format: int64
         voucherDescription:
           description: >-
             The description of the voucher which was reserved, eg 'R50 Nando's

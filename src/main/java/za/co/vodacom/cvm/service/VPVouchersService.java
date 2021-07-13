@@ -58,5 +58,20 @@ public interface VPVouchersService {
      * @param incomingTrxId
      * @param id
      */
-    void issueVoucher(String incomingTrxId,  Long id);
+    void issueVoucher(String incomingTrxId, Long id);
+
+    /**
+     * Get a valid voucher for users who want to return a voucher
+     * @param productId
+     * @param id
+     * @param trxId
+     * @return
+     */
+    Optional<VPVouchers> getValidVoucherForReturn(String productId, Long id, String trxId);
+
+    /**
+     * Update a returned voucher
+     * @param id
+     */
+    void updateReturnedVoucher(Long id);
 }

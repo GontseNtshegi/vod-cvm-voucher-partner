@@ -15,6 +15,7 @@ import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
 import za.co.vodacom.cvm.client.wigroup.model.CouponsDelResponse;
 import za.co.vodacom.cvm.client.wigroup.model.CouponsRequest;
 import za.co.vodacom.cvm.client.wigroup.model.CouponsResponse;
+import za.co.vodacom.cvm.config.ApplicationProperties;
 import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPCampaign;
 import za.co.vodacom.cvm.domain.VPCampaignVouchers;
@@ -26,6 +27,7 @@ import za.co.vodacom.cvm.service.VPCampaignService;
 import za.co.vodacom.cvm.service.VPCampaignVouchersService;
 import za.co.vodacom.cvm.service.VPVoucherDefService;
 import za.co.vodacom.cvm.service.VPVouchersService;
+import za.co.vodacom.cvm.utils.BlowFishEncryption;
 import za.co.vodacom.cvm.web.api.VoucherApiDelegate;
 import za.co.vodacom.cvm.web.api.model.VoucherAllocationRequest;
 import za.co.vodacom.cvm.web.api.model.VoucherAllocationResponse;
@@ -53,6 +55,12 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
     @Autowired
     Tracer tracer;
+
+    @Autowired
+    BlowFishEncryption blowFishEncryption;
+
+    @Autowired
+    ApplicationProperties applicationProperties;
 
     VoucherServiceImpl(
         VPCampaignService vpCampaignService,
@@ -120,12 +128,25 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                                             .plusMinutes(59L)
                                                             .plusSeconds(59L)
                                                             .plusDays(vpVoucherDef.getValidityPeriod());
+                                                    String voucherCode = vpVoucher.getVoucherCode();
+                                                    try {
+                                                        voucherCode =
+                                                            vpVoucherDef.getEncryptedYN() != null &&
+                                                                vpVoucherDef.getEncryptedYN().equalsIgnoreCase(Constants.YES)
+                                                                ? blowFishEncryption.encrypt(
+                                                                    voucherCode,
+                                                                    applicationProperties.getEncryption().getKey()
+                                                                )
+                                                                : voucherCode;
+                                                    } catch (Exception e) {
+                                                        log.error(e.getMessage());
+                                                    }
                                                     //set response
                                                     voucherAllocationResponse.setCollectpoint(vpVoucher.getCollectionPoint());
                                                     voucherAllocationResponse.setExpiryDate(expiryDate);
                                                     voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                                     voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
-                                                    voucherAllocationResponse.setVoucherCode(vpVoucher.getVoucherCode());
+                                                    voucherAllocationResponse.setVoucherCode(voucherCode);
                                                     voucherAllocationResponse.setVoucherDescription(vpVoucher.getDescription());
                                                     voucherAllocationResponse.setVoucherId(vpVoucher.getId());
                                                     voucherAllocationResponse.setVoucherType(vpVoucherDef.getType());
@@ -157,12 +178,26 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                                 .plusMinutes(59L)
                                                 .plusSeconds(59L)
                                                 .plusDays(vpVoucherDef.getValidityPeriod());
+
+                                        String voucherCode = vpVoucher.getVoucherCode();
+                                        try {
+                                            voucherCode =
+                                                vpVoucherDef.getEncryptedYN() != null &&
+                                                    vpVoucherDef.getEncryptedYN().equalsIgnoreCase(Constants.YES)
+                                                    ? blowFishEncryption.encrypt(
+                                                        voucherCode,
+                                                        applicationProperties.getEncryption().getKey()
+                                                    )
+                                                    : voucherCode;
+                                        } catch (Exception e) {
+                                            log.error(e.getMessage());
+                                        }
                                         //set response
                                         voucherAllocationResponse.setCollectpoint(vpVoucher.getCollectionPoint());
                                         voucherAllocationResponse.setExpiryDate(expiryDate);
                                         voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                         voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
-                                        voucherAllocationResponse.setVoucherCode(vpVoucher.getVoucherCode());
+                                        voucherAllocationResponse.setVoucherCode(voucherCode);
                                         voucherAllocationResponse.setVoucherDescription(vpVoucher.getDescription());
                                         voucherAllocationResponse.setVoucherId(vpVoucher.getId());
                                         voucherAllocationResponse.setVoucherType(vpVoucherDef.getType());
@@ -198,12 +233,26 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                             .plusMinutes(59L)
                                             .plusSeconds(59L)
                                             .plusDays(vpVoucherDef.getValidityPeriod());
+
+                                        String voucherCode = couponsResponse.getCoupon().getWiCode() + "";
+                                        try {
+                                            voucherCode =
+                                                vpVoucherDef.getEncryptedYN() != null &&
+                                                    vpVoucherDef.getEncryptedYN().equalsIgnoreCase(Constants.YES)
+                                                    ? blowFishEncryption.encrypt(
+                                                        voucherCode,
+                                                        applicationProperties.getEncryption().getKey()
+                                                    )
+                                                    : voucherCode;
+                                        } catch (Exception e) {
+                                            log.error(e.getMessage());
+                                        }
                                         //set response
                                         voucherAllocationResponse.setCollectpoint("N/A");
                                         voucherAllocationResponse.setExpiryDate(expiryDate);
                                         voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                         voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
-                                        voucherAllocationResponse.setVoucherCode(couponsResponse.getCoupon().getWiCode() + "");
+                                        voucherAllocationResponse.setVoucherCode(voucherCode);
                                         voucherAllocationResponse.setVoucherDescription(vpVoucherDef.getDescription());
                                         voucherAllocationResponse.setVoucherId(couponsResponse.getCoupon().getId());
                                         voucherAllocationResponse.setVoucherType(couponsResponse.getCoupon().getCampaignType());

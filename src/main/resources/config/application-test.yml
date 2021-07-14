@@ -160,3 +160,5 @@ application:
     name: wigroup-giftcards
     apiId: vodacomqa_voucher
     apiPassword: test
+  encryption:
+    key: 7a6f6f70666f6f74

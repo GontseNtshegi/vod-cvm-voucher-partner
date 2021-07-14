@@ -2,6 +2,7 @@ package za.co.vodacom.cvm.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import za.co.vodacom.cvm.config.pojos.Coupons;
+import za.co.vodacom.cvm.config.pojos.Encryption;
 import za.co.vodacom.cvm.config.pojos.GiftCards;
 
 /**
@@ -15,6 +16,7 @@ public class ApplicationProperties {
 
     public Coupons coupons;
     public GiftCards giftCards;
+    public Encryption encryption;
 
     public Coupons getCoupons() {
         return coupons;
@@ -32,8 +34,16 @@ public class ApplicationProperties {
         this.giftCards = giftCards;
     }
 
+    public Encryption getEncryption() {
+        return encryption;
+    }
+
+    public void setEncryption(Encryption encryption) {
+        this.encryption = encryption;
+    }
+
     @Override
     public String toString() {
-        return "ApplicationProperties{" + "coupons=" + coupons + ", giftCards=" + giftCards + '}';
+        return "ApplicationProperties{" + "coupons=" + coupons + ", giftCards=" + giftCards + ", encryption=" + encryption + '}';
     }
 }

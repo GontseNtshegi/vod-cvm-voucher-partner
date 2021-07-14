@@ -140,6 +140,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                                     voucherAllocationResponse.setVoucherId(vpVoucher.getId());
                                                     voucherAllocationResponse.setVoucherType(vpVoucherDef.getType());
                                                     voucherAllocationResponse.setVoucherVendor(vpVoucherDef.getVendor());
+                                                    voucherAllocationResponse.setEncryptedYN(vpVoucherDef.getEncryptedYN());
 
                                                     log.debug(voucherAllocationResponse.toString());
                                                     log.info(voucherAllocationResponse.toString());
@@ -180,6 +181,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         voucherAllocationResponse.setVoucherId(vpVoucher.getId());
                                         voucherAllocationResponse.setVoucherType(vpVoucherDef.getType());
                                         voucherAllocationResponse.setVoucherVendor(vpVoucherDef.getVendor());
+                                        voucherAllocationResponse.setEncryptedYN(vpVoucherDef.getEncryptedYN());
 
                                         log.debug(voucherAllocationResponse.toString());
                                         log.info(voucherAllocationResponse.toString());
@@ -235,6 +237,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         voucherAllocationResponse.setVoucherId(couponsResponse.getCoupon().getId());
                                         voucherAllocationResponse.setVoucherType(couponsResponse.getCoupon().getCampaignType());
                                         voucherAllocationResponse.setVoucherVendor(vpVoucherDef.getVendor());
+                                        voucherAllocationResponse.setEncryptedYN(vpVoucherDef.getEncryptedYN());
 
                                         log.debug(voucherAllocationResponse.toString());
                                         log.info(voucherAllocationResponse.toString());

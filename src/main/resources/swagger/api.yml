@@ -195,6 +195,9 @@ components:
         trxId:
           description: The incoming trxId
           type: string
+        encryptedYN:
+          description: 'Indicates Whether the returned voucher code is encrypted'
+          type: string
     VoucherReturnRequest:
       type: object
       properties:

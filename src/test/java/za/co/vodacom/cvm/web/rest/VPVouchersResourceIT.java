@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static za.co.vodacom.cvm.web.rest.TestUtil.sameInstant;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -74,8 +75,8 @@ class VPVouchersResourceIT {
     private static final String DEFAULT_SOURCE_TRXID = "AAAAAAAAAA";
     private static final String UPDATED_SOURCE_TRXID = "BBBBBBBBBB";
 
-    private static final Integer DEFAULT_QUANTITY = 1;
-    private static final Integer UPDATED_QUANTITY = 2;
+    private static final BigDecimal DEFAULT_QUANTITY = BigDecimal.ONE;
+    private static final BigDecimal UPDATED_QUANTITY = BigDecimal.ONE.add(DEFAULT_QUANTITY);
 
     private static final String ENTITY_API_URL = "/v2/api/vp-vouchers";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -471,7 +472,7 @@ class VPVouchersResourceIT {
         VPVouchers testVPVouchers = vPVouchersList.get(vPVouchersList.size() - 1);
         assertThat(testVPVouchers.getBatchId()).isEqualTo(UPDATED_BATCH_ID);
         assertThat(testVPVouchers.getFileId()).isEqualTo(UPDATED_FILE_ID);
-       // assertThat(testVPVouchers.getVoucherCode()).isEqualTo(UPDATED_VOUCHER_CODE);
+        // assertThat(testVPVouchers.getVoucherCode()).isEqualTo(UPDATED_VOUCHER_CODE);
         assertThat(testVPVouchers.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testVPVouchers.getCreateDate()).isEqualTo(UPDATED_CREATE_DATE);
         assertThat(testVPVouchers.getStartDate()).isEqualTo(UPDATED_START_DATE);
@@ -574,7 +575,7 @@ class VPVouchersResourceIT {
         VPVouchers testVPVouchers = vPVouchersList.get(vPVouchersList.size() - 1);
         assertThat(testVPVouchers.getBatchId()).isEqualTo(UPDATED_BATCH_ID);
         assertThat(testVPVouchers.getFileId()).isEqualTo(UPDATED_FILE_ID);
-       // assertThat(testVPVouchers.getProductId()).isEqualTo(DEFAULT_PRODUCT_ID);
+        // assertThat(testVPVouchers.getProductId()).isEqualTo(DEFAULT_PRODUCT_ID);
         assertThat(testVPVouchers.getVoucherCode()).isEqualTo(UPDATED_VOUCHER_CODE);
         assertThat(testVPVouchers.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testVPVouchers.getCreateDate()).isEqualTo(UPDATED_CREATE_DATE);
@@ -630,7 +631,7 @@ class VPVouchersResourceIT {
         VPVouchers testVPVouchers = vPVouchersList.get(vPVouchersList.size() - 1);
         assertThat(testVPVouchers.getBatchId()).isEqualTo(UPDATED_BATCH_ID);
         assertThat(testVPVouchers.getFileId()).isEqualTo(UPDATED_FILE_ID);
-      //  assertThat(testVPVouchers.getProductId()).isEqualTo(UPDATED_PRODUCT_ID);
+        //  assertThat(testVPVouchers.getProductId()).isEqualTo(UPDATED_PRODUCT_ID);
         assertThat(testVPVouchers.getVoucherCode()).isEqualTo(UPDATED_VOUCHER_CODE);
         assertThat(testVPVouchers.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testVPVouchers.getCreateDate()).isEqualTo(UPDATED_CREATE_DATE);

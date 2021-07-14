@@ -103,7 +103,8 @@ public class VPVoucherDefServiceImpl implements VPVoucherDefService {
     }
 
     @Override
-    public Optional<VPVoucherDef> findByProductId(String id) {
-        return vPVoucherDefRepository.findByProductId(id);
+    public Optional<VPVoucherDef> findByProductIdForUpdate(String id) {
+        log.debug("Request to findByProductIdForUpdate VPVoucherDef : {}", id);
+        return vPVoucherDefRepository.findByProductIdForUpdate(id);
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import za.co.vodacom.cvm.domain.VPVouchers;
+import za.co.vodacom.cvm.service.dto.product.Product;
 
 /**
  * Spring Data SQL repository for the VPVouchers entity.
@@ -13,7 +14,7 @@ import za.co.vodacom.cvm.domain.VPVouchers;
 @Repository
 public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     @Query(
-        value = "select * from vp_vouchers where productId=:productId startDate< sysdate() and endDate>sysdate() and issuedDate is null and rownum<2",
+        value = "select * from vp_vouchers where productId=:productId and startDate< sysdate() and endDate>sysdate() and issuedDate is null and rownum<2",
         nativeQuery = true
     )
     Optional<VPVouchers> getValidVoucher(@Param("productId") String productId);
@@ -23,7 +24,7 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     void issueVoucher(@Param("incomingTrxId") String incomingTrxId, @Param("id") Long id);
 
     @Query(
-        value = "select * from vp_vouchers where productId=:productId startDate< sysdate() and endDate>sysdate() and id=:id and source_trxid=:trxId",
+        value = "select * from vp_vouchers where productId=:productId and startDate< sysdate() and endDate>sysdate() and id=:id and source_trxid=:trxId",
         nativeQuery = true
     )
     Optional<VPVouchers> getValidVoucherForReturn(@Param("productId") String productId, @Param("id") Long id, @Param("trxId") String trxId);
@@ -31,4 +32,10 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     @Modifying
     @Query(value = "update VPVouchers u set issuedDate = null, sourceTrxid= null where id=:id")
     void updateReturnedVoucher(@Param("id") Long id);
+
+    @Query(
+        value = "select za.co.vodacom.cvm.service.dto.product.Product(count(*), min(end_date)) from vp_vouchers where productId=:productId and startDate< sysdate() and endDate>sysdate() and issuedDate is null",
+        nativeQuery = true
+    )
+    Optional<Product> getValidVoucherForProduct(@Param("productId") String productId);
 }

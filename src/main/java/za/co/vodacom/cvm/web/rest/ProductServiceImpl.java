@@ -69,12 +69,35 @@ public class ProductServiceImpl implements ProductApiDelegate {
         //Validate the incoming campaign
         Optional<VPCampaign> vpCampaign = vpCampaignService.findByName(campaign);
         if (vpCampaign.isPresent()) {
+            log.debug(vpCampaign.get().toString());
+            log.info(vpCampaign.get().toString());
             //Validate incoming productId
             Optional<VPCampaignVouchers> vpCampaignVouchers = vpCampaignVouchersService.findByProductIdAndCampaignIdAndActiveYN(
                 productId,
                 vpCampaign.get().getId(),
                 Constants.YES
             );
+            //ProductId Found
+            if (vpCampaignVouchers.isPresent()) {
+                log.debug(vpCampaignVouchers.get().toString());
+                log.info(vpCampaignVouchers.get().toString());
+                vpVoucherDefService
+                    .findOne(vpCampaignVouchers.get().getProductId())
+                    .ifPresent(
+                        vpVoucherDef -> {
+                            switch (vpVoucherDef.getType()) {
+                                case Constants.VOUCHER:
+                                    break;
+                                case Constants.GENERIC_VOUCHER:
+                                    break;
+                                case Constants.ONLINE_VOUCHER:
+                                    break;
+                            }
+                        }
+                    );
+            } else {
+                throw new AllocationException("Invalid ProductId", Status.NOT_FOUND);
+            }
         } else { //campaign found //campaign not found
             throw new AllocationException("Invalid Campaign", Status.NOT_FOUND);
         }

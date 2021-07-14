@@ -17,5 +17,5 @@ import za.co.vodacom.cvm.domain.VPVoucherDef;
 public interface VPVoucherDefRepository extends JpaRepository<VPVoucherDef, String> {
     @Modifying
     @Query(value = "select * vp_voucher_def  where id=:id for update", nativeQuery = true)
-    Optional<VPVoucherDef> findByProductId(String id);
+    Optional<VPVoucherDef> findByProductIdForUpdate(String id);
 }

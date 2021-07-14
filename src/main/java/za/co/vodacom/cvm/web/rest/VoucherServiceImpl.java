@@ -104,7 +104,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                             switch (vpVoucherDef.getType()) {
                                 case Constants.VOUCHER:
                                     vpVoucherDefService
-                                        .findByProductId(voucherAllocationRequest.getProductId()) //acquire a lock
+                                        .findByProductIdForUpdate(voucherAllocationRequest.getProductId()) //acquire a lock
                                         .ifPresent(
                                             vpVoucherDef1 -> {
                                                 //get valid voucher

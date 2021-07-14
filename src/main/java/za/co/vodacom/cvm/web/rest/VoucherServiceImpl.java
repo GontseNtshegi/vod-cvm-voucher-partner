@@ -2,6 +2,7 @@ package za.co.vodacom.cvm.web.rest;
 
 import brave.Tracer;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,9 +106,23 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                                     log.info(vpVoucher.toString());
                                                     //issue voucher
                                                     vpVouchersService.issueVoucher(voucherAllocationRequest.getTrxId(), vpVoucher.getId());
+
+                                                    OffsetDateTime expiryDate = vpVoucher.getExpiryDate() != null
+                                                        ? vpVoucher
+                                                            .getExpiryDate()
+                                                            .toOffsetDateTime()
+                                                            .plusHours(23L)
+                                                            .plusMinutes(59L)
+                                                            .plusSeconds(59L)
+                                                        : OffsetDateTime
+                                                            .now()
+                                                            .plusHours(23L)
+                                                            .plusMinutes(59L)
+                                                            .plusSeconds(59L)
+                                                            .plusDays(vpVoucherDef.getValidityPeriod());
                                                     //set response
                                                     voucherAllocationResponse.setCollectpoint(vpVoucher.getCollectionPoint());
-                                                    voucherAllocationResponse.setExpiryDate(vpVoucher.getExpiryDate().toOffsetDateTime());
+                                                    voucherAllocationResponse.setExpiryDate(expiryDate);
                                                     voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                                     voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                                     voucherAllocationResponse.setVoucherCode(vpVoucher.getVoucherCode());
@@ -134,10 +149,17 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         VPVouchers vpVoucher = vpVouchersGen.get();
                                         log.debug(vpVoucher.toString());
                                         log.info(vpVoucher.toString());
-
+                                        OffsetDateTime expiryDate = vpVoucher.getExpiryDate() != null
+                                            ? vpVoucher.getExpiryDate().toOffsetDateTime().plusHours(23L).plusMinutes(59L).plusSeconds(59L)
+                                            : OffsetDateTime
+                                                .now()
+                                                .plusHours(23L)
+                                                .plusMinutes(59L)
+                                                .plusSeconds(59L)
+                                                .plusDays(vpVoucherDef.getValidityPeriod());
                                         //set response
                                         voucherAllocationResponse.setCollectpoint(vpVoucher.getCollectionPoint());
-                                        voucherAllocationResponse.setExpiryDate(vpVoucher.getExpiryDate().toOffsetDateTime());
+                                        voucherAllocationResponse.setExpiryDate(expiryDate);
                                         voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                         voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                         voucherAllocationResponse.setVoucherCode(vpVoucher.getVoucherCode());
@@ -170,13 +192,19 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         couponsResponse.getResponseCode().equals(Constants.RESPONSE_CODE) ||
                                         couponsResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
                                     ) {
+                                        OffsetDateTime expiryDate = OffsetDateTime
+                                            .now()
+                                            .plusHours(23L)
+                                            .plusMinutes(59L)
+                                            .plusSeconds(59L)
+                                            .plusDays(vpVoucherDef.getValidityPeriod());
                                         //set response
-                                        voucherAllocationResponse.setCollectpoint(couponsResponse.getCoupon().getCampaignType());
-                                        voucherAllocationResponse.setExpiryDate(couponsResponse.getCoupon().getCreateDate());
+                                        voucherAllocationResponse.setCollectpoint("N/A");
+                                        voucherAllocationResponse.setExpiryDate(expiryDate);
                                         voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                         voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                         voucherAllocationResponse.setVoucherCode(couponsResponse.getCoupon().getWiCode() + "");
-                                        voucherAllocationResponse.setVoucherDescription(couponsResponse.getCoupon().getDescription());
+                                        voucherAllocationResponse.setVoucherDescription(vpVoucherDef.getDescription());
                                         voucherAllocationResponse.setVoucherId(couponsResponse.getCoupon().getId());
                                         voucherAllocationResponse.setVoucherType(couponsResponse.getCoupon().getCampaignType());
                                         voucherAllocationResponse.setVoucherVendor(vpVoucherDef.getVendor());

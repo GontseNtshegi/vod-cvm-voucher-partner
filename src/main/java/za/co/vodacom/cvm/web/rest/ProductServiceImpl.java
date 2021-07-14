@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
+import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPCampaign;
+import za.co.vodacom.cvm.domain.VPCampaignVouchers;
 import za.co.vodacom.cvm.exception.AllocationException;
 import za.co.vodacom.cvm.service.VPCampaignService;
 import za.co.vodacom.cvm.service.VPCampaignVouchersService;
@@ -66,7 +68,14 @@ public class ProductServiceImpl implements ProductApiDelegate {
         VoucherAllocationResponse voucherAllocationResponse = null;
         //Validate the incoming campaign
         Optional<VPCampaign> vpCampaign = vpCampaignService.findByName(campaign);
-        if (vpCampaign.isPresent()) {} else { //campaign found //campaign not found
+        if (vpCampaign.isPresent()) {
+            //Validate incoming productId
+            Optional<VPCampaignVouchers> vpCampaignVouchers = vpCampaignVouchersService.findByProductIdAndCampaignIdAndActiveYN(
+                productId,
+                vpCampaign.get().getId(),
+                Constants.YES
+            );
+        } else { //campaign found //campaign not found
             throw new AllocationException("Invalid Campaign", Status.NOT_FOUND);
         }
         return new ResponseEntity<>(productValidationResponse, HttpStatus.OK);

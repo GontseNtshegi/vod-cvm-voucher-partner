@@ -51,5 +51,5 @@ public interface VPCampaignVouchersService {
      * @param productId
      * @return
      */
-    Optional<VPCampaignVouchers> findByProductId(String productId);
+    Optional<VPCampaignVouchers> findByProductIdAndCampaignIdAndActiveYN(String productId, Long campaignId, String activeYN);
 }

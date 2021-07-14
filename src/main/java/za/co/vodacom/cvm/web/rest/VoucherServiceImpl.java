@@ -4,6 +4,7 @@ import brave.Tracer;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import org.aspectj.weaver.ConcreteTypeMunger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,8 +87,10 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
         Optional<VPCampaign> vpCampaign = vpCampaignService.findByName(voucherAllocationRequest.getCampaign());
         if (vpCampaign.isPresent()) { //campaign found
             //Validate incoming productId
-            Optional<VPCampaignVouchers> vpCampaignVouchers = vpCampaignVouchersService.findByProductId(
-                voucherAllocationRequest.getProductId()
+            Optional<VPCampaignVouchers> vpCampaignVouchers = vpCampaignVouchersService.findByProductIdAndCampaignIdAndActiveYN(
+                voucherAllocationRequest.getProductId(),
+                vpCampaign.get().getId(),
+                Constants.YES
             );
             if (vpCampaignVouchers.isPresent()) { //productId found
                 log.debug(vpCampaignVouchers.get().toString());

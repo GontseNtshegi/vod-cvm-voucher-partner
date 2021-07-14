@@ -82,8 +82,8 @@ public class VPCampaignVouchersServiceImpl implements VPCampaignVouchersService 
     }
 
     @Override
-    public Optional<VPCampaignVouchers> findByProductId(String productId) {
+    public Optional<VPCampaignVouchers> findByProductIdAndCampaignIdAndActiveYN(String productId, Long campaignId, String activeYN) {
         log.debug("Request to find by productIdin VPCampaignVouchers : {}", productId);
-        return vPCampaignVouchersRepository.findByProductId(productId);
+        return vPCampaignVouchersRepository.findByProductIdAndCampaignIdAndActiveYN(productId, campaignId, activeYN);
     }
 }

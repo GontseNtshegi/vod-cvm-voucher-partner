@@ -38,4 +38,10 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
         nativeQuery = true
     )
     Optional<Product> getValidVoucherForProduct(@Param("productId") String productId);
+
+    @Query(
+        value = "select za.co.vodacom.cvm.service.dto.product.Product(quantity, end_date) from vp_vouchers where productId=:productId and startDate< sysdate() and endDate>sysdate()",
+        nativeQuery = true
+    )
+    Optional<Product> getValidVoucherForProductGenericVoucher(@Param("productId") String productId);
 }

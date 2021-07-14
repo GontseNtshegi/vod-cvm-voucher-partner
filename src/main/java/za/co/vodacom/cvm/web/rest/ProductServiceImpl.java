@@ -2,6 +2,7 @@ package za.co.vodacom.cvm.web.rest;
 
 import brave.Tracer;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import java.math.BigDecimal;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +66,6 @@ public class ProductServiceImpl implements ProductApiDelegate {
         log.debug("Product ID: {}, Origin: {}, Campaign: {}", productId, origin, campaign);
         log.info("Product ID: {}, Origin: {}, Campaign: {}", productId, origin, campaign);
 
-        VoucherAllocationResponse voucherAllocationResponse = null;
         //Validate the incoming campaign
         Optional<VPCampaign> vpCampaign = vpCampaignService.findByName(campaign);
         if (vpCampaign.isPresent()) {
@@ -87,10 +87,48 @@ public class ProductServiceImpl implements ProductApiDelegate {
                         vpVoucherDef -> {
                             switch (vpVoucherDef.getType()) {
                                 case Constants.VOUCHER:
+                                    vpVouchersService
+                                        .getValidVoucherForProduct(productId)
+                                        .ifPresent(
+                                            vpVouchers -> {
+                                                productValidationResponse.setMinExpiry(vpVouchers.getMinEndDitme().toOffsetDateTime());
+                                                productValidationResponse.setVoucherCategory(vpVoucherDef.getCategory());
+                                                productValidationResponse.setVoucherDescription(vpVoucherDef.getDescription());
+                                                productValidationResponse.setVoucherQuantity(vpVouchers.getCount());
+                                                productValidationResponse.setVoucherType(vpVoucherDef.getType());
+                                                productValidationResponse.setVoucherVendor(vpVoucherDef.getVendor());
+                                            }
+                                        );
                                     break;
                                 case Constants.GENERIC_VOUCHER:
+                                    vpVouchersService
+                                        .getValidVoucherForProductGenericVoucher(productId)
+                                        .ifPresent(
+                                            vpVouchers -> {
+                                                productValidationResponse.setMinExpiry(vpVouchers.getMinEndDitme().toOffsetDateTime());
+                                                productValidationResponse.setVoucherCategory(vpVoucherDef.getCategory());
+                                                productValidationResponse.setVoucherDescription(vpVoucherDef.getDescription());
+                                                productValidationResponse.setVoucherQuantity(vpVouchers.getCount());
+                                                productValidationResponse.setVoucherType(vpVoucherDef.getType());
+                                                productValidationResponse.setVoucherVendor(vpVoucherDef.getVendor());
+                                            }
+                                        );
+                                    if (productValidationResponse == null) {
+                                        productValidationResponse.setMinExpiry(null);
+                                        productValidationResponse.setVoucherCategory(vpVoucherDef.getCategory());
+                                        productValidationResponse.setVoucherDescription(vpVoucherDef.getDescription());
+                                        productValidationResponse.setVoucherQuantity(BigDecimal.ZERO);
+                                        productValidationResponse.setVoucherType(vpVoucherDef.getType());
+                                        productValidationResponse.setVoucherVendor(vpVoucherDef.getVendor());
+                                    }
                                     break;
                                 case Constants.ONLINE_VOUCHER:
+                                    productValidationResponse.setMinExpiry(null);
+                                    productValidationResponse.setVoucherCategory(vpVoucherDef.getCategory());
+                                    productValidationResponse.setVoucherDescription(vpVoucherDef.getDescription());
+                                    productValidationResponse.setVoucherQuantity(BigDecimal.ONE);
+                                    productValidationResponse.setVoucherType(vpVoucherDef.getType());
+                                    productValidationResponse.setVoucherVendor(vpVoucherDef.getVendor());
                                     break;
                             }
                         }

@@ -3,6 +3,7 @@ package za.co.vodacom.cvm.service;
 import java.util.List;
 import java.util.Optional;
 import za.co.vodacom.cvm.domain.VPVouchers;
+import za.co.vodacom.cvm.service.dto.product.Product;
 
 /**
  * Service Interface for managing {@link VPVouchers}.
@@ -74,4 +75,18 @@ public interface VPVouchersService {
      * @param id
      */
     void updateReturnedVoucher(Long id);
+
+    /**
+     *
+     * @param productId
+     * @return
+     */
+    Optional<Product> getValidVoucherForProduct(String productId);
+
+    /**
+     *
+     * @param productId
+     * @return
+     */
+    Optional<Product> getValidVoucherForProductGenericVoucher(String productId);
 }

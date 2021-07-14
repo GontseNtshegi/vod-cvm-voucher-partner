@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.repository.VPVouchersRepository;
 import za.co.vodacom.cvm.service.VPVouchersService;
+import za.co.vodacom.cvm.service.dto.product.Product;
 
 /**
  * Service Implementation for managing {@link VPVouchers}.
@@ -128,5 +129,15 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     @Override
     public void updateReturnedVoucher(Long id) {
         vPVouchersRepository.updateReturnedVoucher(id);
+    }
+
+    @Override
+    public Optional<Product> getValidVoucherForProduct(String productId) {
+        return vPVouchersRepository.getValidVoucherForProduct(productId);
+    }
+
+    @Override
+    public Optional<Product> getValidVoucherForProductGenericVoucher(String productId) {
+        return vPVouchersRepository.getValidVoucherForProductGenericVoucher(productId);
     }
 }

@@ -2,6 +2,7 @@ package za.co.vodacom.cvm.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -77,9 +78,9 @@ public class VPVouchers implements Serializable {
 
     @NotNull
     @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    private BigDecimal quantity;
 
-   /* @ManyToOne
+    /* @ManyToOne
     @JsonIgnoreProperties(value = { "productIds", "productIds" }, allowSetters = true)
     private VPVoucherDef productId;*/
 
@@ -123,7 +124,7 @@ public class VPVouchers implements Serializable {
         this.fileId = fileId;
     }
 
-  /*  public String getProductId() {
+    /*  public String getProductId() {
         return this.productId;
     }*/
 
@@ -266,20 +267,20 @@ public class VPVouchers implements Serializable {
         this.sourceTrxid = sourceTrxid;
     }
 
-    public Integer getQuantity() {
+    public BigDecimal getQuantity() {
         return this.quantity;
     }
 
-    public VPVouchers quantity(Integer quantity) {
+    public VPVouchers quantity(BigDecimal quantity) {
         this.quantity = quantity;
         return this;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 
-   /* public VPVoucherDef getProductId() {
+    /* public VPVoucherDef getProductId() {
         return this.productId;
     }
 

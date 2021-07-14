@@ -1,22 +1,23 @@
 package za.co.vodacom.cvm.service.dto.product;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 public class Product {
 
-    Long count;
+    BigDecimal count;
     ZonedDateTime minEndDateitme;
 
-    public Product(Long count, ZonedDateTime minEndDateitme) {
+    public Product(BigDecimal count, ZonedDateTime minEndDateitme) {
         this.count = count;
         this.minEndDateitme = minEndDateitme;
     }
 
-    public Long getCount() {
+    public BigDecimal getCount() {
         return count;
     }
 
-    public void setCount(Long count) {
+    public void setCount(BigDecimal count) {
         this.count = count;
     }
 

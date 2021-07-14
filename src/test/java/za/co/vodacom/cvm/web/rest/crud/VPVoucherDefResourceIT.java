@@ -1,4 +1,4 @@
-package za.co.vodacom.cvm.web.rest;
+package za.co.vodacom.cvm.web.rest.crud;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.IntegrationTest;
 import za.co.vodacom.cvm.domain.VPVoucherDef;
 import za.co.vodacom.cvm.repository.VPVoucherDefRepository;
+import za.co.vodacom.cvm.web.rest.TestUtil;
 import za.co.vodacom.cvm.web.rest.crud.VPVoucherDefResource;
 
 /**
@@ -189,7 +190,7 @@ class VPVoucherDefResourceIT {
     void checkProductIdIsRequired() throws Exception {
         int databaseSizeBeforeTest = vPVoucherDefRepository.findAll().size();
         // set the field null
-       // vPVoucherDef.setProductId(null);
+        // vPVoucherDef.setProductId(null);
 
         // Create the VPVoucherDef, which fails.
 

@@ -1,4 +1,4 @@
-package za.co.vodacom.cvm.web.rest;
+package za.co.vodacom.cvm.web.rest.crud;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.IntegrationTest;
 import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.repository.VPVouchersRepository;
+import za.co.vodacom.cvm.web.rest.TestUtil;
 import za.co.vodacom.cvm.web.rest.crud.VPVouchersResource;
 
 /**
@@ -75,8 +76,8 @@ class VPVouchersResourceIT {
     private static final String DEFAULT_SOURCE_TRXID = "AAAAAAAAAA";
     private static final String UPDATED_SOURCE_TRXID = "BBBBBBBBBB";
 
-    private static final BigDecimal DEFAULT_QUANTITY = BigDecimal.ONE;
-    private static final BigDecimal UPDATED_QUANTITY = BigDecimal.ONE.add(DEFAULT_QUANTITY);
+    private static final Integer DEFAULT_QUANTITY = 1;
+    private static final Integer UPDATED_QUANTITY = 2;
 
     private static final String ENTITY_API_URL = "/v2/api/vp-vouchers";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";

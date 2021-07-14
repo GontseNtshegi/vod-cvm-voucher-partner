@@ -1,4 +1,4 @@
-package za.co.vodacom.cvm.web.rest;
+package za.co.vodacom.cvm.web.rest.crud;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.IntegrationTest;
 import za.co.vodacom.cvm.domain.VPCampaign;
 import za.co.vodacom.cvm.repository.VPCampaignRepository;
+import za.co.vodacom.cvm.web.rest.TestUtil;
 import za.co.vodacom.cvm.web.rest.crud.VPCampaignResource;
 
 /**

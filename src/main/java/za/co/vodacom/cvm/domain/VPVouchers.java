@@ -78,7 +78,7 @@ public class VPVouchers implements Serializable {
 
     @NotNull
     @Column(name = "quantity", nullable = false)
-    private BigDecimal quantity;
+    private Integer quantity;
 
     /* @ManyToOne
     @JsonIgnoreProperties(value = { "productIds", "productIds" }, allowSetters = true)
@@ -267,16 +267,16 @@ public class VPVouchers implements Serializable {
         this.sourceTrxid = sourceTrxid;
     }
 
-    public BigDecimal getQuantity() {
+    public Integer getQuantity() {
         return this.quantity;
     }
 
-    public VPVouchers quantity(BigDecimal quantity) {
+    public VPVouchers quantity(Integer quantity) {
         this.quantity = quantity;
         return this;
     }
 
-    public void setQuantity(BigDecimal quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

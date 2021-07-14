@@ -19,7 +19,7 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     Optional<VPVouchers> getValidVoucher(@Param("productId") String productId);
 
     @Modifying
-    @Query(value = "update vp_vouchers set issuedDate = sysdate() and sourceTrxid=:incomingTrxId where id=:id", nativeQuery = true)
+    @Query(value = "update vp_vouchers set issuedDate = sysdate(), sourceTrxid=:incomingTrxId where id=:id", nativeQuery = true)
     void issueVoucher(@Param("incomingTrxId") String incomingTrxId, @Param("id") Long id);
 
     @Query(
@@ -29,6 +29,6 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     Optional<VPVouchers> getValidVoucherForReturn(@Param("productId") String productId, @Param("id") Long id, @Param("trxId") String trxId);
 
     @Modifying
-    @Query(value = "update VPVouchers u set issuedDate = null and sourceTrxid= null where id=:id")
+    @Query(value = "update VPVouchers u set issuedDate = null, sourceTrxid= null where id=:id")
     void updateReturnedVoucher(@Param("id") Long id);
 }

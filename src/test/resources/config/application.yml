@@ -122,3 +122,7 @@ application:
     name: wigroup-coupons
     apiId: dfd
     apiPassword: sddsf
+  giftCards:
+    name: wigroup-giftcards
+    apiId: vodacomqa_voucher
+    apiPassword: test

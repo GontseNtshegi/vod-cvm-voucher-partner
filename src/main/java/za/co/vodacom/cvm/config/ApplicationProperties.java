@@ -2,6 +2,7 @@ package za.co.vodacom.cvm.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import za.co.vodacom.cvm.config.pojos.Coupons;
+import za.co.vodacom.cvm.config.pojos.GiftCards;
 
 /**
  * Properties specific to Voucherpartner.
@@ -13,6 +14,7 @@ import za.co.vodacom.cvm.config.pojos.Coupons;
 public class ApplicationProperties {
 
     public Coupons coupons;
+    public GiftCards giftCards;
 
     public Coupons getCoupons() {
         return coupons;
@@ -22,8 +24,16 @@ public class ApplicationProperties {
         this.coupons = coupons;
     }
 
+    public GiftCards getGiftCards() {
+        return giftCards;
+    }
+
+    public void setGiftCards(GiftCards giftCards) {
+        this.giftCards = giftCards;
+    }
+
     @Override
     public String toString() {
-        return "ApplicationProperties{" + "coupons=" + coupons + '}';
+        return "ApplicationProperties{" + "coupons=" + coupons + ", giftCards=" + giftCards + '}';
     }
 }

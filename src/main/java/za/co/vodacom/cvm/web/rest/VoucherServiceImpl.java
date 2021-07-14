@@ -129,18 +129,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                                             .plusSeconds(59L)
                                                             .plusDays(vpVoucherDef.getValidityPeriod());
                                                     String voucherCode = vpVoucher.getVoucherCode();
-                                                    try {
-                                                        voucherCode =
-                                                            vpVoucherDef.getEncryptedYN() != null &&
-                                                                vpVoucherDef.getEncryptedYN().equalsIgnoreCase(Constants.YES)
-                                                                ? blowFishEncryption.encrypt(
-                                                                    voucherCode,
-                                                                    applicationProperties.getEncryption().getKey()
-                                                                )
-                                                                : voucherCode;
-                                                    } catch (Exception e) {
-                                                        log.error(e.getMessage());
-                                                    }
+
                                                     //set response
                                                     voucherAllocationResponse.setCollectpoint(vpVoucher.getCollectionPoint());
                                                     voucherAllocationResponse.setExpiryDate(expiryDate);
@@ -180,18 +169,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                                 .plusDays(vpVoucherDef.getValidityPeriod());
 
                                         String voucherCode = vpVoucher.getVoucherCode();
-                                        try {
-                                            voucherCode =
-                                                vpVoucherDef.getEncryptedYN() != null &&
-                                                    vpVoucherDef.getEncryptedYN().equalsIgnoreCase(Constants.YES)
-                                                    ? blowFishEncryption.encrypt(
-                                                        voucherCode,
-                                                        applicationProperties.getEncryption().getKey()
-                                                    )
-                                                    : voucherCode;
-                                        } catch (Exception e) {
-                                            log.error(e.getMessage());
-                                        }
+
                                         //set response
                                         voucherAllocationResponse.setCollectpoint(vpVoucher.getCollectionPoint());
                                         voucherAllocationResponse.setExpiryDate(expiryDate);
@@ -235,7 +213,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                             .plusDays(vpVoucherDef.getValidityPeriod());
 
                                         String voucherCode = couponsResponse.getCoupon().getWiCode() + "";
-                                        try {
+                                        try { //Encrypt code
                                             voucherCode =
                                                 vpVoucherDef.getEncryptedYN() != null &&
                                                     vpVoucherDef.getEncryptedYN().equalsIgnoreCase(Constants.YES)

@@ -12,8 +12,8 @@ paths:
     post:
       tags:
         - voucher
-      summary: Customer voucher reservation
-      operationId: updateVoucherToReserved
+      summary: Customer voucher allocation
+      operationId: issueVoucher
       description: Reserve a voucher for a customer.
       requestBody:
         content:
@@ -42,7 +42,7 @@ paths:
       tags:
         - voucher
       summary: Return a voucher which was issued
-      operationId: updateVoucherToReturned
+      operationId: returnVoucher
       description: Return a voucher which was issued
       parameters:
         - name: voucherId
@@ -79,7 +79,7 @@ paths:
       tags:
         - product
       summary: Check whether the given voucher based product has stock.
-      operationId: updateVoucherToValid
+      operationId: validateVoucher
       description: Check whether the given voucher based product has stock
       parameters:
         - name: productId
@@ -185,7 +185,7 @@ components:
         voucherVendor:
           description: "The vendor, eg Nando's"
           type: string
-        collectpoint:
+        collectPoint:
           description: An optional field that indicates where the voucher can be redeemed
           type: string
         expiryDate:

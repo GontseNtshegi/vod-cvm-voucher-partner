@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
@@ -22,8 +23,8 @@ import za.co.vodacom.cvm.service.VPVoucherDefService;
 import za.co.vodacom.cvm.service.VPVouchersService;
 import za.co.vodacom.cvm.web.api.ProductApiDelegate;
 import za.co.vodacom.cvm.web.api.model.ProductValidationResponse;
-import za.co.vodacom.cvm.web.api.model.VoucherAllocationResponse;
 
+@Service
 public class ProductServiceImpl implements ProductApiDelegate {
 
     public static final Logger log = LoggerFactory.getLogger(VoucherServiceImpl.class);
@@ -59,9 +60,9 @@ public class ProductServiceImpl implements ProductApiDelegate {
     }
 
     @Transactional
-    @HystrixCommand(fallbackMethod = "updateVoucherToValidFallback", ignoreExceptions = AllocationException.class)
+    // @HystrixCommand(fallbackMethod = "validateVoucherFallback", ignoreExceptions = AllocationException.class)
     @Override
-    public ResponseEntity<ProductValidationResponse> updateVoucherToValid(String productId, String origin, String campaign) {
+    public ResponseEntity<ProductValidationResponse> validateVoucher(String productId, String origin, String campaign) {
         ProductValidationResponse productValidationResponse = new ProductValidationResponse();
         log.debug("Product ID: {}, Origin: {}, Campaign: {}", productId, origin, campaign);
         log.info("Product ID: {}, Origin: {}, Campaign: {}", productId, origin, campaign);
@@ -143,7 +144,7 @@ public class ProductServiceImpl implements ProductApiDelegate {
     }
 
     //retry once
-    public ResponseEntity<ProductValidationResponse> updateVoucherToValidFallback(String productId, String origin, String campaign) {
-        return updateVoucherToValid(productId, origin, campaign);
+    public ResponseEntity<ProductValidationResponse> validateVoucherFallback(String productId, String origin, String campaign) {
+        return validateVoucher(productId, origin, campaign);
     }
 }

@@ -4,12 +4,12 @@ import brave.Tracer;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import java.time.OffsetDateTime;
 import java.util.Optional;
-import org.aspectj.weaver.ConcreteTypeMunger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
@@ -24,6 +24,7 @@ import za.co.vodacom.cvm.domain.VPVoucherDef;
 import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.exception.AllocationException;
 import za.co.vodacom.cvm.exception.WiGroupException;
+import za.co.vodacom.cvm.repository.VPVoucherDefRepository;
 import za.co.vodacom.cvm.service.VPCampaignService;
 import za.co.vodacom.cvm.service.VPCampaignVouchersService;
 import za.co.vodacom.cvm.service.VPVoucherDefService;
@@ -35,6 +36,7 @@ import za.co.vodacom.cvm.web.api.model.VoucherAllocationResponse;
 import za.co.vodacom.cvm.web.api.model.VoucherReturnRequest;
 import za.co.vodacom.cvm.web.api.model.VoucherReturnResponse;
 
+@Service
 public class VoucherServiceImpl implements VoucherApiDelegate {
 
     public static final Logger log = LoggerFactory.getLogger(VoucherServiceImpl.class);
@@ -58,6 +60,9 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     Tracer tracer;
 
     @Autowired
+    VPVoucherDefRepository vpVoucherDefRepository;
+
+    @Autowired
     BlowFishEncryption blowFishEncryption;
 
     @Autowired
@@ -76,13 +81,13 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     }
 
     @Transactional
-    @HystrixCommand(fallbackMethod = "updateVoucherToReservedFallback", ignoreExceptions = AllocationException.class)
+    //@HystrixCommand(fallbackMethod = "issueVoucherFallback", ignoreExceptions = AllocationException.class)
     @Override
-    public ResponseEntity<VoucherAllocationResponse> updateVoucherToReserved(VoucherAllocationRequest voucherAllocationRequest) {
-        log.debug(voucherAllocationRequest.toString());
-        log.info(voucherAllocationRequest.toString());
+    public ResponseEntity<VoucherAllocationResponse> issueVoucher(VoucherAllocationRequest voucherAllocationRequest) {
+        // log.debug(voucherAllocationRequest.toString());
+        //log.info(voucherAllocationRequest.toString());
 
-        VoucherAllocationResponse voucherAllocationResponse = null;
+        VoucherAllocationResponse voucherAllocationResponse = new VoucherAllocationResponse();
         //Validate the incoming campaign
         Optional<VPCampaign> vpCampaign = vpCampaignService.findByName(voucherAllocationRequest.getCampaign());
         if (vpCampaign.isPresent()) { //campaign found
@@ -104,7 +109,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                             switch (vpVoucherDef.getType()) {
                                 case Constants.VOUCHER:
                                     vpVoucherDefService
-                                        .findByProductIdForUpdate(voucherAllocationRequest.getProductId()) //acquire a lock
+                                        .findById(voucherAllocationRequest.getProductId()) //acquire a lock
                                         .ifPresent(
                                             vpVoucherDef1 -> {
                                                 //get valid voucher
@@ -133,8 +138,9 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                                             .plusDays(vpVoucherDef.getValidityPeriod());
                                                     String voucherCode = vpVoucher.getVoucherCode();
 
+                                                    //vpVoucherDefRepository.flush();//release lock
                                                     //set response
-                                                    voucherAllocationResponse.setCollectpoint(vpVoucher.getCollectionPoint());
+                                                    voucherAllocationResponse.setCollectPoint(vpVoucher.getCollectionPoint());
                                                     voucherAllocationResponse.setExpiryDate(expiryDate);
                                                     voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                                     voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
@@ -175,7 +181,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         String voucherCode = vpVoucher.getVoucherCode();
 
                                         //set response
-                                        voucherAllocationResponse.setCollectpoint(vpVoucher.getCollectionPoint());
+                                        voucherAllocationResponse.setCollectPoint(vpVoucher.getCollectionPoint());
                                         voucherAllocationResponse.setExpiryDate(expiryDate);
                                         voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                         voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
@@ -199,6 +205,8 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                     couponsRequest.sendSMS(false);
                                     couponsRequest.setUserRef(voucherAllocationRequest.getMsisdn());
                                     couponsRequest.setSmsMessage("");
+
+                                    log.info(couponsRequest.toString());
                                     //call wi group
                                     ResponseEntity<CouponsResponse> couponsResponseResponseEntity = couponsApiClient.issueVoucher(
                                         true,
@@ -231,7 +239,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                             log.error(e.getMessage());
                                         }
                                         //set response
-                                        voucherAllocationResponse.setCollectpoint("N/A");
+                                        voucherAllocationResponse.setCollectPoint("N/A");
                                         voucherAllocationResponse.setExpiryDate(expiryDate);
                                         voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                         voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
@@ -265,14 +273,14 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     }
 
     //retry once
-    public ResponseEntity<VoucherAllocationResponse> updateVoucherToReservedFallback(VoucherAllocationRequest voucherAllocationRequest) {
-        return updateVoucherToReserved(voucherAllocationRequest);
+    public ResponseEntity<VoucherAllocationResponse> issueVoucherFallback(VoucherAllocationRequest voucherAllocationRequest) {
+        return issueVoucher(voucherAllocationRequest);
     }
 
     @Transactional
-    @HystrixCommand(fallbackMethod = "updateVoucherToReturnedFallback", ignoreExceptions = AllocationException.class)
+    @HystrixCommand(fallbackMethod = "returnVoucherFallback", ignoreExceptions = AllocationException.class)
     @Override
-    public ResponseEntity<VoucherReturnResponse> updateVoucherToReturned(Long voucherId, VoucherReturnRequest voucherReturnRequest) {
+    public ResponseEntity<VoucherReturnResponse> returnVoucher(Long voucherId, VoucherReturnRequest voucherReturnRequest) {
         log.debug(voucherReturnRequest.toString());
         log.info(voucherReturnRequest.toString());
         VoucherReturnResponse voucherReturnResponse = new VoucherReturnResponse();
@@ -350,10 +358,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     }
 
     //retry once
-    public ResponseEntity<VoucherReturnResponse> updateVoucherToReturnedFallback(
-        Long voucherId,
-        VoucherReturnRequest voucherReturnRequest
-    ) {
-        return updateVoucherToReturned(voucherId, voucherReturnRequest);
+    public ResponseEntity<VoucherReturnResponse> returnVoucherFallback(Long voucherId, VoucherReturnRequest voucherReturnRequest) {
+        return returnVoucher(voucherId, voucherReturnRequest);
     }
 }

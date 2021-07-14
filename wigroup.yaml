@@ -17,7 +17,7 @@ paths:
             description: Reserve a voucher for a customer.
             parameters:
             - name: issueWiCode
-              in: path
+              in: query
               required: true
               description: >-
                   The original wigroup voucher id or VP_VOUCHER.ID used to issued the

@@ -14,17 +14,17 @@ import za.co.vodacom.cvm.service.dto.product.Product;
 @Repository
 public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     @Query(
-        value = "select * from vp_vouchers where productId=:productId and startDate< sysdate() and endDate>sysdate() and issuedDate is null and rownum<2",
+        value = "select * from vp_vouchers where product_id=:productId and start_date< sysdate() and end_date>sysdate() and issued_date is null limit 1",
         nativeQuery = true
     )
     Optional<VPVouchers> getValidVoucher(@Param("productId") String productId);
 
     @Modifying
-    @Query(value = "update vp_vouchers set issuedDate = sysdate(), sourceTrxid=:incomingTrxId where id=:id", nativeQuery = true)
+    @Query(value = "update vp_vouchers set issued_date = sysdate(), source_trxid=:incomingTrxId where id=:id", nativeQuery = true)
     void issueVoucher(@Param("incomingTrxId") String incomingTrxId, @Param("id") Long id);
 
     @Query(
-        value = "select * from vp_vouchers where productId=:productId and startDate< sysdate() and endDate>sysdate() and id=:id and source_trxid=:trxId",
+        value = "select * from vp_vouchers where product_id=:productId and start_date< sysdate() and end_date>sysdate() and id=:id and source_trxid=:trxId",
         nativeQuery = true
     )
     Optional<VPVouchers> getValidVoucherForReturn(@Param("productId") String productId, @Param("id") Long id, @Param("trxId") String trxId);
@@ -34,13 +34,13 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     void updateReturnedVoucher(@Param("id") Long id);
 
     @Query(
-        value = "select za.co.vodacom.cvm.service.dto.product.Product(count(*), min(end_date)) from vp_vouchers where productId=:productId and startDate< sysdate() and endDate>sysdate() and issuedDate is null",
+        value = "select za.co.vodacom.cvm.service.dto.product.Product(count(*), min(end_date)) from vp_vouchers where product_id=:productId and start_date< sysdate() and end_date>sysdate() and issued_date is null",
         nativeQuery = true
     )
     Optional<Product> getValidVoucherForProduct(@Param("productId") String productId);
 
     @Query(
-        value = "select za.co.vodacom.cvm.service.dto.product.Product(quantity, end_date) from vp_vouchers where productId=:productId and startDate< sysdate() and endDate>sysdate()",
+        value = "select za.co.vodacom.cvm.service.dto.product.Product(quantity, end_date) from vp_vouchers where product_d=:productId and start_date< sysdate() and end_date>sysdate()",
         nativeQuery = true
     )
     Optional<Product> getValidVoucherForProductGenericVoucher(@Param("productId") String productId);

@@ -90,7 +90,7 @@ public class VPVoucherDefServiceImpl implements VPVoucherDefService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public Optional<VPVoucherDef> findOne(String id) {
         log.debug("Request to get VPVoucherDef : {}", id);
         return vPVoucherDefRepository.findById(id);
@@ -103,8 +103,8 @@ public class VPVoucherDefServiceImpl implements VPVoucherDefService {
     }
 
     @Override
-    public Optional<VPVoucherDef> findByProductIdForUpdate(String id) {
+    public Optional<VPVoucherDef> findById(String id) {
         log.debug("Request to findByProductIdForUpdate VPVoucherDef : {}", id);
-        return vPVoucherDefRepository.findByProductIdForUpdate(id);
+        return vPVoucherDefRepository.findById(id);
     }
 }

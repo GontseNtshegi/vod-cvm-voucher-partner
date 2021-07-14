@@ -796,7 +796,6 @@
                     <version>${maven-surefire-plugin.version}</version>
                     <configuration>
                         <!-- Force alphabetical order to have a reproducible build -->
-<argLine>@{argLine}</argLine>
                         <argLine>@{argLine}</argLine>
                         <runOrder>alphabetical</runOrder>
                         <excludes>
@@ -814,7 +813,6 @@
                              See https://github.com/spring-projects/spring-boot/issues/6254 -->
                         <classesDirectory>${project.build.outputDirectory}</classesDirectory>
                         <!-- Force alphabetical order to have a reproducible build -->
-<argLine>@{argLine}</argLine>
                         <argLine>@{argLine}</argLine>
                         <runOrder>alphabetical</runOrder>
                         <includes>

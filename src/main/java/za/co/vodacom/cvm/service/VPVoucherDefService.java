@@ -51,5 +51,5 @@ public interface VPVoucherDefService {
      * @param id
      * @return
      */
-    Optional<VPVoucherDef> findByProductIdForUpdate(String id);
+    Optional<VPVoucherDef> findById(String id);
 }

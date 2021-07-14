@@ -23,7 +23,7 @@ import za.co.vodacom.cvm.client.wigroup.model.CouponsResponse;
 @Api(value = "Coupons", description = "the Coupons API")
 public interface CouponsApi {
     /**
-     * POST /coupons/{issueWiCode} : Customer voucher reservation
+     * POST /coupons : Customer voucher reservation
      * Reserve a voucher for a customer.
      *
      * @param issueWiCode The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher (required)
@@ -52,13 +52,13 @@ public interface CouponsApi {
             @ApiResponse(code = 500, message = "Internal Server Error"),
         }
     )
-    @PostMapping(value = "/coupons/{issueWiCode}", produces = "application/json", consumes = "application/json")
+    @PostMapping(value = "/coupons/", produces = "application/json", consumes = "application/json")
     ResponseEntity<CouponsResponse> issueVoucher(
         @ApiParam(
             value = "The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher",
             required = true,
             defaultValue = "true"
-        ) @PathVariable("issueWiCode") Boolean issueWiCode,
+        ) @RequestParam("issueWiCode") Boolean issueWiCode,
         @ApiParam(value = "") @Valid @RequestBody(required = false) CouponsRequest couponsRequest
     );
 

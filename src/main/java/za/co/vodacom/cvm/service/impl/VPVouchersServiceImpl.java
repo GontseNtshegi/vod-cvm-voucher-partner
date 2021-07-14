@@ -108,7 +108,7 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    // @Transactional
     public Optional<VPVouchers> getValidVoucher(String productId) {
         log.debug("Request to get Valid VPVouchers : {}", productId);
         return vPVouchersRepository.getValidVoucher(productId);

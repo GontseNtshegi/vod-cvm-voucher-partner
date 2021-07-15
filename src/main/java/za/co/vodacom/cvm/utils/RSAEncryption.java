@@ -19,7 +19,7 @@ public class RSAEncryption {
         throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
         byte[] KeyData = key.getBytes();
         SecretKeySpec KS = new SecretKeySpec(KeyData, "RSA");
-        Cipher cipher = Cipher.getInstance("RSA");
+        Cipher cipher = Cipher.getInstance("RSA/None/OAEPWITHSHA-256ANDMGF1PADDING");
         cipher.init(Cipher.ENCRYPT_MODE, KS);
         String encryptedtext = Base64.getEncoder().encodeToString(cipher.doFinal(code.getBytes("UTF-8")));
         return encryptedtext;
@@ -30,7 +30,7 @@ public class RSAEncryption {
         byte[] KeyData = key.getBytes();
         SecretKeySpec KS = new SecretKeySpec(KeyData, "RSA");
         byte[] ecryptedtexttobytes = Base64.getDecoder().decode(encryptedtext);
-        Cipher cipher = Cipher.getInstance("RSA");
+        Cipher cipher = Cipher.getInstance("RSA/None/OAEPWITHSHA-256ANDMGF1PADDING");
         cipher.init(Cipher.DECRYPT_MODE, KS);
         byte[] decrypted = cipher.doFinal(ecryptedtexttobytes);
         String decryptedString = new String(decrypted, Charset.forName("UTF-8"));

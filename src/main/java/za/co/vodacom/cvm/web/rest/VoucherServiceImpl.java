@@ -278,7 +278,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     }
 
     @Transactional
-    @HystrixCommand(fallbackMethod = "returnVoucherFallback", ignoreExceptions = AllocationException.class)
+    //@HystrixCommand(fallbackMethod = "returnVoucherFallback", ignoreExceptions = AllocationException.class)
     @Override
     public ResponseEntity<VoucherReturnResponse> returnVoucher(Long voucherId, VoucherReturnRequest voucherReturnRequest) {
         log.debug(voucherReturnRequest.toString());

@@ -1,9 +1,6 @@
 package za.co.vodacom.cvm.web.rest;
 
 import brave.Tracer;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import java.time.OffsetDateTime;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +26,15 @@ import za.co.vodacom.cvm.service.VPCampaignService;
 import za.co.vodacom.cvm.service.VPCampaignVouchersService;
 import za.co.vodacom.cvm.service.VPVoucherDefService;
 import za.co.vodacom.cvm.service.VPVouchersService;
-import za.co.vodacom.cvm.utils.BlowFishEncryption;
+import za.co.vodacom.cvm.utils.RSAEncryption;
 import za.co.vodacom.cvm.web.api.VoucherApiDelegate;
 import za.co.vodacom.cvm.web.api.model.VoucherAllocationRequest;
 import za.co.vodacom.cvm.web.api.model.VoucherAllocationResponse;
 import za.co.vodacom.cvm.web.api.model.VoucherReturnRequest;
 import za.co.vodacom.cvm.web.api.model.VoucherReturnResponse;
+
+import java.time.OffsetDateTime;
+import java.util.Optional;
 
 @Service
 public class VoucherServiceImpl implements VoucherApiDelegate {
@@ -63,7 +63,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     VPVoucherDefRepository vpVoucherDefRepository;
 
     @Autowired
-    BlowFishEncryption blowFishEncryption;
+    RSAEncryption rsaEncryption;
 
     @Autowired
     ApplicationProperties applicationProperties;
@@ -230,7 +230,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                             voucherCode =
                                                 vpVoucherDef.getEncryptedYN() != null &&
                                                     vpVoucherDef.getEncryptedYN().equalsIgnoreCase(Constants.YES)
-                                                    ? blowFishEncryption.encrypt(
+                                                    ? rsaEncryption.encrypt(
                                                         voucherCode,
                                                         applicationProperties.getEncryption().getKey()
                                                     )

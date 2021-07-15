@@ -49,7 +49,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://vouchermanagement.cluster-custom-cepvu5oayajv.eu-west-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: superuser
-    password: VoucherManagement1
+    password: ENC(2uDUJ5brB0fv8llNu+flAaG1pq0qg6U1SCBhvf1w+onpDFeedPjZ9tMVtPdMRmJPmAsaSV5S/gJ0Tdy6uMhxoQ==)
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -130,10 +130,13 @@ application:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     name: wigroup-coupons
     apiId: vodacomqa_voucher
-    apiPassword: test
+    apiPassword: ENC(ZUiYvAm0vRQMpBU1dmQY+3Cl28UYMPs6eD168NvjIEK8q/jcxKfKaQsDubVxZke5)
   giftCards:
     name: wigroup-giftcards
     apiId: vodacomqa_voucher
-    apiPassword: test
+    apiPassword: ENC(W8OsgnIPFfmlNv+UVwVE8dmYXZu28sj0tyydKFNkqfhGtWvi64J3JYw1BUv+fnbq)
   encryption:
-    key: 7a6f6f70666f6f74
+    key: ENC(1BnXwEkQg3zRqEupl31YnftHGtybJ53wem3rj07lW7cc1B+Omul0IgOguvwZ5cdGB/NC9EFRjxrTQ8gsSi47xA==)
+jasypt:
+  encryptor:
+    password: CVMicroservices

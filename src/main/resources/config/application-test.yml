@@ -52,9 +52,9 @@ spring:
       # it can be set to any label, branch or commit of the configuration source Git repository
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
-    username: root
-    password:
+    url: jdbc:mysql://loyalty.cluster-cc1yxzokhc4w.eu-west-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: superuser
+    password: ENC(AWLMQYuWBhMTte4NFtOqOFmrtz/h03+9ZFfJyJpkQfx9ZwU3WYvg7Jv5EIl30GUq4ezFf01+uswR0tXmFmQsyQ==)
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -155,10 +155,13 @@ application:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     name: wigroup-coupons
     apiId: vodacomqa_voucher
-    apiPassword: test
+    apiPassword: ENC(hXtf4TV12Puvss/fpEwEBi44RPIaZA4AXwcFXEcl+chbHy+TBa8okaMV6pXQ/9ay)
   giftCards:
     name: wigroup-giftcards
     apiId: vodacomqa_voucher
-    apiPassword: test
+    apiPassword: ENC(aMYdtF3FcPlnY7DbO8+kexkKGMm8LP5VSiXVtGkziMZXq0Zf9wpGYytjczaZiGBd)
   encryption:
-    key: 7a6f6f70666f6f74
+    key: ENC(P4W5VJ1eK/QxDjazIghFU7eaX5Erw8V6hY5tJi5/lw3N2VWfKV44yna6yP9UEGxZT/LMHmBO6kzV3YRhksppUw==)
+jasypt:
+  encryptor:
+    password: CVMicroservices

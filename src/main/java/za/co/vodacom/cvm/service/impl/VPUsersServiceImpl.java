@@ -67,13 +67,13 @@ public class VPUsersServiceImpl implements VPUsersService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<VPUsers> findOne(String id) {
+    public Optional<VPUsers> findOne(Long id) {
         log.debug("Request to get VPUsers : {}", id);
         return vPUsersRepository.findById(id);
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(Long id) {
         log.debug("Request to delete VPUsers : {}", id);
         vPUsersRepository.deleteById(id);
     }

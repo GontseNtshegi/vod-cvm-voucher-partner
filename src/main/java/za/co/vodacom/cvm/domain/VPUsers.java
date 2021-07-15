@@ -1,11 +1,13 @@
 package za.co.vodacom.cvm.domain;
 
-import java.io.Serializable;
-import java.time.ZonedDateTime;
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.time.ZonedDateTime;
 
 /**
  * A VPUsers.
@@ -18,16 +20,14 @@ public class VPUsers implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-   // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", length = 100, nullable = false, unique = true)
+    private Long id;
+
     @NotNull
     @Size(max = 100)
     @Column(name = "user_id", length = 100, nullable = false, unique = true)
-    private String id;
-
-    /*@NotNull
-    @Size(max = 100)
-    @Column(name = "user_id", length = 100, nullable = false, unique = true)
-    private String userId;*/
+    private String userId;
 
     @NotNull
     @Column(name = "create_date", nullable = false)
@@ -43,20 +43,20 @@ public class VPUsers implements Serializable {
     private String activeYN;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public VPUsers id(String id) {
+    public VPUsers id(Long id) {
         this.id = id;
         return this;
     }
 
-    /*public String getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 
@@ -67,7 +67,7 @@ public class VPUsers implements Serializable {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }*/
+    }
 
     public ZonedDateTime getCreateDate() {
         return this.createDate;
@@ -132,7 +132,7 @@ public class VPUsers implements Serializable {
     public String toString() {
         return "VPUsers{" +
             "id=" + getId() +
-           // ", userId='" + getUserId() + "'" +
+            ", userId='" + getUserId() + "'" +
             ", createDate='" + getCreateDate() + "'" +
             ", modifiedDate='" + getModifiedDate() + "'" +
             ", activeYN='" + getActiveYN() + "'" +

@@ -11,11 +11,11 @@
     -->
     <changeSet id="20210707160144-1" author="Gontse">
         <createTable tableName="vp_users">
-            <!--<column name="id" type="bigint" autoIncrement="true">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
-            </column>-->
+            </column>
             <column name="user_id" type="varchar(100)">
-                <constraints primaryKey="true" nullable="false" unique="true" uniqueConstraintName="ux_vp_users__user_id" />
+                <constraints  nullable="false" unique="true" uniqueConstraintName="ux_vp_users__user_id" />
             </column>
             <column name="create_date" type="${datetimeType}">
                 <constraints nullable="false" />

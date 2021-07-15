@@ -152,7 +152,7 @@ public class VPUsersResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the vPUsers, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/vp-users/{id}")
-    public ResponseEntity<VPUsers> getVPUsers(@PathVariable String id) {
+    public ResponseEntity<VPUsers> getVPUsers(@PathVariable Long id) {
         log.debug("REST request to get VPUsers : {}", id);
         Optional<VPUsers> vPUsers = vPUsersService.findOne(id);
         return ResponseUtil.wrapOrNotFound(vPUsers);
@@ -165,7 +165,7 @@ public class VPUsersResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/vp-users/{id}")
-    public ResponseEntity<Void> deleteVPUsers(@PathVariable String id) {
+    public ResponseEntity<Void> deleteVPUsers(@PathVariable Long id) {
         log.debug("REST request to delete VPUsers : {}", id);
         vPUsersService.delete(id);
         return ResponseEntity

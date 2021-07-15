@@ -73,7 +73,7 @@ class VPUsersResourceIT {
      */
     public static VPUsers createEntity(EntityManager em) {
         VPUsers vPUsers = new VPUsers()
-            .id(DEFAULT_USER_ID)
+            .userId(DEFAULT_USER_ID)
             .createDate(DEFAULT_CREATE_DATE)
             .modifiedDate(DEFAULT_MODIFIED_DATE)
             .activeYN(DEFAULT_ACTIVE_YN);
@@ -88,7 +88,7 @@ class VPUsersResourceIT {
      */
     public static VPUsers createUpdatedEntity(EntityManager em) {
         VPUsers vPUsers = new VPUsers()
-            .id(UPDATED_USER_ID)
+            .userId(UPDATED_USER_ID)
             .createDate(UPDATED_CREATE_DATE)
             .modifiedDate(UPDATED_MODIFIED_DATE)
             .activeYN(UPDATED_ACTIVE_YN);
@@ -123,7 +123,7 @@ class VPUsersResourceIT {
     @Transactional
     void createVPUsersWithExistingId() throws Exception {
         // Create the VPUsers with an existing ID
-        vPUsers.setId("1");
+        vPUsers.setId(1L);
 
         int databaseSizeBeforeCreate = vPUsersRepository.findAll().size();
 
@@ -260,7 +260,7 @@ class VPUsersResourceIT {
         VPUsers updatedVPUsers = vPUsersRepository.findById(vPUsers.getId()).get();
         // Disconnect from session so that the updates on updatedVPUsers are not directly saved in db
         em.detach(updatedVPUsers);
-        updatedVPUsers.id(UPDATED_USER_ID).createDate(UPDATED_CREATE_DATE).modifiedDate(UPDATED_MODIFIED_DATE).activeYN(UPDATED_ACTIVE_YN);
+        updatedVPUsers.userId(UPDATED_USER_ID).createDate(UPDATED_CREATE_DATE).modifiedDate(UPDATED_MODIFIED_DATE).activeYN(UPDATED_ACTIVE_YN);
 
         restVPUsersMockMvc
             .perform(
@@ -284,7 +284,7 @@ class VPUsersResourceIT {
     @Transactional
     void putNonExistingVPUsers() throws Exception {
         int databaseSizeBeforeUpdate = vPUsersRepository.findAll().size();
-        vPUsers.setId(count.incrementAndGet() + "");
+        vPUsers.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restVPUsersMockMvc
@@ -304,7 +304,7 @@ class VPUsersResourceIT {
     @Transactional
     void putWithIdMismatchVPUsers() throws Exception {
         int databaseSizeBeforeUpdate = vPUsersRepository.findAll().size();
-        vPUsers.setId(count.incrementAndGet() + "");
+        vPUsers.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restVPUsersMockMvc
@@ -324,7 +324,7 @@ class VPUsersResourceIT {
     @Transactional
     void putWithMissingIdPathParamVPUsers() throws Exception {
         int databaseSizeBeforeUpdate = vPUsersRepository.findAll().size();
-        vPUsers.setId(count.incrementAndGet() + "");
+        vPUsers.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restVPUsersMockMvc
@@ -379,7 +379,7 @@ class VPUsersResourceIT {
         partialUpdatedVPUsers.setId(vPUsers.getId());
 
         partialUpdatedVPUsers
-            .id(UPDATED_USER_ID)
+            .userId(UPDATED_USER_ID)
             .createDate(UPDATED_CREATE_DATE)
             .modifiedDate(UPDATED_MODIFIED_DATE)
             .activeYN(UPDATED_ACTIVE_YN);
@@ -406,7 +406,7 @@ class VPUsersResourceIT {
     @Transactional
     void patchNonExistingVPUsers() throws Exception {
         int databaseSizeBeforeUpdate = vPUsersRepository.findAll().size();
-        vPUsers.setId(count.incrementAndGet() + "");
+        vPUsers.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restVPUsersMockMvc
@@ -426,7 +426,7 @@ class VPUsersResourceIT {
     @Transactional
     void patchWithIdMismatchVPUsers() throws Exception {
         int databaseSizeBeforeUpdate = vPUsersRepository.findAll().size();
-        vPUsers.setId(count.incrementAndGet() + "");
+        vPUsers.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restVPUsersMockMvc
@@ -446,7 +446,7 @@ class VPUsersResourceIT {
     @Transactional
     void patchWithMissingIdPathParamVPUsers() throws Exception {
         int databaseSizeBeforeUpdate = vPUsersRepository.findAll().size();
-        vPUsers.setId(count.incrementAndGet() + "");
+        vPUsers.setId(count.incrementAndGet());
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restVPUsersMockMvc

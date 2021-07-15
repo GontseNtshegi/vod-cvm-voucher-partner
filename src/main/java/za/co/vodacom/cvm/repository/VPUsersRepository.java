@@ -9,4 +9,4 @@ import za.co.vodacom.cvm.domain.VPUsers;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface VPUsersRepository extends JpaRepository<VPUsers, String> {}
+public interface VPUsersRepository extends JpaRepository<VPUsers, Long> {}

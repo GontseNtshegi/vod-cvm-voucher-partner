@@ -150,4 +150,18 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+  coupons:
+    url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
+    name: wigroup-coupons
+    apiId: VodaSummerShake
+    apiPassword: Z15YmHxNoisiX
+  giftCards:
+    name: wigroup-giftcards
+    apiId: VodaSummerShake
+    apiPassword: ENC(29dlGTps9Mvv/+fWBj/DQUyZe6ibS8Fc/jlmyJn0jxZRxN2kkVG7M8I45tQt+CcX)
+  encryption:
+    key: ENC(1Xj75roWvFEoZs5gWoSAewMdAK1oNgC2rmrWPLF1VdJpVcFp+bu2ICSBH+vhh7jTnQeL3mocg4V3xbkjTF/ayg==)
+jasypt:
+  encryptor:
+    password: CVMicroservices

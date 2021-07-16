@@ -36,6 +36,8 @@
     "nativeLanguage": "en",
     "packageFolder": "za/co/vodacom/cvm",
     "jwtSecretKey": "ZmMyZWFjY2E5ZmE0Zjc4YmZmNjUwNjkzNzI0YjY5NTE5NjBjOGE2ZDlhOTIwZDAyM2FiMGE3YzMwOWJhYTk5ZjQzYjNmZmJiMjJlZTUzZTNhMGIyNzFkMzZlNmNjYWQyM2E0NTk2NzQ0OTcwYTBjZDFmNTc5YmY0MTY2MDI5OWM=",
-    "languages": ["en", "fr"]
+    "languages": ["en", "fr"],
+    "entities": ["VPCampaign", "VPVoucherDef", "VPUsers", "VPBatch", "VPCampaignVouchers", "VPFileLoad", "VPVouchers"],
+    "lastLiquibaseTimestamp": 1625673708000
   }
 }

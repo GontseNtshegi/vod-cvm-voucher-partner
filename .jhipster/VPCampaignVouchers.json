@@ -1,0 +1,59 @@
+{
+  "name": "VPCampaignVouchers",
+  "fields": [
+    {
+      "fieldName": "campaignId",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "productId",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength", "required"],
+      "fieldValidateRulesMaxlength": "30"
+    },
+    {
+      "fieldName": "createDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "modifiedDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "activeYN",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength", "required"],
+      "fieldValidateRulesMaxlength": "1"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "vPCampaign",
+      "otherEntityRelationshipName": "id",
+      "relationshipName": "campaignId"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "vPVoucherDef",
+      "otherEntityRelationshipName": "productId",
+      "relationshipName": "productId"
+    }
+  ],
+  "entityTableName": "vp_campaign_vouchers",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "microserviceName": "voucherpartner",
+  "clientRootFolder": "voucherpartner",
+  "databaseType": "sql",
+  "changelogDate": "20210707160146"
+}

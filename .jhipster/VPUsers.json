@@ -1,0 +1,41 @@
+{
+  "name": "VPUsers",
+  "fields": [
+    {
+      "fieldName": "userId",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength", "required", "unique"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "createDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "modifiedDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "activeYN",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength", "required"],
+      "fieldValidateRulesMaxlength": "1"
+    }
+  ],
+  "relationships": [],
+  "entityTableName": "vp_users",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "microserviceName": "voucherpartner",
+  "clientRootFolder": "voucherpartner",
+  "databaseType": "sql",
+  "changelogDate": "20210707160144"
+}

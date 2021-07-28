@@ -47,7 +47,8 @@ spring:
       # it can be set to any label, branch or commit of the configuration source Git repository
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://vouchermanagement.cluster-custom-cepvu5oayajv.eu-west-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    url: jdbc:mysql://vouchermanagement.cluster-custom-cepvu5oayajv.eu-west-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true&verifyServerCertificate=true&useSSL=true&requireSSL=true
+    ##&verifyServerCertificate=true&useSSL=true&requireSSL=true&clientCertificateKey=file:/optclientkeyStore.jks&clientCertificateKeyStorePassword=mypass&trustCertificateKeyStoreUrl=file:/opt/truststore.jks&trustCertificateKeyStorePassword=mypass
     username: superuser
     password: ENC(2uDUJ5brB0fv8llNu+flAaG1pq0qg6U1SCBhvf1w+onpDFeedPjZ9tMVtPdMRmJPmAsaSV5S/gJ0Tdy6uMhxoQ==)
     hikari:
@@ -126,6 +127,9 @@ jhipster:
 # ===================================================================
 
 application:
+  msisdn:
+    internal: '^270[4-8][0-9][0-9][0-9]000[0-9]*'
+    external: '^27[4-8][0-9]*'
   coupons:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     name: wigroup-coupons

@@ -4,6 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import za.co.vodacom.cvm.config.pojos.Coupons;
 import za.co.vodacom.cvm.config.pojos.Encryption;
 import za.co.vodacom.cvm.config.pojos.GiftCards;
+import za.co.vodacom.cvm.config.pojos.Msisdn;
 
 /**
  * Properties specific to Voucherpartner.
@@ -17,6 +18,15 @@ public class ApplicationProperties {
     public Coupons coupons;
     public GiftCards giftCards;
     public Encryption encryption;
+    public Msisdn msisdn;
+
+    public Msisdn getMsisdn() {
+        return msisdn;
+    }
+
+    public void setMsisdn(Msisdn msisdn) {
+        this.msisdn = msisdn;
+    }
 
     public Coupons getCoupons() {
         return coupons;
@@ -44,6 +54,11 @@ public class ApplicationProperties {
 
     @Override
     public String toString() {
-        return "ApplicationProperties{" + "coupons=" + coupons + ", giftCards=" + giftCards + ", encryption=" + encryption + '}';
+        return "ApplicationProperties{" +
+            "coupons=" + coupons +
+            ", giftCards=" + giftCards +
+            ", encryption=" + encryption +
+            ", msisdn=" + msisdn +
+            '}';
     }
 }

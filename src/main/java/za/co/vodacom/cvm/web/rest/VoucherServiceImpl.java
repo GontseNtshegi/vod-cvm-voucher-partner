@@ -101,6 +101,8 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
         if (voucherAllocationRequest.getMsisdn().length() == 11 && Pattern.matches(applicationProperties.getMsisdn().getExternal(), voucherAllocationRequest.getMsisdn())) {
             voucherAllocationRequest.setMsisdn(msisdnConverter.convertToInternal(voucherAllocationRequest.getMsisdn()));
+            couponsRequest.setMobileNumber(voucherAllocationRequest.getMsisdn());
+            couponsRequest.setUserRef(voucherAllocationRequest.getMsisdn());
         } else if (voucherAllocationRequest.getMsisdn().length() == 15 && Pattern.matches(applicationProperties.getMsisdn().getInternal(), voucherAllocationRequest.getMsisdn())) {
             couponsRequest.setMobileNumber(msisdnConverter.convertToExternal(voucherAllocationRequest.getMsisdn()));
             couponsRequest.setUserRef(msisdnConverter.convertToExternal(voucherAllocationRequest.getMsisdn()));
@@ -304,6 +306,8 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
         CouponsRequest couponsRequest = new CouponsRequest();
         if (voucherReturnRequest.getMsisdn().length() == 11 && Pattern.matches(applicationProperties.getMsisdn().getExternal(), voucherReturnRequest.getMsisdn())) {
             voucherReturnRequest.setMsisdn(msisdnConverter.convertToInternal(voucherReturnRequest.getMsisdn()));
+            couponsRequest.setMobileNumber(voucherReturnRequest.getMsisdn());
+            couponsRequest.setUserRef(voucherReturnRequest.getMsisdn());
         }
         else if (voucherReturnRequest.getMsisdn().length() == 15 && Pattern.matches(applicationProperties.getMsisdn().getInternal(), voucherReturnRequest.getMsisdn())) {
             couponsRequest.setMobileNumber(msisdnConverter.convertToExternal(voucherReturnRequest.getMsisdn()));

@@ -26,15 +26,20 @@ import za.co.vodacom.cvm.service.VPCampaignService;
 import za.co.vodacom.cvm.service.VPCampaignVouchersService;
 import za.co.vodacom.cvm.service.VPVoucherDefService;
 import za.co.vodacom.cvm.service.VPVouchersService;
+import za.co.vodacom.cvm.utils.MSISDNConverter;
 import za.co.vodacom.cvm.utils.RSAEncryption;
 import za.co.vodacom.cvm.web.api.VoucherApiDelegate;
 import za.co.vodacom.cvm.web.api.model.VoucherAllocationRequest;
 import za.co.vodacom.cvm.web.api.model.VoucherAllocationResponse;
 import za.co.vodacom.cvm.web.api.model.VoucherReturnRequest;
 import za.co.vodacom.cvm.web.api.model.VoucherReturnResponse;
+import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
+import java.util.regex.Pattern;
+
+import static org.hibernate.id.IdentifierGenerator.ENTITY_NAME;
 
 @Service
 public class VoucherServiceImpl implements VoucherApiDelegate {
@@ -68,12 +73,17 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     @Autowired
     ApplicationProperties applicationProperties;
 
+    @Autowired
+    MSISDNConverter msisdnConverter;
+
+
     VoucherServiceImpl(
         VPCampaignService vpCampaignService,
         VPCampaignVouchersService vpCampaignVouchersService,
         VPVoucherDefService vpVoucherDefService,
         VPVouchersService vpVouchersService
     ) {
+
         this.vpCampaignService = vpCampaignService;
         this.vpCampaignVouchersService = vpCampaignVouchersService;
         this.vpVoucherDefService = vpVoucherDefService;
@@ -84,8 +94,18 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     //@HystrixCommand(fallbackMethod = "issueVoucherFallback", ignoreExceptions = AllocationException.class)
     @Override
     public ResponseEntity<VoucherAllocationResponse> issueVoucher(VoucherAllocationRequest voucherAllocationRequest) {
-        // log.debug(voucherAllocationRequest.toString());
-        //log.info(voucherAllocationRequest.toString());
+        log.debug(voucherAllocationRequest.toString());
+        log.info(voucherAllocationRequest.toString());
+
+        CouponsRequest couponsRequest = new CouponsRequest();
+
+        if (voucherAllocationRequest.getMsisdn().length() == 11 && Pattern.matches(applicationProperties.getMsisdn().getExternal(), voucherAllocationRequest.getMsisdn())) {
+            voucherAllocationRequest.setMsisdn(msisdnConverter.convertToInternal(voucherAllocationRequest.getMsisdn()));
+        } else if (voucherAllocationRequest.getMsisdn().length() == 15 && Pattern.matches(applicationProperties.getMsisdn().getInternal(), voucherAllocationRequest.getMsisdn())) {
+            couponsRequest.setMobileNumber(msisdnConverter.convertToExternal(voucherAllocationRequest.getMsisdn()));
+            couponsRequest.setUserRef(msisdnConverter.convertToExternal(voucherAllocationRequest.getMsisdn()));
+        } else
+            throw new BadRequestAlertException("Invalid MSISDN format: " + voucherAllocationRequest.getMsisdn(), ENTITY_NAME, "11 or 15 digits required");
 
         VoucherAllocationResponse voucherAllocationResponse = new VoucherAllocationResponse();
         //Validate the incoming campaign
@@ -125,17 +145,17 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
                                                     OffsetDateTime expiryDate = vpVoucher.getExpiryDate() != null
                                                         ? vpVoucher
-                                                            .getExpiryDate()
-                                                            .toOffsetDateTime()
-                                                            .plusHours(23L)
-                                                            .plusMinutes(59L)
-                                                            .plusSeconds(59L)
+                                                        .getExpiryDate()
+                                                        .toOffsetDateTime()
+                                                        .plusHours(23L)
+                                                        .plusMinutes(59L)
+                                                        .plusSeconds(59L)
                                                         : OffsetDateTime
-                                                            .now()
-                                                            .plusHours(23L)
-                                                            .plusMinutes(59L)
-                                                            .plusSeconds(59L)
-                                                            .plusDays(vpVoucherDef.getValidityPeriod());
+                                                        .now()
+                                                        .plusHours(23L)
+                                                        .plusMinutes(59L)
+                                                        .plusSeconds(59L)
+                                                        .plusDays(vpVoucherDef.getValidityPeriod());
                                                     String voucherCode = vpVoucher.getVoucherCode();
 
                                                     //vpVoucherDefRepository.flush();//release lock
@@ -172,11 +192,11 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         OffsetDateTime expiryDate = vpVoucher.getExpiryDate() != null
                                             ? vpVoucher.getExpiryDate().toOffsetDateTime().plusHours(23L).plusMinutes(59L).plusSeconds(59L)
                                             : OffsetDateTime
-                                                .now()
-                                                .plusHours(23L)
-                                                .plusMinutes(59L)
-                                                .plusSeconds(59L)
-                                                .plusDays(vpVoucherDef.getValidityPeriod());
+                                            .now()
+                                            .plusHours(23L)
+                                            .plusMinutes(59L)
+                                            .plusSeconds(59L)
+                                            .plusDays(vpVoucherDef.getValidityPeriod());
 
                                         String voucherCode = vpVoucher.getVoucherCode();
 
@@ -199,11 +219,9 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                     }
                                     break;
                                 case Constants.ONLINE_VOUCHER:
-                                    CouponsRequest couponsRequest = new CouponsRequest();
+
                                     couponsRequest.setCampaignId(vpVoucherDef.getExtId());
-                                    couponsRequest.setMobileNumber(voucherAllocationRequest.getMsisdn());
                                     couponsRequest.sendSMS(false);
-                                    couponsRequest.setUserRef(voucherAllocationRequest.getMsisdn());
                                     couponsRequest.setSmsMessage("");
 
                                     log.info(couponsRequest.toString());
@@ -216,7 +234,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                     CouponsResponse couponsResponse = couponsResponseResponseEntity.getBody();
                                     if (
                                         couponsResponse.getResponseCode().equals(Constants.RESPONSE_CODE) ||
-                                        couponsResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
+                                            couponsResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
                                     ) {
                                         OffsetDateTime expiryDate = OffsetDateTime
                                             .now()
@@ -231,9 +249,9 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                                 vpVoucherDef.getEncryptedYN() != null &&
                                                     vpVoucherDef.getEncryptedYN().equalsIgnoreCase(Constants.YES)
                                                     ? rsaEncryption.encrypt(
-                                                        voucherCode,
-                                                        applicationProperties.getEncryption().getKey()
-                                                    )
+                                                    voucherCode,
+                                                    applicationProperties.getEncryption().getKey()
+                                                )
                                                     : voucherCode;
                                         } catch (Exception e) {
                                             log.error(e.getMessage());
@@ -283,6 +301,17 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     public ResponseEntity<VoucherReturnResponse> returnVoucher(Long voucherId, VoucherReturnRequest voucherReturnRequest) {
         log.debug(voucherReturnRequest.toString());
         log.info(voucherReturnRequest.toString());
+        CouponsRequest couponsRequest = new CouponsRequest();
+        if (voucherReturnRequest.getMsisdn().length() == 11 && Pattern.matches(applicationProperties.getMsisdn().getExternal(), voucherReturnRequest.getMsisdn())) {
+            voucherReturnRequest.setMsisdn(msisdnConverter.convertToInternal(voucherReturnRequest.getMsisdn()));
+        }
+        else if (voucherReturnRequest.getMsisdn().length() == 15 && Pattern.matches(applicationProperties.getMsisdn().getInternal(), voucherReturnRequest.getMsisdn())) {
+            couponsRequest.setMobileNumber(msisdnConverter.convertToExternal(voucherReturnRequest.getMsisdn()));
+            couponsRequest.setUserRef(msisdnConverter.convertToExternal(voucherReturnRequest.getMsisdn()));
+        }
+        else
+            throw new BadRequestAlertException("Invalid MSISDN format: " + voucherReturnRequest.getMsisdn(), ENTITY_NAME, "11 or 15 digits required");
+
         VoucherReturnResponse voucherReturnResponse = new VoucherReturnResponse();
         Optional<VPVoucherDef> vpVoucherDefOptional = vpVoucherDefService.findOne(voucherReturnRequest.getProductId());
         if (vpVoucherDefOptional.isPresent()) { //productId found
@@ -320,11 +349,9 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                     voucherReturnResponse.setVoucherId(voucherId);
                     break;
                 case Constants.ONLINE_VOUCHER:
-                    CouponsRequest couponsRequest = new CouponsRequest();
+
                     couponsRequest.setCampaignId(vpVoucherDef.getExtId());
-                    couponsRequest.setMobileNumber(voucherReturnRequest.getMsisdn());
                     couponsRequest.sendSMS(false);
-                    couponsRequest.setUserRef(voucherReturnRequest.getMsisdn());
                     couponsRequest.setSmsMessage("");
 
                     log.debug(couponsRequest.toString());
@@ -337,7 +364,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                     log.info(couponsDelResponse.toString());
                     if (
                         couponsDelResponse.getResponseCode().equals(Constants.RESPONSE_CODE) ||
-                        couponsDelResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
+                            couponsDelResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
                     ) {
                         //set response
                         voucherReturnResponse.setVoucherDescription(vpVoucherDef.getDescription());

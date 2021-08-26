@@ -30,7 +30,7 @@ public class VPFileLoad implements Serializable {
     @Column(name = "batch_id", nullable = false)
     private Integer batchId;
 
-    @NotNull
+    //@NotNull
     @Column(name = "create_date", nullable = false)
     private ZonedDateTime createDate;
 

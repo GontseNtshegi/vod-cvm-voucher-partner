@@ -21,7 +21,7 @@ public class VPBatch implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    //@NotNull
     @Column(name = "create_date", nullable = false)
     private ZonedDateTime createDate;
 

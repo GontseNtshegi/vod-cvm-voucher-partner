@@ -45,15 +45,15 @@ public class VPVouchers implements Serializable {
     @Column(name = "description", length = 100, nullable = false)
     private String description;
 
-    @NotNull
+    //@NotNull
     @Column(name = "create_date", nullable = false)
     private ZonedDateTime createDate;
 
-    @NotNull
+    //@NotNull
     @Column(name = "start_date", nullable = false)
     private ZonedDateTime startDate;
 
-    @NotNull
+    //@NotNull
     @Column(name = "end_date", nullable = false)
     private ZonedDateTime endDate;
 
@@ -68,7 +68,7 @@ public class VPVouchers implements Serializable {
     @Column(name = "issued_date")
     private ZonedDateTime issuedDate;
 
-    @NotNull
+    //@NotNull
     @Column(name = "reversed_date", nullable = false)
     private ZonedDateTime reversedDate;
 

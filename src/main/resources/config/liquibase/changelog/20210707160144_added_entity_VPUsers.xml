@@ -18,10 +18,10 @@
                 <constraints  nullable="false" unique="true" uniqueConstraintName="ux_vp_users__user_id" />
             </column>
             <column name="create_date" type="${datetimeType}">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="modified_date" type="${datetimeType}">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="active_yn" type="varchar(1)">
                 <constraints nullable="false" />

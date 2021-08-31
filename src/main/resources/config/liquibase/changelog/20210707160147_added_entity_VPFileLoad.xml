@@ -21,7 +21,7 @@
                 <constraints nullable="false" />
             </column>
             <column name="create_date" type="${datetimeType}">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="completed_date" type="${datetimeType}">
                 <constraints nullable="true" />

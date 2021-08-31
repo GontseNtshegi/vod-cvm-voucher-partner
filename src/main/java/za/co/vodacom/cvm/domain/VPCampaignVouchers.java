@@ -31,11 +31,11 @@ public class VPCampaignVouchers implements Serializable {
     @Column(name = "product_id", length = 30, nullable = false)
     private String productId;
 
-    @NotNull
+    //@NotNull
     @Column(name = "create_date", nullable = false)
     private ZonedDateTime createDate;
 
-    @NotNull
+    //@NotNull
     @Column(name = "modified_date", nullable = false)
     private ZonedDateTime modifiedDate;
 

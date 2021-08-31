@@ -29,11 +29,11 @@ public class VPUsers implements Serializable {
     @Column(name = "user_id", length = 100, nullable = false, unique = true)
     private String userId;
 
-    @NotNull
+    //@NotNull
     @Column(name = "create_date", nullable = false)
     private ZonedDateTime createDate;
 
-    @NotNull
+   // @NotNull
     @Column(name = "modified_date", nullable = false)
     private ZonedDateTime modifiedDate;
 

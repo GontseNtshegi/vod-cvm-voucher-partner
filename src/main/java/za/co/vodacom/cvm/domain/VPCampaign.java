@@ -29,11 +29,11 @@ public class VPCampaign implements Serializable {
     @Column(name = "name", length = 100, nullable = false)
     private String name;
 
-    @NotNull
+    //@NotNull
     @Column(name = "start_date", nullable = false)
     private ZonedDateTime startDate;
 
-    @NotNull
+    //@NotNull
     @Column(name = "end_date", nullable = false)
     private ZonedDateTime endDate;
 

@@ -30,13 +30,13 @@
                 <constraints nullable="false" />
             </column>
             <column name="create_date" type="${datetimeType}">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="start_date" type="${datetimeType}">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="end_date" type="${datetimeType}">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="expiry_date" type="${datetimeType}">
                 <constraints nullable="true" />
@@ -48,7 +48,7 @@
                 <constraints nullable="true" />
             </column>
             <column name="reversed_date" type="${datetimeType}">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="source_trxid" type="varchar(60)">
                 <constraints nullable="true" />

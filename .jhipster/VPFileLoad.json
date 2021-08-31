@@ -1,0 +1,47 @@
+{
+  "name": "VPFileLoad",
+  "fields": [
+    {
+      "fieldName": "fileName",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength", "required"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "batchId",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "completedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "numLoaded",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "numFailed",
+      "fieldType": "Integer"
+    }
+  ],
+  "relationships": [],
+  "entityTableName": "vp_file_load",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "microserviceName": "voucherpartner",
+  "clientRootFolder": "voucherpartner",
+  "databaseType": "sql",
+  "changelogDate": "20210707160147"
+}

@@ -1,0 +1,81 @@
+entity VPCampaign {
+    //Id Integer required unique,
+    Name String maxlength(100) required,
+    StartDate ZonedDateTime required,
+    EndDate ZonedDateTime required
+}
+
+entity VPVoucherDef {
+    ProductId String maxlength(30) required unique,
+    Description String maxlength(100) required,
+    Type String maxlength(30) required,
+    Category String maxlength(100) required,
+    Vendor String maxlength(100) required,
+    ExtId String maxlength(50),
+    ExtSystem String maxlength(50),
+    TemplateId String maxlength(50),
+    ValidityPeriod Integer required,
+    CacheQuantity Integer required,
+    EncryptedYN String maxlength(1) required,
+    ModifiedDate ZonedDateTime
+}
+
+entity VPUsers {
+    UserId String maxlength(100) required unique,
+    CreateDate ZonedDateTime required,
+    ModifiedDate ZonedDateTime required,
+    ActiveYN String maxlength(1) required
+}
+
+entity VPBatch {
+    CreateDate ZonedDateTime required,
+    LoadDate ZonedDateTime,
+    Comment String maxlength(100) required,
+    RestrictedYN String maxlength(1) required,
+    UserId Integer required
+}
+
+entity VPCampaignVouchers {
+    CampaignId Integer required,
+    ProductId String maxlength(30) required,
+    CreateDate ZonedDateTime required,
+    ModifiedDate ZonedDateTime required,
+    ActiveYN String maxlength(1) required
+}
+
+entity VPFileLoad {
+   FileName String maxlength(100) required,
+   BatchId Integer required,
+   CreateDate ZonedDateTime required,
+   CompletedDate ZonedDateTime,
+   NumLoaded Integer,
+   NumFailed Integer
+}
+
+entity VPVouchers {
+  BatchId Integer required,
+  FileId Integer, 
+  ProductId String maxlength(30) required,
+  VoucherCode String maxlength(60) required,
+  Description String maxlength(100) required,
+  CreateDate ZonedDateTime required,
+  StartDate ZonedDateTime required,
+  EndDate ZonedDateTime required,
+  ExpiryDate ZonedDateTime, 
+  CollectionPoint String maxlength(100) required,
+  IssuedDate ZonedDateTime,
+  ReversedDate ZonedDateTime required, 
+  SourceTrxid String maxlength(60),
+  Quantity Integer required
+}
+
+relationship OneToMany {
+	VPVoucherDef{ProductId} to VPVouchers{ProductId}
+}
+
+relationship ManyToOne {
+  VPCampaignVouchers{CampaignId} to VPCampaign{Id}
+  VPCampaignVouchers{ProductId} to VPVoucherDef{ProductId}
+}
+
+service all with serviceImpl

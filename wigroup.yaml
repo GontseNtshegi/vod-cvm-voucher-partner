@@ -1,0 +1,355 @@
+openapi: 3.0.1
+info:
+    title: WiGroup API
+    version: 1.0.0
+servers:
+- url: 'https://za-vsp-int.wigroup.co/cvs-issuer/rest'
+  description: Development server
+- url: 'https://za-vsp-int.wigroup.co/cvs-issuer/rest'
+  description: Development server with TLS Profile
+paths:
+    '/coupons/{issueWiCode}':
+        post:
+            tags:
+            - coupons
+            summary: Customer voucher reservation
+            operationId: updateVoucherToReserved
+            description: Reserve a voucher for a customer.
+            parameters:
+            - name: issueWiCode
+              in: query
+              required: true
+              description: >-
+                  The original wigroup voucher id or VP_VOUCHER.ID used to issued the
+                  voucher
+              schema:
+                  type: boolean
+                  default: true
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CouponsRequest'
+            responses:
+                '200':
+                    description: Sucessful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CouponsResponse'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad Request
+                '404':
+                    description: Not Found
+                '405':
+                    description: Method Not Allowed
+                '500':
+                    description: Internal Server Error
+    '/coupons/{id}':
+        get:
+            tags:
+            - coupons
+            summary: Return a voucher which was issued
+            operationId: updateVoucherToReturned
+            description: Return a voucher which was issued
+            parameters:
+            - name: id
+              in: path
+              required: true
+              description: >-
+                  The original wigroup voucher id or VP_VOUCHER.ID used to issued the
+                  voucher
+              schema:
+                  type: integer
+                  format: int64
+            responses:
+                '200':
+                    description: Successful Operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CouponsGetResponse'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad Request
+                '404':
+                    description: Not Found
+                '405':
+                    description: Method Not Allowed
+                '500':
+                    description: Internal Server Error
+    '/coupons/{idd}':
+        delete:
+            tags:
+            - coupons
+            summary: Check whether the given voucher based product has stock.
+            operationId: updateVoucherToValid
+            description: Check whether the given voucher based product has stock
+            parameters:
+            - name: idd
+              in: path
+              required: true
+              description: The original wigroup voucher id
+              schema:
+                  type: integer
+                  format: int64
+            responses:
+                '200':
+                    description: Successful Operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CouponsDelResponse'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad Request
+                '404':
+                    description: Not Found
+                '405':
+                    description: Method Not Allowed
+                '500':
+                    description: Internal Server Error
+components:
+    schemas:
+        CouponsRequest:
+            type: object
+            properties:
+                campaignId:
+                    description: The id of the campaign to issue against.
+                    type: string
+                userRef:
+                    description: >-
+                        A unique user reference as on the issuer channel system. This
+                        reference will be used to restrict user limits on campaigns.
+                    type: string
+                mobileNumber:
+                    description: >-
+                        The mobile number. The mobile number must be presented in
+                        International format.
+                    type: string
+                smsMessage:
+                    description: >-
+                        The message to override original sms message with. Used in request
+                        only.
+                    type: string
+                sendSMS:
+                    description: Indicates whether an SMS must be sent on issue or not.
+                    type: boolean
+            required:
+            - campaignId
+            - userRef
+            - mobileNumber
+            - smsMessage
+            - sendSMS
+        CouponsResponse:
+            type: object
+            properties:
+                coupon:
+                    description: Coupon from WiGroup
+                    type: object
+                    properties:
+                        id:
+                            description: The id of the coupon.
+                            type: integer
+                            format: int64
+                        userRef:
+                            description: >-
+                                A unique user reference as on the issuer channel system. This
+                                reference will be used to restrict user limits on campaigns.
+                            type: string
+                        campaignId:
+                            description: campaignId
+                            type: string
+                        campaignName:
+                            description: The name of the campaign.
+                            type: string
+                        campaignType:
+                            description: The type of campaign.
+                            type: string
+                        termsAndConditions:
+                            description: The terms and conditions of the coupon.
+                            type: string
+                        createDate:
+                            description: The date the couponCampaign was created.
+                            type: string
+                            format: date-time
+                        redeemFromDate:
+                            description: From which date the coupon can be redeemed
+                            type: string
+                            format: date-time
+                        redeemToDate:
+                            description: Until when the coupon is redeemable.
+                            type: string
+                            format: date-time
+                        wiCode:
+                            description: The wiCode linked to the user token.
+                            type: integer
+                            format: int64
+                        description:
+                            description: A description of the campaign.
+                            type: string
+                        voucherAmount:
+                            description: The possible coupon redemption amount.
+                            type: number
+                        wiQr:
+                            description: The wiCode linked to the user token.
+                            type: integer
+                            format: int64
+                responseCode:
+                    description: The date by which the voucher has to be redeemed
+                    type: string
+                responseDesc:
+                    description: The date by which the voucher has to be redeemed
+                    type: string
+        CouponsGetResponse:
+            type: object
+            properties:
+                coupon:
+                    description: Coupon from WiGroup
+                    type: object
+                    properties:
+                        id:
+                            description: The id of the coupon.
+                            type: integer
+                            format: int64
+                        userRef:
+                            description: >-
+                                A unique user reference as on the issuer channel system. This
+                                reference will be used to restrict user limits on campaigns.
+                            type: string
+                        campaignId:
+                            description: campaignId
+                            type: string
+                        campaignName:
+                            description: The name of the campaign.
+                            type: string
+                        campaignType:
+                            description: The type of campaign.
+                            type: string
+                        termsAndConditions:
+                            description: The terms and conditions of the coupon.
+                            type: string
+                        createDate:
+                            description: The date the couponCampaign was created.
+                            type: string
+                            format: date-time
+                        redeemFromDate:
+                            description: From which date the coupon can be redeemed
+                            type: string
+                            format: date-time
+                        redeemToDate:
+                            description: Until when the coupon is redeemable.
+                            type: string
+                            format: date-time
+                        wiCode:
+                            description: The wiCode linked to the user token.
+                            type: integer
+                            format: int64
+                        description:
+                            description: A description of the campaign.
+                            type: string
+                        voucherAmount:
+                            description: The possible coupon redemption amount.
+                            type: number
+                        mobileNumber:
+                            description: 'The users mobile number, if available.'
+                            type: string
+                        imageUrl:
+                            description: The image url of the coupon.
+                            type: string
+                        redeemedAmount:
+                            description: The amount redeemed on the coupon.
+                            type: number
+                        stateId:
+                            description: >-
+                                The current state of the coupon. A (Active) D (Deactivated) E
+                                (Expired) R (Redeemed)
+                            type: string
+                            enum:
+                            - A
+                            - D
+                            - E
+                            - R
+                        redeemedDate:
+                            description: The date on which the coupon was redeemed (if it was expire)
+                            type: string
+                            format: date-time
+                responseCode:
+                    description: The date by which the voucher has to be redeemed
+                    type: string
+                responseDesc:
+                    description: The date by which the voucher has to be redeemed
+                    type: string
+        CouponsDelResponse:
+            type: object
+            properties:
+                responseCode:
+                    description: The date by which the voucher has to be redeemed
+                    type: string
+                responseDesc:
+                    description: The date by which the voucher has to be redeemed
+                    type: string
+        Problem:
+            type: object
+            properties:
+                type:
+                    type: string
+                    format: uri
+                    description: >
+                        An absolute URI that identifies the problem type.  When
+                        dereferenced,
+
+                        it SHOULD provide human-readable documentation for the problem type
+
+                        (e.g., using HTML).
+                    default: 'about:blank'
+                    example: 'https://zalando.github.io/problem/constraint-violation'
+                title:
+                    type: string
+                    description: >
+                        A short, summary of the problem type. Written in english and
+                        readable
+
+                        for engineers (usually not suited for non technical stakeholders and
+
+                        not localized);
+                    example: Service Unavailable
+                status:
+                    type: integer
+                    format: int32
+                    description: >
+                        The HTTP status code generated by the origin server for this
+                        occurrence
+
+                        of the problem.
+                    minimum: 100
+                    maximum: 600
+                    exclusiveMaximum: true
+                    example: 503
+                detail:
+                    type: string
+                    description: |
+                        A human readable explanation specific to this occurrence of the
+                        problem.
+                    example: Connection to database timed out
+                instance:
+                    type: string
+                    format: uri
+                    description: >
+                        An absolute URI that identifies the specific occurrence of the
+                        problem.
+
+                        It may or may not yield further information if dereferenced.
+    responses:
+        Problem:
+            description: >-
+                error occurred - see status code and problem object for more
+                information.
+            content:
+                application/problem+json:
+                    schema:
+                        $ref: '#/components/schemas/Problem'

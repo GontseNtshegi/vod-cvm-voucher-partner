@@ -11,6 +11,10 @@ public class Product {
         this.count = count;
         this.minEndDateitme = minEndDateitme;
     }
+    public Product(Integer count, ZonedDateTime minEndDateitme) {
+        this.count = count.longValue();
+        this.minEndDateitme = minEndDateitme;
+    }
 
     public Long getCount() {
         return count;

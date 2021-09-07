@@ -29,4 +29,9 @@ CMD java \
          -Dappdynamics.agent.applicationName=CVM_Openshift_TEST \
          -Dappdynamics.agent.tierName=CP_VoucherPartner_TEST \
          -Dappdynamics.bciengine.limit.package.qualifiers=7 \
+         -Xms1024m -Xmx2048m \
+         -Dhttps.proxyHost=http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp \
+         -Dhttps.proxyPort=8080 \
+         -Dhttps.proxyUser=vcacmang%40vodacom \
+         -Dhttps.proxyPassword=V0d4f0n3%402020 \
         -jar -Djavax.net.ssl.trustStore=$JAVA_HOME/jre/lib/security/cacerts /opt/appdynamics/cp-voucher-partner.jar

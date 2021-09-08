@@ -1,6 +1,7 @@
 package za.co.vodacom.cvm.config;
 
 import feign.Client;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,11 @@ import java.net.Proxy;
 @Import(FeignClientsConfiguration.class)
 public class FeignConfiguration {
 
+    @Value("${application.proxyHost:}")
+    private String proxyHost;
+    @Value("${application.proxyPort:}")
+    private int proxyPort;
+
     /**
      * Set the Feign specific log level to log client REST requests.
      */
@@ -27,6 +33,6 @@ public class FeignConfiguration {
     public Client feignClient() {
         return new Client.Proxied(null, null,
             new Proxy(Proxy.Type.HTTP,
-                new InetSocketAddress("http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp", 8080)));
+                new InetSocketAddress(proxyHost, proxyPort)));
     }
 }

@@ -1,6 +1,7 @@
 package za.co.vodacom.cvm.config;
 
 import feign.Client;
+import liquibase.pro.packaged.S;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
@@ -19,7 +20,7 @@ public class FeignConfiguration {
     @Value("${application.proxyHost:}")
     private String proxyHost;
     @Value("${application.proxyPort:}")
-    private int proxyPort;
+    private String proxyPort;
 
     /**
      * Set the Feign specific log level to log client REST requests.
@@ -33,6 +34,6 @@ public class FeignConfiguration {
     public Client feignClient() {
         return new Client.Proxied(null, null,
             new Proxy(Proxy.Type.HTTP,
-                new InetSocketAddress(proxyHost, proxyPort)));
+                new InetSocketAddress(proxyHost, Integer.parseInt(proxyPort))));
     }
 }

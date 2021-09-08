@@ -21,6 +21,10 @@ public class FeignConfiguration {
     private String proxyHost;
     @Value("${application.proxyPort:}")
     private String proxyPort;
+    @Value("${application.proxyUser:}")
+    private String proxyUser;
+    @Value("${application.proxyPassword:}")
+    private String proxyPassword;
 
     /**
      * Set the Feign specific log level to log client REST requests.

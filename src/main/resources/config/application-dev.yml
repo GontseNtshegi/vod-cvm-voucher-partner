@@ -145,10 +145,10 @@ application:
     apiPassword: ENC(W8OsgnIPFfmlNv+UVwVE8dmYXZu28sj0tyydKFNkqfhGtWvi64J3JYw1BUv+fnbq)
   encryption:
     key: ENC(1BnXwEkQg3zRqEupl31YnftHGtybJ53wem3rj07lW7cc1B+Omul0IgOguvwZ5cdGB/NC9EFRjxrTQ8gsSi47xA==)
-jasypt:
-  encryptor:
-    password: CVMicroservices
   proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080
   proxyPort: 8080
   proxyUser: vcacmang%40vodacom
   proxyPassword: V0d4f0n3%402020
+jasypt:
+  encryptor:
+    password: CVMicroservices

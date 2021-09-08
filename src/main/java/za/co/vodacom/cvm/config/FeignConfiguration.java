@@ -34,6 +34,6 @@ public class FeignConfiguration {
     public Client feignClient() {
         return new Client.Proxied(null, null,
             new Proxy(Proxy.Type.HTTP,
-                new InetSocketAddress(proxyHost, Integer.parseInt(proxyPort))));
+                new InetSocketAddress(proxyHost, 8080)));
     }
 }

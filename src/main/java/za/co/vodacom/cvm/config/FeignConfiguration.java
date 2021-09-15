@@ -1,7 +1,6 @@
 package za.co.vodacom.cvm.config;
 
 import feign.Client;
-import liquibase.pro.packaged.S;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
@@ -20,7 +19,7 @@ public class FeignConfiguration {
     @Value("${application.proxyHost:}")
     private String proxyHost;
     @Value("${application.proxyPort:}")
-    private String proxyPort;
+    private Integer proxyPort;
     @Value("${application.proxyUser:}")
     private String proxyUser;
     @Value("${application.proxyPassword:}")
@@ -38,6 +37,6 @@ public class FeignConfiguration {
     public Client feignClient() {
         return new Client.Proxied(null, null,
             new Proxy(Proxy.Type.HTTP,
-                new InetSocketAddress(proxyHost, 8080)));
+                new InetSocketAddress(proxyHost, proxyPort)));
     }
 }

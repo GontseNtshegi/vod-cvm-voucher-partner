@@ -95,7 +95,7 @@ public class ProductServiceImpl implements ProductApiDelegate {
                                                 productValidationResponse.setMinExpiry(vpVouchers.getMinEndDitme().toOffsetDateTime());
                                                 productValidationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                                 productValidationResponse.setVoucherDescription(vpVoucherDef.getDescription());
-                                                productValidationResponse.setVoucherQuantity(vpVouchers.getCount());
+                                                productValidationResponse.setVoucherQuantity(BigDecimal.valueOf(vpVouchers.getCount()));
                                                 productValidationResponse.setVoucherType(vpVoucherDef.getType());
                                                 productValidationResponse.setVoucherVendor(vpVoucherDef.getVendor());
                                             }
@@ -109,7 +109,7 @@ public class ProductServiceImpl implements ProductApiDelegate {
                                                 productValidationResponse.setMinExpiry(vpVouchers.getMinEndDitme().toOffsetDateTime());
                                                 productValidationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                                 productValidationResponse.setVoucherDescription(vpVoucherDef.getDescription());
-                                                productValidationResponse.setVoucherQuantity(vpVouchers.getCount());
+                                                productValidationResponse.setVoucherQuantity(BigDecimal.valueOf(vpVouchers.getCount()));
                                                 productValidationResponse.setVoucherType(vpVoucherDef.getType());
                                                 productValidationResponse.setVoucherVendor(vpVoucherDef.getVendor());
                                             }

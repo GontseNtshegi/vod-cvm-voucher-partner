@@ -29,4 +29,5 @@ CMD java \
          -Dappdynamics.agent.applicationName=CVM_Openshift_TEST \
          -Dappdynamics.agent.tierName=CP_VoucherPartner_TEST \
          -Dappdynamics.bciengine.limit.package.qualifiers=7 \
+         -Xms1024m -Xmx2048m \
         -jar -Djavax.net.ssl.trustStore=$JAVA_HOME/jre/lib/security/cacerts /opt/appdynamics/cp-voucher-partner.jar

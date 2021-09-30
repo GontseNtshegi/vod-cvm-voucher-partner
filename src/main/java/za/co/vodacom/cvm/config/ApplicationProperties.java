@@ -19,6 +19,10 @@ public class ApplicationProperties {
     public GiftCards giftCards;
     public Encryption encryption;
     public Msisdn msisdn;
+    public String proxyHost;
+    public Integer proxyPort;
+    public String proxyUser;
+    public String proxyPassword;
 
     public Msisdn getMsisdn() {
         return msisdn;
@@ -52,6 +56,38 @@ public class ApplicationProperties {
         this.encryption = encryption;
     }
 
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public void setProxyHost(String proxyHost) {
+        this.proxyHost = proxyHost;
+    }
+
+    public Integer getProxyPort() {
+        return proxyPort;
+    }
+
+    public void setProxyPort(Integer proxyPort) {
+        this.proxyPort = proxyPort;
+    }
+
+    public String getProxyUser() {
+        return proxyUser;
+    }
+
+    public void setProxyUser(String proxyUser) {
+        this.proxyUser = proxyUser;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+    public void setProxyPassword(String proxyPassword) {
+        this.proxyPassword = proxyPassword;
+    }
+
     @Override
     public String toString() {
         return "ApplicationProperties{" +
@@ -59,6 +95,10 @@ public class ApplicationProperties {
             ", giftCards=" + giftCards +
             ", encryption=" + encryption +
             ", msisdn=" + msisdn +
+            ", proxyHost='" + proxyHost + '\'' +
+            ", proxyPort=" + proxyPort +
+            ", proxyUser='" + proxyUser + '\'' +
+            ", proxyPassword='" + proxyPassword + '\'' +
             '}';
     }
 }

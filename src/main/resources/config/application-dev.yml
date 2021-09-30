@@ -47,11 +47,14 @@ spring:
       # it can be set to any label, branch or commit of the configuration source Git repository
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://vouchermanagement.cluster-custom-cepvu5oayajv.eu-west-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    #url: jdbc:mysql://vouchermanagement.cluster-custom-cepvu5oayajv.eu-west-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
     #&verifyServerCertificate=true&useSSL=true&requireSSL=true
     ##&verifyServerCertificate=true&useSSL=true&requireSSL=true&clientCertificateKey=file:/optclientkeyStore.jks&clientCertificateKeyStorePassword=mypass&trustCertificateKeyStoreUrl=file:/opt/truststore.jks&trustCertificateKeyStorePassword=mypass
+    #username: superuser
+    #password: ENC(2uDUJ5brB0fv8llNu+flAaG1pq0qg6U1SCBhvf1w+onpDFeedPjZ9tMVtPdMRmJPmAsaSV5S/gJ0Tdy6uMhxoQ==)
+    url: jdbc:mysql://loyalty.cluster-cc1yxzokhc4w.eu-west-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: superuser
-    password: ENC(2uDUJ5brB0fv8llNu+flAaG1pq0qg6U1SCBhvf1w+onpDFeedPjZ9tMVtPdMRmJPmAsaSV5S/gJ0Tdy6uMhxoQ==)
+    password: ENC(AWLMQYuWBhMTte4NFtOqOFmrtz/h03+9ZFfJyJpkQfx9ZwU3WYvg7Jv5EIl30GUq4ezFf01+uswR0tXmFmQsyQ==)
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -142,6 +145,10 @@ application:
     apiPassword: ENC(W8OsgnIPFfmlNv+UVwVE8dmYXZu28sj0tyydKFNkqfhGtWvi64J3JYw1BUv+fnbq)
   encryption:
     key: ENC(1BnXwEkQg3zRqEupl31YnftHGtybJ53wem3rj07lW7cc1B+Omul0IgOguvwZ5cdGB/NC9EFRjxrTQ8gsSi47xA==)
+  proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080
+  proxyPort: 8080
+  proxyUser: vcacmang%40vodacom
+  proxyPassword: V0d4f0n3%402020
 jasypt:
   encryptor:
     password: CVMicroservices

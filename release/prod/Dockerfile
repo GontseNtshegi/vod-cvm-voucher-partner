@@ -7,6 +7,7 @@ ADD VODACOMROOTCA.crt $JAVA_HOME/lib/security/VODACOMROOTCA.crt
 RUN \
    cd $JAVA_HOME/lib/security \
    && keytool -import -trustcacerts -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt -alias VODACOMROOTCA -import -file VODACOMROOTCA.crt \
+   && keytool -import -trustcacerts -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -noprompt -alias gdroot-g2 -import -file gdroot-g2.crt \
    && update-ca-certificates
 
 ADD http://nexus-cvm-microservices-prod.app.prod.tc.ocp.vodacom.corp/repository/appdynamics/opt/apdynamics/AppServerAgentt.zip /opt/appdynamics/

@@ -4,6 +4,7 @@ LABEL service="Vodacom CVM cp-voucher-partner"
 ENV SPRING_OUTPUT_ANSI_ENABLED=ALWAYS
 EXPOSE 8080
 ADD VODACOMROOTCA.crt $JAVA_HOME/lib/security/VODACOMROOTCA.crt
+ADD gdroot-g2.crt $JAVA_HOME/jre/lib/security/gdroot-g2.crt
 RUN \
    cd $JAVA_HOME/lib/security \
    && keytool -import -trustcacerts -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt -alias VODACOMROOTCA -import -file VODACOMROOTCA.crt \

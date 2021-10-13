@@ -266,7 +266,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         voucherAllocationResponse.setVoucherCode(voucherCode);
                                         voucherAllocationResponse.setVoucherDescription(vpVoucherDef.getDescription());
                                         voucherAllocationResponse.setVoucherId(couponsResponse.getCoupon().getId());
-                                        voucherAllocationResponse.setVoucherType(couponsResponse.getCoupon().getCampaignType());
+                                        voucherAllocationResponse.setVoucherType(vpVoucherDef.getType());
                                         voucherAllocationResponse.setVoucherVendor(vpVoucherDef.getVendor());
                                         voucherAllocationResponse.setEncryptedYN(vpVoucherDef.getEncryptedYN());
 

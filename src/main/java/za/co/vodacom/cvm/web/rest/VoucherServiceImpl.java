@@ -259,7 +259,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                             log.error(e.getMessage());
                                         }
                                         //set response
-                                        voucherAllocationResponse.setCollectPoint("N/A");
+                                        voucherAllocationResponse.setCollectPoint(vpVoucherDef.getVendor());
                                         voucherAllocationResponse.setExpiryDate(expiryDate);
                                         voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                         voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());

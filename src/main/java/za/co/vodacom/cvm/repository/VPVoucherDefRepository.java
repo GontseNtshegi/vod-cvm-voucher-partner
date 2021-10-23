@@ -16,7 +16,7 @@ import za.co.vodacom.cvm.domain.VPVoucherDef;
 @SuppressWarnings("unused")
 @Repository
 public interface VPVoucherDefRepository extends JpaRepository<VPVoucherDef, String> {
-//    @Lock(value = LockModeType.PESSIMISTIC_WRITE)
+    @Lock(value = LockModeType.PESSIMISTIC_WRITE)
     // @Query(value = "select * vp_voucher_def  where id=:id", nativeQuery = true)
     Optional<VPVoucherDef> findById(String id);
 }

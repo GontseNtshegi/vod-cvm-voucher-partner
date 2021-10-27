@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
@@ -36,6 +37,7 @@ import za.co.vodacom.cvm.web.api.model.VoucherReturnResponse;
 import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
 
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -75,7 +77,6 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
     @Autowired
     MSISDNConverter msisdnConverter;
-
 
     VoucherServiceImpl(
         VPCampaignService vpCampaignService,
@@ -121,66 +122,40 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
             );
             if (vpCampaignVouchers.isPresent()) { //productId found
                 log.debug(vpCampaignVouchers.get().toString());
-                log.info(vpCampaignVouchers.get().toString());
                 vpVoucherDefService
                     .findOne(voucherAllocationRequest.getProductId())
                     .ifPresent(
                         vpVoucherDef -> {
                             log.debug(vpVoucherDef.toString());
-                            log.info(vpVoucherDef.toString());
                             switch (vpVoucherDef.getType()) {
                                 case Constants.VOUCHER:
-                                    vpVoucherDefService
-                                        .findById(voucherAllocationRequest.getProductId()) //acquire a lock
-                                        .ifPresent(
-                                            vpVoucherDef1 -> {
-                                                //get valid voucher
-                                                Optional<VPVouchers> vpVouchers = vpVouchersService.getValidVoucher(
-                                                    voucherAllocationRequest.getProductId()
-                                                );
-                                                if (vpVouchers.isPresent()) { //voucher found
-                                                    VPVouchers vpVoucher = vpVouchers.get();
-                                                    log.debug(vpVoucher.toString());
-                                                    log.info(vpVoucher.toString());
-                                                    //issue voucher
-                                                    vpVouchersService.issueVoucher(voucherAllocationRequest.getTrxId(), vpVoucher.getId());
+                                    VPVouchers voucher = getAndIssueVoucher(voucherAllocationRequest.getProductId(), voucherAllocationRequest.getTrxId());
 
-                                                    OffsetDateTime expiryDate = vpVoucher.getExpiryDate() != null
-                                                        ? vpVoucher
-                                                        .getExpiryDate()
-                                                        .toOffsetDateTime()
-                                                        .plusHours(23L)
-                                                        .plusMinutes(59L)
-                                                        .plusSeconds(59L)
-                                                        : OffsetDateTime
-                                                        .now()
-                                                        .plusHours(23L)
-                                                        .plusMinutes(59L)
-                                                        .plusSeconds(59L)
-                                                        .plusDays(vpVoucherDef.getValidityPeriod());
-                                                    String voucherCode = vpVoucher.getVoucherCode();
+                                    //set response
+                                    voucherAllocationResponse.setCollectPoint(voucher.getCollectionPoint());
+                                    voucherAllocationResponse.setExpiryDate(voucher.getExpiryDate() != null
+                                        ? voucher
+                                        .getExpiryDate()
+                                        .toOffsetDateTime()
+                                        .plusHours(23L)
+                                        .plusMinutes(59L)
+                                        .plusSeconds(59L)
+                                        : OffsetDateTime
+                                        .now()
+                                        .plusHours(23L)
+                                        .plusMinutes(59L)
+                                        .plusSeconds(59L)
+                                        .plusDays(vpVoucherDef.getValidityPeriod()));
+                                    voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
+                                    voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
+                                    voucherAllocationResponse.setVoucherCode(voucher.getVoucherCode());
+                                    voucherAllocationResponse.setVoucherDescription(voucher.getDescription());
+                                    voucherAllocationResponse.setVoucherId(voucher.getId());
+                                    voucherAllocationResponse.setVoucherType(vpVoucherDef.getType());
+                                    voucherAllocationResponse.setVoucherVendor(vpVoucherDef.getVendor());
+                                    voucherAllocationResponse.setEncryptedYN(vpVoucherDef.getEncryptedYN());
 
-                                                    //vpVoucherDefRepository.flush();//release lock
-                                                    //set response
-                                                    voucherAllocationResponse.setCollectPoint(vpVoucher.getCollectionPoint());
-                                                    voucherAllocationResponse.setExpiryDate(expiryDate);
-                                                    voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
-                                                    voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
-                                                    voucherAllocationResponse.setVoucherCode(voucherCode);
-                                                    voucherAllocationResponse.setVoucherDescription(vpVoucher.getDescription());
-                                                    voucherAllocationResponse.setVoucherId(vpVoucher.getId());
-                                                    voucherAllocationResponse.setVoucherType(vpVoucherDef.getType());
-                                                    voucherAllocationResponse.setVoucherVendor(vpVoucherDef.getVendor());
-                                                    voucherAllocationResponse.setEncryptedYN(vpVoucherDef.getEncryptedYN());
-
-                                                    log.debug(voucherAllocationResponse.toString());
-                                                    log.info(voucherAllocationResponse.toString());
-                                                } else { //no valid voucher
-                                                    throw new AllocationException("Voucher not available", Status.NOT_FOUND);
-                                                }
-                                            }
-                                        );
-
+                                    log.debug(voucherAllocationResponse.toString());
                                     break;
                                 case Constants.GENERIC_VOUCHER:
                                     //get valid voucher
@@ -215,7 +190,6 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         voucherAllocationResponse.setEncryptedYN(vpVoucherDef.getEncryptedYN());
 
                                         log.debug(voucherAllocationResponse.toString());
-                                        log.info(voucherAllocationResponse.toString());
                                     } else { //no valid voucher
                                         throw new AllocationException("Voucher not available", Status.NOT_FOUND);
                                     }
@@ -271,7 +245,6 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         voucherAllocationResponse.setEncryptedYN(vpVoucherDef.getEncryptedYN());
 
                                         log.debug(voucherAllocationResponse.toString());
-                                        log.info(voucherAllocationResponse.toString());
                                     } else { //failed
                                         throw new WiGroupException(
                                             couponsResponseResponseEntity.getBody().getResponseDesc(),
@@ -289,12 +262,31 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+        log.info("Voucher issued for {}", voucherAllocationRequest.getMsisdn());
+
         return new ResponseEntity<>(voucherAllocationResponse, HttpStatus.OK);
     }
 
     //retry once
     public ResponseEntity<VoucherAllocationResponse> issueVoucherFallback(VoucherAllocationRequest voucherAllocationRequest) {
         return issueVoucher(voucherAllocationRequest);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public VPVouchers getAndIssueVoucher(String productId, String transactionId) {
+        Optional<VPVouchers> vpVouchers = vpVouchersService.getValidVoucherWithLock(
+            productId
+        );
+        if (vpVouchers.isPresent()) { //voucher found
+            log.info("Voucher available to issue for {}.", productId);
+            //issue voucher
+            vpVouchersService.issueVoucher(transactionId, vpVouchers.get().getId());
+        }
+        else {
+            throw new AllocationException("Voucher not available", Status.NOT_FOUND);
+        }
+
+        return vpVouchers.get();
     }
 
     @Transactional

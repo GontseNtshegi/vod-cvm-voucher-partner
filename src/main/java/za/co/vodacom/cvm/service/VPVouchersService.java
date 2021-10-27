@@ -55,6 +55,13 @@ public interface VPVouchersService {
     Optional<VPVouchers> getValidVoucher(String productId);
 
     /**
+     * Get a valid voucher with lock
+     * @param productId
+     * @return
+     */
+    Optional<VPVouchers> getValidVoucherWithLock(String productId);
+
+    /**
      * Issue voucher
      * @param incomingTrxId
      * @param id

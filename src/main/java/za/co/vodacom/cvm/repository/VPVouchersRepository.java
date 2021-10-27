@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.service.dto.product.Product;
 
+import static javax.persistence.LockModeType.PESSIMISTIC_WRITE;
+
 /**
  * Spring Data SQL repository for the VPVouchers entity.
  */
@@ -18,6 +20,13 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
         nativeQuery = true
     )
     Optional<VPVouchers> getValidVoucher(@Param("productId") String productId);
+
+    @Lock(PESSIMISTIC_WRITE)
+    @Query(
+        value = "select * from vp_vouchers where product_id=:productId and start_date< sysdate() and end_date>sysdate() and issued_date is null limit 1",
+        nativeQuery = true
+    )
+    Optional<VPVouchers> getValidVoucherWithLock(@Param("productId") String productId);
 
     @Modifying
     @Query(value = "update vp_vouchers set issued_date = sysdate() + INTERVAL 2 HOUR, source_trxid=:incomingTrxId where id=:id", nativeQuery = true)

@@ -115,6 +115,13 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     }
 
     @Override
+    // @Transactional
+    public Optional<VPVouchers> getValidVoucherWithLock(String productId) {
+        log.debug("Request to get Valid VPVouchers : {}", productId);
+        return vPVouchersRepository.getValidVoucherWithLock(productId);
+    }
+
+    @Override
     public void issueVoucher(String incomingTrxId, Long id) {
         log.debug("Request to issue VPVouchers : {}, {}", incomingTrxId, id);
         vPVouchersRepository.issueVoucher(incomingTrxId, id);

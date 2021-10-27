@@ -1,13 +1,13 @@
 package za.co.vodacom.cvm.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.time.ZonedDateTime;
 
 /**
  * A VPVouchers.

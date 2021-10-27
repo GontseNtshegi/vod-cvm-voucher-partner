@@ -5,15 +5,20 @@ import java.time.ZonedDateTime;
 public class Product {
 
     Long count;
-    ZonedDateTime minEndDateitme;
+    ZonedDateTime minEndDateTime;
 
-    public Product(Long count, ZonedDateTime minEndDateitme) {
+    public Product(){
+        this.count = 0L;
+        minEndDateTime = null;
+    }
+
+    public Product(Long count, ZonedDateTime minEndDateTime) {
         this.count = count;
-        this.minEndDateitme = minEndDateitme;
+        this.minEndDateTime = minEndDateTime;
     }
     public Product(Integer count, ZonedDateTime minEndDateitme) {
         this.count = count.longValue();
-        this.minEndDateitme = minEndDateitme;
+        this.minEndDateTime = minEndDateitme;
     }
 
     public Long getCount() {
@@ -24,16 +29,16 @@ public class Product {
         this.count = count;
     }
 
-    public ZonedDateTime getMinEndDitme() {
-        return minEndDateitme;
+    public ZonedDateTime getMinEndDateTime() {
+        return minEndDateTime;
     }
 
-    public void setMinEndDitme(ZonedDateTime minEndDitme) {
-        this.minEndDateitme = minEndDitme;
+    public void setMinEndDateTime(ZonedDateTime minEndDitme) {
+        this.minEndDateTime = minEndDitme;
     }
 
     @Override
     public String toString() {
-        return "Product{" + "count=" + count + ", minEndDitme=" + minEndDateitme + '}';
+        return "Product{" + "count=" + count + ", minEndDitme=" + minEndDateTime + '}';
     }
 }

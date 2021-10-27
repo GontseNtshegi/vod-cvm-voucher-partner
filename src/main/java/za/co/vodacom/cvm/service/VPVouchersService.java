@@ -59,7 +59,7 @@ public interface VPVouchersService {
      * @param productId
      * @return
      */
-    Optional<VPVouchers> getValidVoucherWithLock(String productId);
+    List<VPVouchers> getValidVoucherWithLock(String productId);
 
     /**
      * Issue voucher

@@ -38,6 +38,7 @@ import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
 
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -274,19 +275,20 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public VPVouchers getAndIssueVoucher(String productId, String transactionId) {
-        Optional<VPVouchers> vpVouchers = vpVouchersService.getValidVoucherWithLock(
+        List<VPVouchers> vpVouchers = vpVouchersService.getValidVoucherWithLock(
             productId
         );
-        if (vpVouchers.isPresent()) { //voucher found
-            log.info("Voucher available to issue for {}.", productId);
-            //issue voucher
-            vpVouchersService.issueVoucher(transactionId, vpVouchers.get().getId());
-        }
-        else {
+
+        // Vouchers found ?
+        if (vpVouchers.isEmpty()) {
             throw new AllocationException("Voucher not available", Status.NOT_FOUND);
         }
 
-        return vpVouchers.get();
+        log.info("Voucher available to issue for {}.", productId);
+        //issue voucher
+        vpVouchersService.issueVoucher(transactionId, vpVouchers.get(0).getId());
+
+        return vpVouchers.get(0);
     }
 
     @Transactional

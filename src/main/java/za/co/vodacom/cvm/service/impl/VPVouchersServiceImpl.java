@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPVouchers;
@@ -116,9 +118,9 @@ public class VPVouchersServiceImpl implements VPVouchersService {
 
     @Override
     // @Transactional
-    public Optional<VPVouchers> getValidVoucherWithLock(String productId) {
+    public List<VPVouchers> getValidVoucherWithLock(String productId) {
         log.debug("Request to get Valid VPVouchers : {}", productId);
-        return vPVouchersRepository.getValidVoucherWithLock(productId);
+        return vPVouchersRepository.getValidVoucherWithLock(productId, (Pageable) PageRequest.of(0,1));
     }
 
     @Override

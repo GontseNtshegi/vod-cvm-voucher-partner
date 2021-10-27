@@ -1,11 +1,19 @@
 package za.co.vodacom.cvm.repository;
 
-import java.util.Optional;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.service.dto.product.Product;
+
+import java.util.List;
+import java.util.Optional;
+
+import static javax.persistence.LockModeType.PESSIMISTIC_WRITE;
 
 /**
  * Spring Data SQL repository for the VPVouchers entity.
@@ -13,11 +21,18 @@ import za.co.vodacom.cvm.service.dto.product.Product;
 @SuppressWarnings("unused")
 @Repository
 public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
+
     @Query(
         value = "select * from vp_vouchers where product_id=:productId and start_date< sysdate() and end_date>sysdate() and issued_date is null limit 1",
         nativeQuery = true
     )
     Optional<VPVouchers> getValidVoucher(@Param("productId") String productId);
+
+    @Lock(PESSIMISTIC_WRITE)
+    @Query(
+        value = "select v from VPVouchers v where v.productId=:productId and v.startDate< CURRENT_TIMESTAMP and v.endDate>CURRENT_TIMESTAMP and v.issuedDate is null"
+    )
+    List<VPVouchers> getValidVoucherWithLock(@Param("productId") String productId, Pageable pageable);
 
     @Modifying
     @Query(value = "update vp_vouchers set issued_date = sysdate() + INTERVAL 2 HOUR, source_trxid=:incomingTrxId where id=:id", nativeQuery = true)

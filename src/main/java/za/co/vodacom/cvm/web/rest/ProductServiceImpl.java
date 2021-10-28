@@ -1,9 +1,6 @@
 package za.co.vodacom.cvm.web.rest;
 
 import brave.Tracer;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import java.math.BigDecimal;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +11,18 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
 import za.co.vodacom.cvm.config.Constants;
-import za.co.vodacom.cvm.domain.VPCampaign;
-import za.co.vodacom.cvm.domain.VPCampaignVouchers;
 import za.co.vodacom.cvm.exception.AllocationException;
 import za.co.vodacom.cvm.service.VPCampaignService;
 import za.co.vodacom.cvm.service.VPCampaignVouchersService;
 import za.co.vodacom.cvm.service.VPVoucherDefService;
 import za.co.vodacom.cvm.service.VPVouchersService;
+import za.co.vodacom.cvm.service.dto.VPCampaignDTO;
+import za.co.vodacom.cvm.service.dto.VPCampaignVouchersDTO;
 import za.co.vodacom.cvm.web.api.ProductApiDelegate;
 import za.co.vodacom.cvm.web.api.model.ProductValidationResponse;
+
+import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductApiDelegate {
@@ -64,26 +64,23 @@ public class ProductServiceImpl implements ProductApiDelegate {
     @Override
     public ResponseEntity<ProductValidationResponse> validateVoucher(String productId, String origin, String campaign) {
         ProductValidationResponse productValidationResponse = new ProductValidationResponse();
-        log.debug("Product ID: {}, Origin: {}, Campaign: {}", productId, origin, campaign);
         log.info("Product ID: {}, Origin: {}, Campaign: {}", productId, origin, campaign);
 
         //Validate the incoming campaign
-        Optional<VPCampaign> vpCampaign = vpCampaignService.findByName(campaign);
-        if (vpCampaign.isPresent()) {
-            log.debug(vpCampaign.get().toString());
-            log.info(vpCampaign.get().toString());
+        Optional<VPCampaignDTO> vpCampaignDTO = vpCampaignService.findByName(campaign);
+        if (vpCampaignDTO.isPresent()) {
+            log.info(vpCampaignDTO.get().toString());
             //Validate incoming productId
-            Optional<VPCampaignVouchers> vpCampaignVouchers = vpCampaignVouchersService.findByProductIdAndCampaignIdAndActiveYN(
+            Optional<VPCampaignVouchersDTO> vpCampaignVouchersDTO = vpCampaignVouchersService.findByProductIdAndCampaignIdAndActiveYN(
                 productId,
-                vpCampaign.get().getId(),
+                vpCampaignDTO.get().getId(),
                 Constants.YES
             );
             //ProductId Found
-            if (vpCampaignVouchers.isPresent()) {
-                log.debug(vpCampaignVouchers.get().toString());
-                log.info(vpCampaignVouchers.get().toString());
+            if (vpCampaignVouchersDTO.isPresent()) {
+                log.info(vpCampaignVouchersDTO.get().toString());
                 vpVoucherDefService
-                    .findOne(vpCampaignVouchers.get().getProductId())
+                    .findOne(vpCampaignVouchersDTO.get().getProductId())
                     .ifPresent(
                         vpVoucherDef -> {
                             switch (vpVoucherDef.getType()) {

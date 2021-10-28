@@ -1,0 +1,100 @@
+# API-first development with OpenAPI
+# This file will be used at compile time to generate Spring-MVC endpoint stubs using openapi-generator
+openapi: '3.0.1'
+info:
+  title: 'Gifting'
+  version: 0.0.1
+servers:
+  - url: http://localhost:8081/api
+    description: Development server
+  - url: https://localhost:8081/api
+    description: Development server with TLS Profile
+tags:
+  - name: gifting
+    description: Gifting interfaces
+paths:
+  /rewards/voucher:
+    put:
+      tags:
+        - gifting
+      summary: Put Gifting Voucher
+      operationId: putGiftingVoucher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GiftingVoucherRequestDTO'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GiftingVoucherResponseDTO'
+        '400':
+          description: Bad request
+        '500':
+          description: Unexpected error
+components:
+  schemas:
+    GiftingVoucherRequestDTO:
+      type: object
+      properties:
+        trxId:
+          type: string
+        msisdn:
+          type: string
+        rewardId:
+          type: string
+    GiftingVoucherResponseDTO:
+      type: object
+      properties:
+        collectionPoint:
+          type: string
+        description:
+          type: string
+        endDate:
+          type: string
+        expiryDate:
+          type: string
+        merchant:
+          type: string
+        pin:
+          type: string
+        seq:
+          type: integer
+          format: int64
+        ErrorMessage:
+          type: string
+    Problem:
+      type: object
+      properties:
+        timestamp:
+          type: string
+        status:
+          type: integer
+          format: int32
+          minimum: 100
+          maximum: 600
+          exclusiveMaximum: true
+          example: 503
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
+  responses:
+    Problem:
+      description: error occurred - see status code and problem object for more information.
+      content:
+        'application/problem+json':
+          schema:
+            $ref: '#/components/schemas/Problem'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+security:
+  - basicAuth: []

@@ -1,10 +1,7 @@
 package za.co.vodacom.cvm.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import za.co.vodacom.cvm.config.pojos.Coupons;
-import za.co.vodacom.cvm.config.pojos.Encryption;
-import za.co.vodacom.cvm.config.pojos.GiftCards;
-import za.co.vodacom.cvm.config.pojos.Msisdn;
+import za.co.vodacom.cvm.config.pojos.*;
 
 /**
  * Properties specific to Voucherpartner.
@@ -18,11 +15,13 @@ public class ApplicationProperties {
     public Coupons coupons;
     public GiftCards giftCards;
     public Encryption encryption;
+    public Gifting gifting;
     public Msisdn msisdn;
     public String proxyHost;
     public Integer proxyPort;
     public String proxyUser;
     public String proxyPassword;
+    public boolean useGiftingVouchers;
 
     public Msisdn getMsisdn() {
         return msisdn;
@@ -54,6 +53,14 @@ public class ApplicationProperties {
 
     public void setEncryption(Encryption encryption) {
         this.encryption = encryption;
+    }
+
+    public Gifting getGifting() {
+        return gifting;
+    }
+
+    public void setGifting(Gifting gifting) {
+        this.gifting = gifting;
     }
 
     public String getProxyHost() {
@@ -88,17 +95,27 @@ public class ApplicationProperties {
         this.proxyPassword = proxyPassword;
     }
 
+    public boolean isUseGiftingVouchers() {
+        return useGiftingVouchers;
+    }
+
+    public void setUseGiftingVouchers(boolean useGiftingVouchers) {
+        this.useGiftingVouchers = useGiftingVouchers;
+    }
+
     @Override
     public String toString() {
         return "ApplicationProperties{" +
             "coupons=" + coupons +
             ", giftCards=" + giftCards +
             ", encryption=" + encryption +
+            ", gifting=" + gifting +
             ", msisdn=" + msisdn +
             ", proxyHost='" + proxyHost + '\'' +
             ", proxyPort=" + proxyPort +
             ", proxyUser='" + proxyUser + '\'' +
             ", proxyPassword='" + proxyPassword + '\'' +
+            ", useGiftingVouchers=" + useGiftingVouchers +
             '}';
     }
 }

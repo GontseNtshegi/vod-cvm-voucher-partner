@@ -2,34 +2,34 @@ package za.co.vodacom.cvm.service;
 
 import java.util.List;
 import java.util.Optional;
-import za.co.vodacom.cvm.domain.VPFileLoad;
+import za.co.vodacom.cvm.service.dto.VPFileLoadDTO;
 
 /**
- * Service Interface for managing {@link VPFileLoad}.
+ * Service Interface for managing {@link za.co.vodacom.cvm.domain.VPFileLoad}.
  */
 public interface VPFileLoadService {
     /**
      * Save a vPFileLoad.
      *
-     * @param vPFileLoad the entity to save.
+     * @param vPFileLoadDTO the entity to save.
      * @return the persisted entity.
      */
-    VPFileLoad save(VPFileLoad vPFileLoad);
+    VPFileLoadDTO save(VPFileLoadDTO vPFileLoadDTO);
 
     /**
      * Partially updates a vPFileLoad.
      *
-     * @param vPFileLoad the entity to update partially.
+     * @param vPFileLoadDTO the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<VPFileLoad> partialUpdate(VPFileLoad vPFileLoad);
+    Optional<VPFileLoadDTO> partialUpdate(VPFileLoadDTO vPFileLoadDTO);
 
     /**
      * Get all the vPFileLoads.
      *
      * @return the list of entities.
      */
-    List<VPFileLoad> findAll();
+    List<VPFileLoadDTO> findAll();
 
     /**
      * Get the "id" vPFileLoad.
@@ -37,7 +37,7 @@ public interface VPFileLoadService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<VPFileLoad> findOne(Long id);
+    Optional<VPFileLoadDTO> findOne(Long id);
 
     /**
      * Delete the "id" vPFileLoad.

@@ -1,7 +1,9 @@
 package za.co.vodacom.cvm.service.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPUsers;
 import za.co.vodacom.cvm.repository.VPUsersRepository;
 import za.co.vodacom.cvm.service.VPUsersService;
+import za.co.vodacom.cvm.service.dto.VPUsersDTO;
+import za.co.vodacom.cvm.service.mapper.VPUsersMapper;
 
 /**
  * Service Implementation for managing {@link VPUsers}.
@@ -21,55 +25,48 @@ public class VPUsersServiceImpl implements VPUsersService {
 
     private final VPUsersRepository vPUsersRepository;
 
-    public VPUsersServiceImpl(VPUsersRepository vPUsersRepository) {
+    private final VPUsersMapper vPUsersMapper;
+
+    public VPUsersServiceImpl(VPUsersRepository vPUsersRepository, VPUsersMapper vPUsersMapper) {
         this.vPUsersRepository = vPUsersRepository;
+        this.vPUsersMapper = vPUsersMapper;
     }
 
     @Override
-    public VPUsers save(VPUsers vPUsers) {
-        log.debug("Request to save VPUsers : {}", vPUsers);
-        return vPUsersRepository.save(vPUsers);
+    public VPUsersDTO save(VPUsersDTO vPUsersDTO) {
+        log.debug("Request to save VPUsers : {}", vPUsersDTO);
+        VPUsers vPUsers = vPUsersMapper.toEntity(vPUsersDTO);
+        vPUsers = vPUsersRepository.save(vPUsers);
+        return vPUsersMapper.toDto(vPUsers);
     }
 
     @Override
-    public Optional<VPUsers> partialUpdate(VPUsers vPUsers) {
-        log.debug("Request to partially update VPUsers : {}", vPUsers);
+    public Optional<VPUsersDTO> partialUpdate(VPUsersDTO vPUsersDTO) {
+        log.debug("Request to partially update VPUsers : {}", vPUsersDTO);
 
         return vPUsersRepository
-            .findById(vPUsers.getId())
-            .map(
-                existingVPUsers -> {
-                    if (vPUsers.getId() != null) {
-                        existingVPUsers.setId(vPUsers.getId());
-                    }
-                    if (vPUsers.getCreateDate() != null) {
-                        existingVPUsers.setCreateDate(vPUsers.getCreateDate());
-                    }
-                    if (vPUsers.getModifiedDate() != null) {
-                        existingVPUsers.setModifiedDate(vPUsers.getModifiedDate());
-                    }
-                    if (vPUsers.getActiveYN() != null) {
-                        existingVPUsers.setActiveYN(vPUsers.getActiveYN());
-                    }
+            .findById(vPUsersDTO.getId())
+            .map(existingVPUsers -> {
+                vPUsersMapper.partialUpdate(existingVPUsers, vPUsersDTO);
 
-                    return existingVPUsers;
-                }
-            )
-            .map(vPUsersRepository::save);
+                return existingVPUsers;
+            })
+            .map(vPUsersRepository::save)
+            .map(vPUsersMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<VPUsers> findAll() {
+    public List<VPUsersDTO> findAll() {
         log.debug("Request to get all VPUsers");
-        return vPUsersRepository.findAll();
+        return vPUsersRepository.findAll().stream().map(vPUsersMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<VPUsers> findOne(Long id) {
+    public Optional<VPUsersDTO> findOne(Long id) {
         log.debug("Request to get VPUsers : {}", id);
-        return vPUsersRepository.findById(id);
+        return vPUsersRepository.findById(id).map(vPUsersMapper::toDto);
     }
 
     @Override

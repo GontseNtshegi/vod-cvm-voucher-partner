@@ -32,7 +32,7 @@
   ],
   "relationships": [],
   "entityTableName": "vp_file_load",
-  "dto": "no",
+  "dto": "mapstruct",
   "pagination": "no",
   "service": "serviceImpl",
   "jpaMetamodelFiltering": false,

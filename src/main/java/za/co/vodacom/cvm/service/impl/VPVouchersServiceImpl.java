@@ -1,7 +1,9 @@
 package za.co.vodacom.cvm.service.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -11,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.repository.VPVouchersRepository;
 import za.co.vodacom.cvm.service.VPVouchersService;
+import za.co.vodacom.cvm.service.dto.VPVouchersDTO;
 import za.co.vodacom.cvm.service.dto.product.Product;
+import za.co.vodacom.cvm.service.mapper.VPVouchersMapper;
 
 /**
  * Service Implementation for managing {@link VPVouchers}.
@@ -24,83 +28,48 @@ public class VPVouchersServiceImpl implements VPVouchersService {
 
     private final VPVouchersRepository vPVouchersRepository;
 
-    public VPVouchersServiceImpl(VPVouchersRepository vPVouchersRepository) {
+    private final VPVouchersMapper vPVouchersMapper;
+
+    public VPVouchersServiceImpl(VPVouchersRepository vPVouchersRepository, VPVouchersMapper vPVouchersMapper) {
         this.vPVouchersRepository = vPVouchersRepository;
+        this.vPVouchersMapper = vPVouchersMapper;
     }
 
     @Override
-    public VPVouchers save(VPVouchers vPVouchers) {
-        log.debug("Request to save VPVouchers : {}", vPVouchers);
-        return vPVouchersRepository.save(vPVouchers);
+    public VPVouchersDTO save(VPVouchersDTO vPVouchersDTO) {
+        log.debug("Request to save VPVouchers : {}", vPVouchersDTO);
+        VPVouchers vPVouchers = vPVouchersMapper.toEntity(vPVouchersDTO);
+        vPVouchers = vPVouchersRepository.save(vPVouchers);
+        return vPVouchersMapper.toDto(vPVouchers);
     }
 
     @Override
-    public Optional<VPVouchers> partialUpdate(VPVouchers vPVouchers) {
-        log.debug("Request to partially update VPVouchers : {}", vPVouchers);
+    public Optional<VPVouchersDTO> partialUpdate(VPVouchersDTO vPVouchersDTO) {
+        log.debug("Request to partially update VPVouchers : {}", vPVouchersDTO);
 
         return vPVouchersRepository
-            .findById(vPVouchers.getId())
-            .map(
-                existingVPVouchers -> {
-                    if (vPVouchers.getBatchId() != null) {
-                        existingVPVouchers.setBatchId(vPVouchers.getBatchId());
-                    }
-                    if (vPVouchers.getFileId() != null) {
-                        existingVPVouchers.setFileId(vPVouchers.getFileId());
-                    }
-                    if (vPVouchers.getId() != null) {
-                        //existingVPVouchers.setProductId(vPVouchers.getId (vPVouchers.getVoucherCode() != null) {
-                        // existingVPVouchers.setVoucherCode(vPVouchers.getVoucherCode());
-                    }
-                    if (vPVouchers.getDescription() != null) {
-                        existingVPVouchers.setDescription(vPVouchers.getDescription());
-                    }
-                    if (vPVouchers.getCreateDate() != null) {
-                        existingVPVouchers.setCreateDate(vPVouchers.getCreateDate());
-                    }
-                    if (vPVouchers.getStartDate() != null) {
-                        existingVPVouchers.setStartDate(vPVouchers.getStartDate());
-                    }
-                    if (vPVouchers.getEndDate() != null) {
-                        existingVPVouchers.setEndDate(vPVouchers.getEndDate());
-                    }
-                    if (vPVouchers.getExpiryDate() != null) {
-                        existingVPVouchers.setExpiryDate(vPVouchers.getExpiryDate());
-                    }
-                    if (vPVouchers.getCollectionPoint() != null) {
-                        existingVPVouchers.setCollectionPoint(vPVouchers.getCollectionPoint());
-                    }
-                    if (vPVouchers.getIssuedDate() != null) {
-                        existingVPVouchers.setIssuedDate(vPVouchers.getIssuedDate());
-                    }
-                    if (vPVouchers.getReversedDate() != null) {
-                        existingVPVouchers.setReversedDate(vPVouchers.getReversedDate());
-                    }
-                    if (vPVouchers.getSourceTrxid() != null) {
-                        existingVPVouchers.setSourceTrxid(vPVouchers.getSourceTrxid());
-                    }
-                    if (vPVouchers.getQuantity() != null) {
-                        existingVPVouchers.setQuantity(vPVouchers.getQuantity());
-                    }
+            .findById(vPVouchersDTO.getId())
+            .map(existingVPVouchers -> {
+                vPVouchersMapper.partialUpdate(existingVPVouchers, vPVouchersDTO);
 
-                    return existingVPVouchers;
-                }
-            )
-            .map(vPVouchersRepository::save);
+                return existingVPVouchers;
+            })
+            .map(vPVouchersRepository::save)
+            .map(vPVouchersMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<VPVouchers> findAll() {
+    public List<VPVouchersDTO> findAll() {
         log.debug("Request to get all VPVouchers");
-        return vPVouchersRepository.findAll();
+        return vPVouchersRepository.findAll().stream().map(vPVouchersMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<VPVouchers> findOne(Long id) {
+    public Optional<VPVouchersDTO> findOne(Long id) {
         log.debug("Request to get VPVouchers : {}", id);
-        return vPVouchersRepository.findById(id);
+        return vPVouchersRepository.findById(id).map(vPVouchersMapper::toDto);
     }
 
     @Override
@@ -111,16 +80,17 @@ public class VPVouchersServiceImpl implements VPVouchersService {
 
     @Override
     // @Transactional
-    public Optional<VPVouchers> getValidVoucher(String productId) {
+    public Optional<VPVouchersDTO> getValidVoucher(String productId) {
         log.debug("Request to get Valid VPVouchers : {}", productId);
-        return vPVouchersRepository.getValidVoucher(productId);
+        return vPVouchersRepository.getValidVoucher(productId).map(vPVouchersMapper::toDto);
     }
 
     @Override
     // @Transactional
-    public List<VPVouchers> getValidVoucherWithLock(String productId) {
+    public List<VPVouchersDTO> getValidVoucherWithLock(String productId) {
         log.debug("Request to get Valid VPVouchers : {}", productId);
-        return vPVouchersRepository.getValidVoucherWithLock(productId, (Pageable) PageRequest.of(0,1));
+        return vPVouchersRepository.getValidVoucherWithLock(productId, (Pageable) PageRequest.of(0,1))
+            .stream().map(vPVouchersMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -131,8 +101,8 @@ public class VPVouchersServiceImpl implements VPVouchersService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<VPVouchers> getValidVoucherForReturn(String productId, Long id, String trxId) {
-        return vPVouchersRepository.getValidVoucherForReturn(productId, id, trxId);
+    public Optional<VPVouchersDTO> getValidVoucherForReturn(String productId, Long id, String trxId) {
+        return vPVouchersRepository.getValidVoucherForReturn(productId, id, trxId).map(vPVouchersMapper::toDto);
     }
 
     @Override

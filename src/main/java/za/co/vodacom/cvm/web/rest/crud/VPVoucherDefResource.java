@@ -10,14 +10,13 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
-import za.co.vodacom.cvm.domain.VPVoucherDef;
 import za.co.vodacom.cvm.repository.VPVoucherDefRepository;
 import za.co.vodacom.cvm.service.VPVoucherDefService;
+import za.co.vodacom.cvm.service.dto.VPVoucherDefDTO;
 import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
 
 /**
@@ -47,17 +46,18 @@ public class VPVoucherDefResource {
     /**
      * {@code POST  /vp-voucher-defs} : Create a new vPVoucherDef.
      *
-     * @param vPVoucherDef the vPVoucherDef to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new vPVoucherDef, or with status {@code 400 (Bad Request)} if the vPVoucherDef has already an ID.
+     * @param vPVoucherDefDTO the vPVoucherDefDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new vPVoucherDefDTO, or with status {@code 400 (Bad Request)} if the vPVoucherDef has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/vp-voucher-defs")
-    public ResponseEntity<VPVoucherDef> createVPVoucherDef(@Valid @RequestBody VPVoucherDef vPVoucherDef) throws URISyntaxException {
-        log.debug("REST request to save VPVoucherDef : {}", vPVoucherDef);
-        if (vPVoucherDef.getId() != null) {
+    public ResponseEntity<VPVoucherDefDTO> createVPVoucherDef(@Valid @RequestBody VPVoucherDefDTO vPVoucherDefDTO)
+        throws URISyntaxException {
+        log.debug("REST request to save VPVoucherDef : {}", vPVoucherDefDTO);
+        if (vPVoucherDefDTO.getId() != null) {
             throw new BadRequestAlertException("A new vPVoucherDef cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        VPVoucherDef result = vPVoucherDefService.save(vPVoucherDef);
+        VPVoucherDefDTO result = vPVoucherDefService.save(vPVoucherDefDTO);
         return ResponseEntity
             .created(new URI("/api/vp-voucher-defs/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
@@ -67,23 +67,23 @@ public class VPVoucherDefResource {
     /**
      * {@code PUT  /vp-voucher-defs/:id} : Updates an existing vPVoucherDef.
      *
-     * @param id the id of the vPVoucherDef to save.
-     * @param vPVoucherDef the vPVoucherDef to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated vPVoucherDef,
-     * or with status {@code 400 (Bad Request)} if the vPVoucherDef is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the vPVoucherDef couldn't be updated.
+     * @param id the id of the vPVoucherDefDTO to save.
+     * @param vPVoucherDefDTO the vPVoucherDefDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated vPVoucherDefDTO,
+     * or with status {@code 400 (Bad Request)} if the vPVoucherDefDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the vPVoucherDefDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/vp-voucher-defs/{id}")
-    public ResponseEntity<VPVoucherDef> updateVPVoucherDef(
-        @PathVariable(value = "id", required = false) final String id,
-        @Valid @RequestBody VPVoucherDef vPVoucherDef
+    public ResponseEntity<VPVoucherDefDTO> updateVPVoucherDef(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody VPVoucherDefDTO vPVoucherDefDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update VPVoucherDef : {}, {}", id, vPVoucherDef);
-        if (vPVoucherDef.getId() == null) {
+        log.debug("REST request to update VPVoucherDef : {}, {}", id, vPVoucherDefDTO);
+        if (vPVoucherDefDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        /*if (!Objects.equals(id, vPVoucherDef.getId())) {
+        /*if (!Objects.equals(id, vPVoucherDefDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -91,34 +91,34 @@ public class VPVoucherDefResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }*/
 
-        VPVoucherDef result = vPVoucherDefService.save(vPVoucherDef);
+        VPVoucherDefDTO result = vPVoucherDefService.save(vPVoucherDefDTO);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, vPVoucherDef.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, vPVoucherDefDTO.getId().toString()))
             .body(result);
     }
 
     /**
      * {@code PATCH  /vp-voucher-defs/:id} : Partial updates given fields of an existing vPVoucherDef, field will ignore if it is null
      *
-     * @param id the id of the vPVoucherDef to save.
-     * @param vPVoucherDef the vPVoucherDef to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated vPVoucherDef,
-     * or with status {@code 400 (Bad Request)} if the vPVoucherDef is not valid,
-     * or with status {@code 404 (Not Found)} if the vPVoucherDef is not found,
-     * or with status {@code 500 (Internal Server Error)} if the vPVoucherDef couldn't be updated.
+     * @param id the id of the vPVoucherDefDTO to save.
+     * @param vPVoucherDefDTO the vPVoucherDefDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated vPVoucherDefDTO,
+     * or with status {@code 400 (Bad Request)} if the vPVoucherDefDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the vPVoucherDefDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the vPVoucherDefDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/vp-voucher-defs/{id}", consumes = "application/merge-patch+json")
-    public ResponseEntity<VPVoucherDef> partialUpdateVPVoucherDef(
-        @PathVariable(value = "id", required = false) final String id,
-        @NotNull @RequestBody VPVoucherDef vPVoucherDef
+    @PatchMapping(value = "/vp-voucher-defs/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    public ResponseEntity<VPVoucherDefDTO> partialUpdateVPVoucherDef(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody VPVoucherDefDTO vPVoucherDefDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update VPVoucherDef partially : {}, {}", id, vPVoucherDef);
-        if (vPVoucherDef.getId() == null) {
+        log.debug("REST request to partial update VPVoucherDef partially : {}, {}", id, vPVoucherDefDTO);
+        if (vPVoucherDefDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        /*if (!Objects.equals(id, vPVoucherDef.getId())) {
+        /*if (!Objects.equals(id, vPVoucherDefDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -126,11 +126,11 @@ public class VPVoucherDefResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }*/
 
-        Optional<VPVoucherDef> result = vPVoucherDefService.partialUpdate(vPVoucherDef);
+        Optional<VPVoucherDefDTO> result = vPVoucherDefService.partialUpdate(vPVoucherDefDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, vPVoucherDef.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, vPVoucherDefDTO.getId().toString())
         );
     }
 
@@ -140,7 +140,7 @@ public class VPVoucherDefResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of vPVoucherDefs in body.
      */
     @GetMapping("/vp-voucher-defs")
-    public List<VPVoucherDef> getAllVPVoucherDefs() {
+    public List<VPVoucherDefDTO> getAllVPVoucherDefs() {
         log.debug("REST request to get all VPVoucherDefs");
         return vPVoucherDefService.findAll();
     }
@@ -148,20 +148,20 @@ public class VPVoucherDefResource {
     /**
      * {@code GET  /vp-voucher-defs/:id} : get the "id" vPVoucherDef.
      *
-     * @param id the id of the vPVoucherDef to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the vPVoucherDef, or with status {@code 404 (Not Found)}.
+     * @param id the id of the vPVoucherDefDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the vPVoucherDefDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/vp-voucher-defs/{id}")
-    public ResponseEntity<VPVoucherDef> getVPVoucherDef(@PathVariable String id) {
+    public ResponseEntity<VPVoucherDefDTO> getVPVoucherDef(@PathVariable String id) {
         log.debug("REST request to get VPVoucherDef : {}", id);
-        Optional<VPVoucherDef> vPVoucherDef = vPVoucherDefService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(vPVoucherDef);
+        Optional<VPVoucherDefDTO> vPVoucherDefDTO = vPVoucherDefService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(vPVoucherDefDTO);
     }
 
     /**
      * {@code DELETE  /vp-voucher-defs/:id} : delete the "id" vPVoucherDef.
      *
-     * @param id the id of the vPVoucherDef to delete.
+     * @param id the id of the vPVoucherDefDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/vp-voucher-defs/{id}")

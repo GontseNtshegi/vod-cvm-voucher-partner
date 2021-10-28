@@ -1,7 +1,9 @@
 package za.co.vodacom.cvm.service.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPBatch;
 import za.co.vodacom.cvm.repository.VPBatchRepository;
 import za.co.vodacom.cvm.service.VPBatchService;
+import za.co.vodacom.cvm.service.dto.VPBatchDTO;
+import za.co.vodacom.cvm.service.mapper.VPBatchMapper;
 
 /**
  * Service Implementation for managing {@link VPBatch}.
@@ -21,58 +25,48 @@ public class VPBatchServiceImpl implements VPBatchService {
 
     private final VPBatchRepository vPBatchRepository;
 
-    public VPBatchServiceImpl(VPBatchRepository vPBatchRepository) {
+    private final VPBatchMapper vPBatchMapper;
+
+    public VPBatchServiceImpl(VPBatchRepository vPBatchRepository, VPBatchMapper vPBatchMapper) {
         this.vPBatchRepository = vPBatchRepository;
+        this.vPBatchMapper = vPBatchMapper;
     }
 
     @Override
-    public VPBatch save(VPBatch vPBatch) {
-        log.debug("Request to save VPBatch : {}", vPBatch);
-        return vPBatchRepository.save(vPBatch);
+    public VPBatchDTO save(VPBatchDTO vPBatchDTO) {
+        log.debug("Request to save VPBatch : {}", vPBatchDTO);
+        VPBatch vPBatch = vPBatchMapper.toEntity(vPBatchDTO);
+        vPBatch = vPBatchRepository.save(vPBatch);
+        return vPBatchMapper.toDto(vPBatch);
     }
 
     @Override
-    public Optional<VPBatch> partialUpdate(VPBatch vPBatch) {
-        log.debug("Request to partially update VPBatch : {}", vPBatch);
+    public Optional<VPBatchDTO> partialUpdate(VPBatchDTO vPBatchDTO) {
+        log.debug("Request to partially update VPBatch : {}", vPBatchDTO);
 
         return vPBatchRepository
-            .findById(vPBatch.getId())
-            .map(
-                existingVPBatch -> {
-                    if (vPBatch.getCreateDate() != null) {
-                        existingVPBatch.setCreateDate(vPBatch.getCreateDate());
-                    }
-                    if (vPBatch.getLoadDate() != null) {
-                        existingVPBatch.setLoadDate(vPBatch.getLoadDate());
-                    }
-                    if (vPBatch.getComment() != null) {
-                        existingVPBatch.setComment(vPBatch.getComment());
-                    }
-                    if (vPBatch.getRestrictedYN() != null) {
-                        existingVPBatch.setRestrictedYN(vPBatch.getRestrictedYN());
-                    }
-                    if (vPBatch.getUserId() != null) {
-                        existingVPBatch.setUserId(vPBatch.getUserId());
-                    }
+            .findById(vPBatchDTO.getId())
+            .map(existingVPBatch -> {
+                vPBatchMapper.partialUpdate(existingVPBatch, vPBatchDTO);
 
-                    return existingVPBatch;
-                }
-            )
-            .map(vPBatchRepository::save);
+                return existingVPBatch;
+            })
+            .map(vPBatchRepository::save)
+            .map(vPBatchMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<VPBatch> findAll() {
+    public List<VPBatchDTO> findAll() {
         log.debug("Request to get all VPBatches");
-        return vPBatchRepository.findAll();
+        return vPBatchRepository.findAll().stream().map(vPBatchMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<VPBatch> findOne(Long id) {
+    public Optional<VPBatchDTO> findOne(Long id) {
         log.debug("Request to get VPBatch : {}", id);
-        return vPBatchRepository.findById(id);
+        return vPBatchRepository.findById(id).map(vPBatchMapper::toDto);
     }
 
     @Override

@@ -1,7 +1,9 @@
 package za.co.vodacom.cvm.service.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPVoucherDef;
 import za.co.vodacom.cvm.repository.VPVoucherDefRepository;
 import za.co.vodacom.cvm.service.VPVoucherDefService;
+import za.co.vodacom.cvm.service.dto.VPVoucherDefDTO;
+import za.co.vodacom.cvm.service.mapper.VPVoucherDefMapper;
 
 /**
  * Service Implementation for managing {@link VPVoucherDef}.
@@ -21,79 +25,48 @@ public class VPVoucherDefServiceImpl implements VPVoucherDefService {
 
     private final VPVoucherDefRepository vPVoucherDefRepository;
 
-    public VPVoucherDefServiceImpl(VPVoucherDefRepository vPVoucherDefRepository) {
+    private final VPVoucherDefMapper vPVoucherDefMapper;
+
+    public VPVoucherDefServiceImpl(VPVoucherDefRepository vPVoucherDefRepository, VPVoucherDefMapper vPVoucherDefMapper) {
         this.vPVoucherDefRepository = vPVoucherDefRepository;
+        this.vPVoucherDefMapper = vPVoucherDefMapper;
     }
 
     @Override
-    public VPVoucherDef save(VPVoucherDef vPVoucherDef) {
-        log.debug("Request to save VPVoucherDef : {}", vPVoucherDef);
-        return vPVoucherDefRepository.save(vPVoucherDef);
+    public VPVoucherDefDTO save(VPVoucherDefDTO vPVoucherDefDTO) {
+        log.debug("Request to save VPVoucherDef : {}", vPVoucherDefDTO);
+        VPVoucherDef vPVoucherDef = vPVoucherDefMapper.toEntity(vPVoucherDefDTO);
+        vPVoucherDef = vPVoucherDefRepository.save(vPVoucherDef);
+        return vPVoucherDefMapper.toDto(vPVoucherDef);
     }
 
     @Override
-    public Optional<VPVoucherDef> partialUpdate(VPVoucherDef vPVoucherDef) {
-        log.debug("Request to partially update VPVoucherDef : {}", vPVoucherDef);
+    public Optional<VPVoucherDefDTO> partialUpdate(VPVoucherDefDTO vPVoucherDefDTO) {
+        log.debug("Request to partially update VPVoucherDef : {}", vPVoucherDefDTO);
 
         return vPVoucherDefRepository
-            .findById(vPVoucherDef.getId())
-            .map(
-                existingVPVoucherDef -> {
-                    if (vPVoucherDef.getId() != null) {
-                        existingVPVoucherDef.setId(vPVoucherDef.getId());
-                    }
-                    if (vPVoucherDef.getDescription() != null) {
-                        existingVPVoucherDef.setDescription(vPVoucherDef.getDescription());
-                    }
-                    if (vPVoucherDef.getType() != null) {
-                        existingVPVoucherDef.setType(vPVoucherDef.getType());
-                    }
-                    if (vPVoucherDef.getCategory() != null) {
-                        existingVPVoucherDef.setCategory(vPVoucherDef.getCategory());
-                    }
-                    if (vPVoucherDef.getVendor() != null) {
-                        existingVPVoucherDef.setVendor(vPVoucherDef.getVendor());
-                    }
-                    if (vPVoucherDef.getExtId() != null) {
-                        existingVPVoucherDef.setExtId(vPVoucherDef.getExtId());
-                    }
-                    if (vPVoucherDef.getExtSystem() != null) {
-                        existingVPVoucherDef.setExtSystem(vPVoucherDef.getExtSystem());
-                    }
-                    if (vPVoucherDef.getTemplateId() != null) {
-                        existingVPVoucherDef.setTemplateId(vPVoucherDef.getTemplateId());
-                    }
-                    if (vPVoucherDef.getValidityPeriod() != null) {
-                        existingVPVoucherDef.setValidityPeriod(vPVoucherDef.getValidityPeriod());
-                    }
-                    if (vPVoucherDef.getCacheQuantity() != null) {
-                        existingVPVoucherDef.setCacheQuantity(vPVoucherDef.getCacheQuantity());
-                    }
-                    if (vPVoucherDef.getEncryptedYN() != null) {
-                        existingVPVoucherDef.setEncryptedYN(vPVoucherDef.getEncryptedYN());
-                    }
-                    if (vPVoucherDef.getModifiedDate() != null) {
-                        existingVPVoucherDef.setModifiedDate(vPVoucherDef.getModifiedDate());
-                    }
+            .findById(vPVoucherDefDTO.getId())
+            .map(existingVPVoucherDef -> {
+                vPVoucherDefMapper.partialUpdate(existingVPVoucherDef, vPVoucherDefDTO);
 
-                    return existingVPVoucherDef;
-                }
-            )
-            .map(vPVoucherDefRepository::save);
+                return existingVPVoucherDef;
+            })
+            .map(vPVoucherDefRepository::save)
+            .map(vPVoucherDefMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<VPVoucherDef> findAll() {
+    public List<VPVoucherDefDTO> findAll() {
         log.debug("Request to get all VPVoucherDefs");
-        return vPVoucherDefRepository.findAll();
+        return vPVoucherDefRepository.findAll().stream().map(vPVoucherDefMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
-    //@Transactional(readOnly = true)
-    public Optional<VPVoucherDef> findOne(String id) {
+    @Transactional(readOnly = true)
+    public Optional<VPVoucherDefDTO> findOne(String id) {
         log.debug("Request to get VPVoucherDef : {}", id);
-        return vPVoucherDefRepository.findById(id);
+        return vPVoucherDefRepository.findById(id).map(vPVoucherDefMapper::toDto);
     }
 
     @Override
@@ -103,8 +76,8 @@ public class VPVoucherDefServiceImpl implements VPVoucherDefService {
     }
 
     @Override
-    public Optional<VPVoucherDef> findById(String id) {
+    public Optional<VPVoucherDefDTO> findById(String id) {
         log.debug("Request to findByProductIdForUpdate VPVoucherDef : {}", id);
-        return vPVoucherDefRepository.findById(id);
+        return vPVoucherDefRepository.findById(id).map(vPVoucherDefMapper::toDto);
     }
 }

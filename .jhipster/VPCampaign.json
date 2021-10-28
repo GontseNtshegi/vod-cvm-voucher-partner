@@ -27,7 +27,7 @@
     }
   ],
   "entityTableName": "vp_campaign",
-  "dto": "no",
+  "dto": "mapstruct",
   "pagination": "no",
   "service": "serviceImpl",
   "jpaMetamodelFiltering": false,

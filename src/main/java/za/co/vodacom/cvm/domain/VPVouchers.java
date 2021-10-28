@@ -124,9 +124,9 @@ public class VPVouchers implements Serializable {
         this.fileId = fileId;
     }
 
-    /*  public String getProductId() {
+    public String getProductId() {
         return this.productId;
-    }*/
+    }
 
     public VPVouchers productId(String productId) {
         this.productId = productId;

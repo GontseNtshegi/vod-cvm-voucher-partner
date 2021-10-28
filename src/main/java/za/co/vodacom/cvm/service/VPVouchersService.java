@@ -2,35 +2,35 @@ package za.co.vodacom.cvm.service;
 
 import java.util.List;
 import java.util.Optional;
-import za.co.vodacom.cvm.domain.VPVouchers;
+import za.co.vodacom.cvm.service.dto.VPVouchersDTO;
 import za.co.vodacom.cvm.service.dto.product.Product;
 
 /**
- * Service Interface for managing {@link VPVouchers}.
+ * Service Interface for managing {@link za.co.vodacom.cvm.domain.VPVouchers}.
  */
 public interface VPVouchersService {
     /**
      * Save a vPVouchers.
      *
-     * @param vPVouchers the entity to save.
+     * @param vPVouchersDTO the entity to save.
      * @return the persisted entity.
      */
-    VPVouchers save(VPVouchers vPVouchers);
+    VPVouchersDTO save(VPVouchersDTO vPVouchersDTO);
 
     /**
      * Partially updates a vPVouchers.
      *
-     * @param vPVouchers the entity to update partially.
+     * @param vPVouchersDTO the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<VPVouchers> partialUpdate(VPVouchers vPVouchers);
+    Optional<VPVouchersDTO> partialUpdate(VPVouchersDTO vPVouchersDTO);
 
     /**
      * Get all the vPVouchers.
      *
      * @return the list of entities.
      */
-    List<VPVouchers> findAll();
+    List<VPVouchersDTO> findAll();
 
     /**
      * Get the "id" vPVouchers.
@@ -38,7 +38,7 @@ public interface VPVouchersService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<VPVouchers> findOne(Long id);
+    Optional<VPVouchersDTO> findOne(Long id);
 
     /**
      * Delete the "id" vPVouchers.
@@ -52,14 +52,14 @@ public interface VPVouchersService {
      * @param productId
      * @return
      */
-    Optional<VPVouchers> getValidVoucher(String productId);
+    Optional<VPVouchersDTO> getValidVoucher(String productId);
 
     /**
      * Get a valid voucher with lock
      * @param productId
      * @return
      */
-    List<VPVouchers> getValidVoucherWithLock(String productId);
+    List<VPVouchersDTO> getValidVoucherWithLock(String productId);
 
     /**
      * Issue voucher
@@ -75,7 +75,7 @@ public interface VPVouchersService {
      * @param trxId
      * @return
      */
-    Optional<VPVouchers> getValidVoucherForReturn(String productId, Long id, String trxId);
+    Optional<VPVouchersDTO> getValidVoucherForReturn(String productId, Long id, String trxId);
 
     /**
      * Update a returned voucher

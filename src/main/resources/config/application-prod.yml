@@ -163,6 +163,11 @@ application:
     name: wigroup-giftcards
     apiId: VodaSummerShake
     apiPassword: ENC(29dlGTps9Mvv/+fWBj/DQUyZe6ibS8Fc/jlmyJn0jxZRxN2kkVG7M8I45tQt+CcX)
+  gifting:
+    url: ???
+    username: ???
+    password: ???
+    feignClientName: gifting
   encryption:
     key: ENC(1Xj75roWvFEoZs5gWoSAewMdAK1oNgC2rmrWPLF1VdJpVcFp+bu2ICSBH+vhh7jTnQeL3mocg4V3xbkjTF/ayg==)
 jasypt:

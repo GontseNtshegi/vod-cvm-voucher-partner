@@ -2,34 +2,34 @@ package za.co.vodacom.cvm.service;
 
 import java.util.List;
 import java.util.Optional;
-import za.co.vodacom.cvm.domain.VPCampaignVouchers;
+import za.co.vodacom.cvm.service.dto.VPCampaignVouchersDTO;
 
 /**
- * Service Interface for managing {@link VPCampaignVouchers}.
+ * Service Interface for managing {@link za.co.vodacom.cvm.domain.VPCampaignVouchers}.
  */
 public interface VPCampaignVouchersService {
     /**
      * Save a vPCampaignVouchers.
      *
-     * @param vPCampaignVouchers the entity to save.
+     * @param vPCampaignVouchersDTO the entity to save.
      * @return the persisted entity.
      */
-    VPCampaignVouchers save(VPCampaignVouchers vPCampaignVouchers);
+    VPCampaignVouchersDTO save(VPCampaignVouchersDTO vPCampaignVouchersDTO);
 
     /**
      * Partially updates a vPCampaignVouchers.
      *
-     * @param vPCampaignVouchers the entity to update partially.
+     * @param vPCampaignVouchersDTO the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<VPCampaignVouchers> partialUpdate(VPCampaignVouchers vPCampaignVouchers);
+    Optional<VPCampaignVouchersDTO> partialUpdate(VPCampaignVouchersDTO vPCampaignVouchersDTO);
 
     /**
      * Get all the vPCampaignVouchers.
      *
      * @return the list of entities.
      */
-    List<VPCampaignVouchers> findAll();
+    List<VPCampaignVouchersDTO> findAll();
 
     /**
      * Get the "id" vPCampaignVouchers.
@@ -37,7 +37,7 @@ public interface VPCampaignVouchersService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<VPCampaignVouchers> findOne(Long id);
+    Optional<VPCampaignVouchersDTO> findOne(Long id);
 
     /**
      * Delete the "id" vPCampaignVouchers.
@@ -51,5 +51,5 @@ public interface VPCampaignVouchersService {
      * @param productId
      * @return
      */
-    Optional<VPCampaignVouchers> findByProductIdAndCampaignIdAndActiveYN(String productId, Long campaignId, String activeYN);
+    Optional<VPCampaignVouchersDTO> findByProductIdAndCampaignIdAndActiveYN(String productId, Long campaignId, String activeYN);
 }

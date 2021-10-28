@@ -2,34 +2,34 @@ package za.co.vodacom.cvm.service;
 
 import java.util.List;
 import java.util.Optional;
-import za.co.vodacom.cvm.domain.VPUsers;
+import za.co.vodacom.cvm.service.dto.VPUsersDTO;
 
 /**
- * Service Interface for managing {@link VPUsers}.
+ * Service Interface for managing {@link za.co.vodacom.cvm.domain.VPUsers}.
  */
 public interface VPUsersService {
     /**
      * Save a vPUsers.
      *
-     * @param vPUsers the entity to save.
+     * @param vPUsersDTO the entity to save.
      * @return the persisted entity.
      */
-    VPUsers save(VPUsers vPUsers);
+    VPUsersDTO save(VPUsersDTO vPUsersDTO);
 
     /**
      * Partially updates a vPUsers.
      *
-     * @param vPUsers the entity to update partially.
+     * @param vPUsersDTO the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<VPUsers> partialUpdate(VPUsers vPUsers);
+    Optional<VPUsersDTO> partialUpdate(VPUsersDTO vPUsersDTO);
 
     /**
      * Get all the vPUsers.
      *
      * @return the list of entities.
      */
-    List<VPUsers> findAll();
+    List<VPUsersDTO> findAll();
 
     /**
      * Get the "id" vPUsers.
@@ -37,7 +37,7 @@ public interface VPUsersService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<VPUsers> findOne(Long id);
+    Optional<VPUsersDTO> findOne(Long id);
 
     /**
      * Delete the "id" vPUsers.

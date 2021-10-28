@@ -163,6 +163,11 @@ application:
     name: wigroup-giftcards
     apiId: vodacomqa_voucher
     apiPassword: ENC(aMYdtF3FcPlnY7DbO8+kexkKGMm8LP5VSiXVtGkziMZXq0Zf9wpGYytjczaZiGBd)
+  gifting:
+    url: http://dpre101zatcwi.vodacom.corp:47606
+    username: rewardstest
+    password: 35A8RH2gsy
+    feignClientName: gifting
   encryption:
     key: ENC(P4W5VJ1eK/QxDjazIghFU7eaX5Erw8V6hY5tJi5/lw3N2VWfKV44yna6yP9UEGxZT/LMHmBO6kzV3YRhksppUw==)
   proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080

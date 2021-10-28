@@ -2,34 +2,34 @@ package za.co.vodacom.cvm.service;
 
 import java.util.List;
 import java.util.Optional;
-import za.co.vodacom.cvm.domain.VPCampaign;
+import za.co.vodacom.cvm.service.dto.VPCampaignDTO;
 
 /**
- * Service Interface for managing {@link VPCampaign}.
+ * Service Interface for managing {@link za.co.vodacom.cvm.domain.VPCampaign}.
  */
 public interface VPCampaignService {
     /**
      * Save a vPCampaign.
      *
-     * @param vPCampaign the entity to save.
+     * @param vPCampaignDTO the entity to save.
      * @return the persisted entity.
      */
-    VPCampaign save(VPCampaign vPCampaign);
+    VPCampaignDTO save(VPCampaignDTO vPCampaignDTO);
 
     /**
      * Partially updates a vPCampaign.
      *
-     * @param vPCampaign the entity to update partially.
+     * @param vPCampaignDTO the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<VPCampaign> partialUpdate(VPCampaign vPCampaign);
+    Optional<VPCampaignDTO> partialUpdate(VPCampaignDTO vPCampaignDTO);
 
     /**
      * Get all the vPCampaigns.
      *
      * @return the list of entities.
      */
-    List<VPCampaign> findAll();
+    List<VPCampaignDTO> findAll();
 
     /**
      * Get the "id" vPCampaign.
@@ -37,7 +37,7 @@ public interface VPCampaignService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<VPCampaign> findOne(Long id);
+    Optional<VPCampaignDTO> findOne(Long id);
 
     /**
      * Delete the "id" vPCampaign.
@@ -51,5 +51,5 @@ public interface VPCampaignService {
      * @param name
      * @return
      */
-    Optional<VPCampaign> findByName(String name);
+    Optional<VPCampaignDTO> findByName(String name);
 }

@@ -1,7 +1,9 @@
 package za.co.vodacom.cvm.service.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPFileLoad;
 import za.co.vodacom.cvm.repository.VPFileLoadRepository;
 import za.co.vodacom.cvm.service.VPFileLoadService;
+import za.co.vodacom.cvm.service.dto.VPFileLoadDTO;
+import za.co.vodacom.cvm.service.mapper.VPFileLoadMapper;
 
 /**
  * Service Implementation for managing {@link VPFileLoad}.
@@ -21,61 +25,48 @@ public class VPFileLoadServiceImpl implements VPFileLoadService {
 
     private final VPFileLoadRepository vPFileLoadRepository;
 
-    public VPFileLoadServiceImpl(VPFileLoadRepository vPFileLoadRepository) {
+    private final VPFileLoadMapper vPFileLoadMapper;
+
+    public VPFileLoadServiceImpl(VPFileLoadRepository vPFileLoadRepository, VPFileLoadMapper vPFileLoadMapper) {
         this.vPFileLoadRepository = vPFileLoadRepository;
+        this.vPFileLoadMapper = vPFileLoadMapper;
     }
 
     @Override
-    public VPFileLoad save(VPFileLoad vPFileLoad) {
-        log.debug("Request to save VPFileLoad : {}", vPFileLoad);
-        return vPFileLoadRepository.save(vPFileLoad);
+    public VPFileLoadDTO save(VPFileLoadDTO vPFileLoadDTO) {
+        log.debug("Request to save VPFileLoad : {}", vPFileLoadDTO);
+        VPFileLoad vPFileLoad = vPFileLoadMapper.toEntity(vPFileLoadDTO);
+        vPFileLoad = vPFileLoadRepository.save(vPFileLoad);
+        return vPFileLoadMapper.toDto(vPFileLoad);
     }
 
     @Override
-    public Optional<VPFileLoad> partialUpdate(VPFileLoad vPFileLoad) {
-        log.debug("Request to partially update VPFileLoad : {}", vPFileLoad);
+    public Optional<VPFileLoadDTO> partialUpdate(VPFileLoadDTO vPFileLoadDTO) {
+        log.debug("Request to partially update VPFileLoad : {}", vPFileLoadDTO);
 
         return vPFileLoadRepository
-            .findById(vPFileLoad.getId())
-            .map(
-                existingVPFileLoad -> {
-                    if (vPFileLoad.getFileName() != null) {
-                        existingVPFileLoad.setFileName(vPFileLoad.getFileName());
-                    }
-                    if (vPFileLoad.getBatchId() != null) {
-                        existingVPFileLoad.setBatchId(vPFileLoad.getBatchId());
-                    }
-                    if (vPFileLoad.getCreateDate() != null) {
-                        existingVPFileLoad.setCreateDate(vPFileLoad.getCreateDate());
-                    }
-                    if (vPFileLoad.getCompletedDate() != null) {
-                        existingVPFileLoad.setCompletedDate(vPFileLoad.getCompletedDate());
-                    }
-                    if (vPFileLoad.getNumLoaded() != null) {
-                        existingVPFileLoad.setNumLoaded(vPFileLoad.getNumLoaded());
-                    }
-                    if (vPFileLoad.getNumFailed() != null) {
-                        existingVPFileLoad.setNumFailed(vPFileLoad.getNumFailed());
-                    }
+            .findById(vPFileLoadDTO.getId())
+            .map(existingVPFileLoad -> {
+                vPFileLoadMapper.partialUpdate(existingVPFileLoad, vPFileLoadDTO);
 
-                    return existingVPFileLoad;
-                }
-            )
-            .map(vPFileLoadRepository::save);
+                return existingVPFileLoad;
+            })
+            .map(vPFileLoadRepository::save)
+            .map(vPFileLoadMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<VPFileLoad> findAll() {
+    public List<VPFileLoadDTO> findAll() {
         log.debug("Request to get all VPFileLoads");
-        return vPFileLoadRepository.findAll();
+        return vPFileLoadRepository.findAll().stream().map(vPFileLoadMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<VPFileLoad> findOne(Long id) {
+    public Optional<VPFileLoadDTO> findOne(Long id) {
         log.debug("Request to get VPFileLoad : {}", id);
-        return vPFileLoadRepository.findById(id);
+        return vPFileLoadRepository.findById(id).map(vPFileLoadMapper::toDto);
     }
 
     @Override

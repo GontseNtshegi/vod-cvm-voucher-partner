@@ -44,7 +44,7 @@
     }
   ],
   "entityTableName": "vp_campaign_vouchers",
-  "dto": "no",
+  "dto": "mapstruct",
   "pagination": "no",
   "service": "serviceImpl",
   "jpaMetamodelFiltering": false,

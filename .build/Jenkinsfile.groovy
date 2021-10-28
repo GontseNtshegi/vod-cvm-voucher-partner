@@ -9,8 +9,8 @@ def configs = [
 unitTests				: true,                            //Run/Skip Unit tests?
 qualityAnalysis			: true,                            //Run/Skip quality analysis?
 createArtifact			: true,                             //Package artifact?
-deployToNexus			: false,								//Send artifact to Nexus? N.B Cannot be set to true if project is on a feature/pull request branch
-createRelease			: false,                             //Send artifact to Open Shift?
+deployToNexus			: true,								//Send artifact to Nexus? N.B Cannot be set to true if project is on a feature/pull request branch
+createRelease			: true,                             //Send artifact to Open Shift?
 
 /* Edit according to your project */
 buildProfile			: "",                               //Include extra profiles desired; excluding dev, prod and test. ( comma seperated) "buildProfile : zip, zipkif" etc

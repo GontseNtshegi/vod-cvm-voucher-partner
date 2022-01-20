@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,9 @@ import za.co.vodacom.cvm.web.api.model.VoucherReturnRequest;
 import za.co.vodacom.cvm.web.api.model.VoucherReturnResponse;
 import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
 
+import javax.persistence.LockTimeoutException;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -137,15 +140,14 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                     voucherAllocationResponse.setExpiryDate(voucher.getExpiryDate() != null
                                         ? voucher
                                         .getExpiryDate()
-                                        .toOffsetDateTime()
-                                        .plusHours(23L)
-                                        .plusMinutes(59L)
-                                        .plusSeconds(59L)
+                                        .toLocalDate()
+                                        .atTime(23, 59, 59)
+                                        .atOffset(ZoneOffset.UTC)
                                         : OffsetDateTime
                                         .now()
-                                        .plusHours(23L)
-                                        .plusMinutes(59L)
-                                        .plusSeconds(59L)
+                                        .toLocalDate()
+                                        .atTime(23, 59, 59)
+                                        .atOffset(ZoneOffset.UTC)
                                         .plusDays(vpVoucherDef.getValidityPeriod()));
                                     voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                     voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
@@ -168,12 +170,16 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         log.debug(vpVoucher.toString());
                                         log.info(vpVoucher.toString());
                                         OffsetDateTime expiryDate = vpVoucher.getExpiryDate() != null
-                                            ? vpVoucher.getExpiryDate().toOffsetDateTime().plusHours(23L).plusMinutes(59L).plusSeconds(59L)
+                                            ? vpVoucher
+                                            .getExpiryDate()
+                                            .toLocalDate()
+                                            .atTime(23, 59, 59)
+                                            .atOffset(ZoneOffset.UTC)
                                             : OffsetDateTime
                                             .now()
-                                            .plusHours(23L)
-                                            .plusMinutes(59L)
-                                            .plusSeconds(59L)
+                                            .toLocalDate()
+                                            .atTime(23, 59, 59)
+                                            .atOffset(ZoneOffset.UTC)
                                             .plusDays(vpVoucherDef.getValidityPeriod());
 
                                         String voucherCode = vpVoucher.getVoucherCode();
@@ -215,9 +221,9 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                     ) {
                                         OffsetDateTime expiryDate = OffsetDateTime
                                             .now()
-                                            .plusHours(23L)
-                                            .plusMinutes(59L)
-                                            .plusSeconds(59L)
+                                            .toLocalDate()
+                                            .atTime(23, 59, 59)
+                                            .atOffset(ZoneOffset.UTC)
                                             .plusDays(vpVoucherDef.getValidityPeriod());
 
                                         String voucherCode = couponsResponse.getCoupon().getWiCode() + "";
@@ -273,7 +279,8 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
         return issueVoucher(voucherAllocationRequest);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Retryable(maxAttempts = 2, value = RuntimeException.class)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
     public VPVouchers getAndIssueVoucher(String productId, String transactionId) {
         List<VPVouchers> vpVouchers = vpVouchersService.getValidVoucherWithLock(
             productId
@@ -281,7 +288,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
         // Vouchers found ?
         if (vpVouchers.isEmpty()) {
-            throw new AllocationException("Voucher not available", Status.NOT_FOUND);
+            throw new LockTimeoutException("Voucher not available", new Throwable());
         }
 
         log.info("Voucher available to issue for {}.", productId);

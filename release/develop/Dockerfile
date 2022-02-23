@@ -13,7 +13,7 @@ RUN \
 
 ADD http://nexus-cvm-microservices-prod.app.prod.tc.ocp.vodacom.corp/repository/appdynamics/opt/apdynamics/AppServerAgentt.zip /opt/appdynamics/
 COPY cp-voucher-partner.jar  /opt/appdynamics/cp-voucher-partner.jar
-RUN chmod -R o+x /opt/appdynamics/
+RUN chmod 777 -R /opt/appdynamics/
 RUN apk add --no-cache curl
 WORKDIR /opt/appdynamics/
 RUN unzip AppServerAgentt.zip

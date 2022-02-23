@@ -123,8 +123,9 @@ application:
     apiId: dfd
     apiPassword: sddsf
   giftCards:
+    url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     name: wigroup-giftcards
-    apiId: vodacomqa_voucher
+    apiId: vodacomqa_giftcard
     apiPassword: test
   encryption:
     key: 7a6f6f70666f6f74

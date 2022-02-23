@@ -12,9 +12,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
-import za.co.vodacom.cvm.client.wigroup.model.CouponsDelResponse;
-import za.co.vodacom.cvm.client.wigroup.model.CouponsRequest;
-import za.co.vodacom.cvm.client.wigroup.model.CouponsResponse;
+import za.co.vodacom.cvm.client.wigroup.api.GiftcardsApiClient;
+import za.co.vodacom.cvm.client.wigroup.model.*;
 import za.co.vodacom.cvm.config.ApplicationProperties;
 import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPCampaign;
@@ -68,6 +67,9 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     CouponsApiClient couponsApiClient;
 
     @Autowired
+    GiftcardsApiClient giftcardsApiClient;
+
+    @Autowired
     Tracer tracer;
 
     @Autowired
@@ -103,6 +105,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
         log.info(voucherAllocationRequest.toString());
 
         CouponsRequest couponsRequest = new CouponsRequest();
+        GiftCardsRequest giftCardsRequest = new GiftCardsRequest();
 
         if (voucherAllocationRequest.getMsisdn().length() == 11 && Pattern.matches(applicationProperties.getMsisdn().getExternal(), voucherAllocationRequest.getMsisdn())) {
             voucherAllocationRequest.setMsisdn(msisdnConverter.convertToInternal(voucherAllocationRequest.getMsisdn()));
@@ -255,6 +258,68 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                     } else { //failed
                                         throw new WiGroupException(
                                             couponsResponseResponseEntity.getBody().getResponseDesc(),
+                                            Status.INTERNAL_SERVER_ERROR
+                                        );
+                                    }
+                                    break;
+
+                                case Constants.ONLINE_GIFT_CARD:
+
+                                    giftCardsRequest.setCampaignId(vpVoucherDef.getExtId());
+                                    giftCardsRequest.setBalance(voucherAllocationRequest.getValue().longValue());
+                                    giftCardsRequest.setUserRef(msisdnConverter.convertToExternal(voucherAllocationRequest.getMsisdn()));
+                                    giftCardsRequest.setMobileNumber(msisdnConverter.convertToExternal(voucherAllocationRequest.getMsisdn()));
+                                    giftCardsRequest.setStateId(GiftCardsRequest.StateIdEnum.A);
+
+                                    log.info(giftCardsRequest.toString());
+                                    //call wi group
+                                    ResponseEntity<GiftCardsResponse> giftCardsResponseResponseEntity= giftcardsApiClient.updateVoucherToReserved(
+                                        true,
+                                        giftCardsRequest
+                                    );
+                                    //success
+                                    GiftCardsResponse giftCardsResponse = giftCardsResponseResponseEntity.getBody();
+                                    log.info("Gift Card Response is: {}",giftCardsResponse);
+                                    if (
+                                        giftCardsResponse.getResponseCode().equals(Constants.RESPONSE_CODE) ||
+                                            giftCardsResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
+                                    ) {
+                                        OffsetDateTime expiryDate = OffsetDateTime
+                                            .now()
+                                            .toLocalDate()
+                                            .atTime(23, 59, 59)
+                                            .atOffset(ZoneOffset.UTC)
+                                            .plusDays(vpVoucherDef.getValidityPeriod());
+
+                                        String voucherCode = giftCardsResponse.getGiftcard().getWiCode() + "";
+                                        try { //Encrypt code
+                                            voucherCode =
+                                                vpVoucherDef.getEncryptedYN() != null &&
+                                                    vpVoucherDef.getEncryptedYN().equalsIgnoreCase(Constants.YES)
+                                                    ? rsaEncryption.encrypt(
+                                                    voucherCode,
+                                                    applicationProperties.getEncryption().getKey()
+                                                )
+                                                    : voucherCode;
+                                        } catch (Exception e) {
+                                            log.error(e.getMessage());
+                                        }
+                                        //set response
+                                        voucherAllocationResponse.setCollectPoint(vpVoucherDef.getVendor());
+                                        voucherAllocationResponse.setExpiryDate(expiryDate);
+                                        voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
+                                        voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
+                                        voucherAllocationResponse.setVoucherCode(voucherCode);
+                                        voucherAllocationResponse.setVoucherDescription(vpVoucherDef.getDescription());
+                                        voucherAllocationResponse.setVoucherId(giftCardsResponse.getGiftcard().getId());
+                                        voucherAllocationResponse.setVoucherType(vpVoucherDef.getType());
+                                        voucherAllocationResponse.setVoucherVendor(vpVoucherDef.getVendor());
+                                        voucherAllocationResponse.setEncryptedYN(vpVoucherDef.getEncryptedYN());
+
+                                        log.debug(voucherAllocationResponse.toString());
+                                    } else { //failed
+                                        throw new WiGroupException(
+                                            giftCardsResponseResponseEntity.getBody().getResponseDesc(),
                                             Status.INTERNAL_SERVER_ERROR
                                         );
                                     }

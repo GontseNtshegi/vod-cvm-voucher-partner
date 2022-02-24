@@ -160,8 +160,9 @@ application:
     apiId: vodacomqa_voucher
     apiPassword: ENC(hXtf4TV12Puvss/fpEwEBi44RPIaZA4AXwcFXEcl+chbHy+TBa8okaMV6pXQ/9ay)
   giftCards:
+    url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     name: wigroup-giftcards
-    apiId: vodacomqa_voucher
+    apiId: vodacomqa_giftcard
     apiPassword: ENC(aMYdtF3FcPlnY7DbO8+kexkKGMm8LP5VSiXVtGkziMZXq0Zf9wpGYytjczaZiGBd)
   encryption:
     key: ENC(P4W5VJ1eK/QxDjazIghFU7eaX5Erw8V6hY5tJi5/lw3N2VWfKV44yna6yP9UEGxZT/LMHmBO6kzV3YRhksppUw==)

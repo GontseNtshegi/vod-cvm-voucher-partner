@@ -117,6 +117,43 @@ paths:
           description: Method Not Allowed
         '500':
           description: Internal Server Error
+  /voucher/redemption/{voucherId}:
+    post:
+      tags:
+        - voucher
+      summary: Return a voucher which was issued
+      operationId: redeemVoucher
+      description: Redeem a voucher which was issued
+      parameters:
+        - name: voucherId
+          in: path
+          required: true
+          description: Issues a new voucher code against a gift card which has had a partial redemption
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoucherRedemptionRequest'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoucherRedemptionResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
 components:
   schemas:
     VoucherAllocationRequest:
@@ -255,6 +292,29 @@ components:
           type: string
         minExpiry:
           description: 'The minimum expiry date'
+          type: string
+          format: date-time
+    VoucherRedemptionRequest:
+      type: object
+      properties:
+        origin:
+          description: Origin Identifier
+          type: string
+        campaign:
+          description: campaign identifier
+          type: string
+      required:
+        - origin
+        - campaign
+    VoucherRedemptionResponse:
+      type: object
+      properties:
+        voucherCode:
+          description: >-
+            The voucher
+          type: string
+        expiryDate:
+          description: The date by which the voucher has to be redeemed
           type: string
           format: date-time
     Problem:

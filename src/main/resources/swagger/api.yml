@@ -154,6 +154,49 @@ paths:
           description: Method Not Allowed
         '500':
           description: Internal Server Error
+  /voucher/balance/{voucherid}:
+    get:
+      tags:
+        - voucher
+      summary: Retrieves the current balance for a Wigroup giftcard.
+      operationId: voucherbalance
+      description: Check the current balance for given voucher based on the voucherid
+      parameters:
+        - name: voucherid
+          in: path
+          required: true
+          description: the id of the issued gift card
+          schema:
+            type: integer
+        - name: origin
+          in: query
+          required: true
+          description: origin identifier
+          schema:
+            type: string
+        - name: campaign
+          in: query
+          required: true
+          description: campaign identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucessful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoucherBalanceResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
 components:
   schemas:
     VoucherAllocationRequest:
@@ -317,6 +360,24 @@ components:
           description: The date by which the voucher has to be redeemed
           type: string
           format: date-time
+    VoucherBalanceResponse:
+      type: object
+      properties:
+        balance:
+          type: number
+          description: remaining balance on the gift card
+        issuedAmount:
+          type: number
+          description: The amount issued for the gift card
+        redeemedAmount:
+          type: number
+          description: The amount redeemed from the gift card
+        expiredAmount:
+          type: number
+          description: The amount expired from the gift card
+        expiryDate:
+          type: string
+          description: the date the giftcard expires "2015-05-25T23:59:59+0200"
     Problem:
       type: object
       properties:

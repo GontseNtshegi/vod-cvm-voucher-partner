@@ -305,7 +305,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         voucherAllocationResponse.setExpiryDate(expiryDate);
                                         voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                         voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
-                                        voucherAllocationResponse.setVoucherCode(giftCardsResponse.getGiftcard().getWiCode());
+                                        voucherAllocationResponse.setVoucherCode(voucherCode);
                                         voucherAllocationResponse.setVoucherDescription(vpVoucherDef.getDescription());
                                         voucherAllocationResponse.setVoucherId(giftCardsResponse.getGiftcard().getId());
                                         voucherAllocationResponse.setVoucherType(vpVoucherDef.getType());

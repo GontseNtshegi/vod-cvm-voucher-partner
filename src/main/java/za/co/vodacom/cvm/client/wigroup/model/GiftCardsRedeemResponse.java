@@ -5,18 +5,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import za.co.vodacom.cvm.client.wigroup.model.GiftCardsResponseGiftcard;
+import za.co.vodacom.cvm.client.wigroup.model.GiftCardsRedeemResponseToken;
 import org.openapitools.jackson.nullable.JsonNullable;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * GiftCardsResponse
+ * GiftCardsRedeemResponse
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-02-28T09:46:21.052981400+02:00[Africa/Harare]")
-public class GiftCardsResponse   {
-  @JsonProperty("giftcard")
-  private GiftCardsResponseGiftcard giftcard;
+public class GiftCardsRedeemResponse   {
+  @JsonProperty("token")
+  private GiftCardsRedeemResponseToken token;
 
   @JsonProperty("responseCode")
   private String responseCode;
@@ -24,28 +24,28 @@ public class GiftCardsResponse   {
   @JsonProperty("responseDesc")
   private String responseDesc;
 
-  public GiftCardsResponse giftcard(GiftCardsResponseGiftcard giftcard) {
-    this.giftcard = giftcard;
+  public GiftCardsRedeemResponse token(GiftCardsRedeemResponseToken token) {
+    this.token = token;
     return this;
   }
 
   /**
-   * Get giftcard
-   * @return giftcard
+   * Get token
+   * @return token
   */
   @ApiModelProperty(value = "")
 
   @Valid
 
-  public GiftCardsResponseGiftcard getGiftcard() {
-    return giftcard;
+  public GiftCardsRedeemResponseToken getToken() {
+    return token;
   }
 
-  public void setGiftcard(GiftCardsResponseGiftcard giftcard) {
-    this.giftcard = giftcard;
+  public void setToken(GiftCardsRedeemResponseToken token) {
+    this.token = token;
   }
 
-  public GiftCardsResponse responseCode(String responseCode) {
+  public GiftCardsRedeemResponse responseCode(String responseCode) {
     this.responseCode = responseCode;
     return this;
   }
@@ -65,7 +65,7 @@ public class GiftCardsResponse   {
     this.responseCode = responseCode;
   }
 
-  public GiftCardsResponse responseDesc(String responseDesc) {
+  public GiftCardsRedeemResponse responseDesc(String responseDesc) {
     this.responseDesc = responseDesc;
     return this;
   }
@@ -94,23 +94,23 @@ public class GiftCardsResponse   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    GiftCardsResponse giftCardsResponse = (GiftCardsResponse) o;
-    return Objects.equals(this.giftcard, giftCardsResponse.giftcard) &&
-        Objects.equals(this.responseCode, giftCardsResponse.responseCode) &&
-        Objects.equals(this.responseDesc, giftCardsResponse.responseDesc);
+    GiftCardsRedeemResponse giftCardsRedeemResponse = (GiftCardsRedeemResponse) o;
+    return Objects.equals(this.token, giftCardsRedeemResponse.token) &&
+        Objects.equals(this.responseCode, giftCardsRedeemResponse.responseCode) &&
+        Objects.equals(this.responseDesc, giftCardsRedeemResponse.responseDesc);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(giftcard, responseCode, responseDesc);
+    return Objects.hash(token, responseCode, responseDesc);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class GiftCardsResponse {\n");
+    sb.append("class GiftCardsRedeemResponse {\n");
     
-    sb.append("    giftcard: ").append(toIndentedString(giftcard)).append("\n");
+    sb.append("    token: ").append(toIndentedString(token)).append("\n");
     sb.append("    responseCode: ").append(toIndentedString(responseCode)).append("\n");
     sb.append("    responseDesc: ").append(toIndentedString(responseDesc)).append("\n");
     sb.append("}");

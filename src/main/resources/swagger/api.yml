@@ -316,7 +316,6 @@ components:
         expiryDate:
           description: The date by which the voucher has to be redeemed
           type: string
-          format: date-time
     Problem:
       type: object
       properties:

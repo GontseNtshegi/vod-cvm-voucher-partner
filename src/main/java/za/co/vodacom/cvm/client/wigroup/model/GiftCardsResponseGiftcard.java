@@ -15,7 +15,7 @@ import javax.validation.constraints.*;
  * GiftCards from WiGroup
  */
 @ApiModel(description = "GiftCards from WiGroup")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-02-23T12:47:32.039955200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-02-28T09:46:21.052981400+02:00[Africa/Harare]")
 public class GiftCardsResponseGiftcard   {
   @JsonProperty("id")
   private Long id;
@@ -108,7 +108,7 @@ public class GiftCardsResponseGiftcard   {
   private StateIdEnum stateId;
 
   @JsonProperty("wiCode")
-  private Long wiCode;
+  private String wiCode;
 
   @JsonProperty("redeemFromTime")
   private String redeemFromTime;
@@ -460,7 +460,7 @@ public class GiftCardsResponseGiftcard   {
     this.stateId = stateId;
   }
 
-  public GiftCardsResponseGiftcard wiCode(Long wiCode) {
+  public GiftCardsResponseGiftcard wiCode(String wiCode) {
     this.wiCode = wiCode;
     return this;
   }
@@ -472,11 +472,11 @@ public class GiftCardsResponseGiftcard   {
   @ApiModelProperty(value = "The wiCode linked to the user token.")
 
 
-  public Long getWiCode() {
+  public String getWiCode() {
     return wiCode;
   }
 
-  public void setWiCode(Long wiCode) {
+  public void setWiCode(String wiCode) {
     this.wiCode = wiCode;
   }
 

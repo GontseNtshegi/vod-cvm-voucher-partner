@@ -15,7 +15,7 @@ import javax.validation.constraints.*;
  * GiftCards from WiGroup
  */
 @ApiModel(description = "GiftCards from WiGroup")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-02-23T12:47:32.039955200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-03-01T15:34:21.931559100+02:00[Africa/Harare]")
 public class GiftCardsResponseGiftcard   {
   @JsonProperty("id")
   private Long id;
@@ -107,8 +107,8 @@ public class GiftCardsResponseGiftcard   {
   @JsonProperty("stateId")
   private StateIdEnum stateId;
 
-  @JsonProperty("wiCode")
-  private Long wiCode;
+  @JsonProperty("wicode")
+  private String wicode;
 
   @JsonProperty("redeemFromTime")
   private String redeemFromTime;
@@ -460,24 +460,24 @@ public class GiftCardsResponseGiftcard   {
     this.stateId = stateId;
   }
 
-  public GiftCardsResponseGiftcard wiCode(Long wiCode) {
-    this.wiCode = wiCode;
+  public GiftCardsResponseGiftcard wicode(String wicode) {
+    this.wicode = wicode;
     return this;
   }
 
   /**
    * The wiCode linked to the user token.
-   * @return wiCode
+   * @return wicode
   */
   @ApiModelProperty(value = "The wiCode linked to the user token.")
 
 
-  public Long getWiCode() {
-    return wiCode;
+  public String getWicode() {
+    return wicode;
   }
 
-  public void setWiCode(Long wiCode) {
-    this.wiCode = wiCode;
+  public void setWicode(String wicode) {
+    this.wicode = wicode;
   }
 
   public GiftCardsResponseGiftcard redeemFromTime(String redeemFromTime) {
@@ -547,14 +547,14 @@ public class GiftCardsResponseGiftcard   {
         Objects.equals(this.description, giftCardsResponseGiftcard.description) &&
         Objects.equals(this.termsAndConditions, giftCardsResponseGiftcard.termsAndConditions) &&
         Objects.equals(this.stateId, giftCardsResponseGiftcard.stateId) &&
-        Objects.equals(this.wiCode, giftCardsResponseGiftcard.wiCode) &&
+        Objects.equals(this.wicode, giftCardsResponseGiftcard.wicode) &&
         Objects.equals(this.redeemFromTime, giftCardsResponseGiftcard.redeemFromTime) &&
         Objects.equals(this.redeemToTime, giftCardsResponseGiftcard.redeemToTime);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, campaignId, interfaceIssuerId, issuerId, userRef, mobileNumber, issuedAmount, redeemedAmount, expiryAmount, balance, createDate, expiryDate, campaignName, campaignType, description, termsAndConditions, stateId, wiCode, redeemFromTime, redeemToTime);
+    return Objects.hash(id, campaignId, interfaceIssuerId, issuerId, userRef, mobileNumber, issuedAmount, redeemedAmount, expiryAmount, balance, createDate, expiryDate, campaignName, campaignType, description, termsAndConditions, stateId, wicode, redeemFromTime, redeemToTime);
   }
 
   @Override
@@ -579,7 +579,7 @@ public class GiftCardsResponseGiftcard   {
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    termsAndConditions: ").append(toIndentedString(termsAndConditions)).append("\n");
     sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
-    sb.append("    wiCode: ").append(toIndentedString(wiCode)).append("\n");
+    sb.append("    wicode: ").append(toIndentedString(wicode)).append("\n");
     sb.append("    redeemFromTime: ").append(toIndentedString(redeemFromTime)).append("\n");
     sb.append("    redeemToTime: ").append(toIndentedString(redeemToTime)).append("\n");
     sb.append("}");

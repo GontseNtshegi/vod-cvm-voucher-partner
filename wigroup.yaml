@@ -451,10 +451,9 @@ components:
                                 - D
                                 - E
                                 - R
-                        wiCode:
+                        wicode:
                             description: The wiCode linked to the user token.
-                            type: integer
-                            format: int64
+                            type: string
                         redeemFromTime:
                             description: From which date the gift card can be redeemed
                             type: string

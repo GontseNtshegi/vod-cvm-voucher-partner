@@ -30,16 +30,12 @@ import za.co.vodacom.cvm.service.VPVouchersService;
 import za.co.vodacom.cvm.utils.MSISDNConverter;
 import za.co.vodacom.cvm.utils.RSAEncryption;
 import za.co.vodacom.cvm.web.api.VoucherApiDelegate;
-import za.co.vodacom.cvm.web.api.model.VoucherAllocationRequest;
-import za.co.vodacom.cvm.web.api.model.VoucherAllocationResponse;
-import za.co.vodacom.cvm.web.api.model.VoucherReturnRequest;
-import za.co.vodacom.cvm.web.api.model.VoucherReturnResponse;
+import za.co.vodacom.cvm.web.api.model.*;
 import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
 
 import javax.persistence.LockTimeoutException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -273,13 +269,13 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
                                     log.info(giftCardsRequest.toString());
                                     //call wi group
-                                    ResponseEntity<GiftCardsResponse> giftCardsResponseResponseEntity= giftcardsApiClient.updateVoucherToReserved(
+                                    ResponseEntity<GiftCardsResponse> giftCardsResponseResponseEntity = giftcardsApiClient.updateVoucherToReserved(
                                         true,
                                         giftCardsRequest
                                     );
                                     //success
                                     GiftCardsResponse giftCardsResponse = giftCardsResponseResponseEntity.getBody();
-                                    log.info("Gift Card Response is: {}",giftCardsResponse);
+                                    log.info("Gift Card Response is: {}", giftCardsResponse);
                                     if (
                                         giftCardsResponse.getResponseCode().equals(Constants.RESPONSE_CODE) ||
                                             giftCardsResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
@@ -291,7 +287,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                             .atOffset(ZoneOffset.UTC)
                                             .plusDays(vpVoucherDef.getValidityPeriod());
 
-                                        String voucherCode = giftCardsResponse.getGiftcard().getWiCode() + "";
+                                        String voucherCode = giftCardsResponse.getGiftcard().getWiCode();
                                         try { //Encrypt code
                                             voucherCode =
                                                 vpVoucherDef.getEncryptedYN() != null &&
@@ -374,12 +370,10 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
             voucherReturnRequest.setMsisdn(msisdnConverter.convertToInternal(voucherReturnRequest.getMsisdn()));
             couponsRequest.setMobileNumber(voucherReturnRequest.getMsisdn());
             couponsRequest.setUserRef(voucherReturnRequest.getMsisdn());
-        }
-        else if (voucherReturnRequest.getMsisdn().length() == 15 && Pattern.matches(applicationProperties.getMsisdn().getInternal(), voucherReturnRequest.getMsisdn())) {
+        } else if (voucherReturnRequest.getMsisdn().length() == 15 && Pattern.matches(applicationProperties.getMsisdn().getInternal(), voucherReturnRequest.getMsisdn())) {
             couponsRequest.setMobileNumber(msisdnConverter.convertToExternal(voucherReturnRequest.getMsisdn()));
             couponsRequest.setUserRef(msisdnConverter.convertToExternal(voucherReturnRequest.getMsisdn()));
-        }
-        else
+        } else
             throw new BadRequestAlertException("Invalid MSISDN format: " + voucherReturnRequest.getMsisdn(), ENTITY_NAME, "11 or 15 digits required");
 
         VoucherReturnResponse voucherReturnResponse = new VoucherReturnResponse();
@@ -458,4 +452,41 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     public ResponseEntity<VoucherReturnResponse> returnVoucherFallback(Long voucherId, VoucherReturnRequest voucherReturnRequest) {
         return returnVoucher(voucherId, voucherReturnRequest);
     }
+
+
+    @Override
+    public ResponseEntity<VoucherRedemptionResponse> redeemVoucher(Long voucherId, VoucherRedemptionRequest voucherRedemptionRequest) {
+        VoucherRedemptionResponse redemptionResponse = new VoucherRedemptionResponse();
+        //Check that the incoming campaign is valid as per VP_CAMPAIGN
+        Optional<VPCampaign> vpCampaign = vpCampaignService.findByName(voucherRedemptionRequest.getCampaign());
+        if (vpCampaign.isPresent()) {
+
+            //call wi group
+            ResponseEntity<GiftCardsRedeemResponse> giftCardsRedeemResponseResponseEntity = giftcardsApiClient.redeemGiftcard(voucherId
+            );
+            //success
+            GiftCardsRedeemResponse giftCardsRedeemResponse = giftCardsRedeemResponseResponseEntity.getBody();
+            log.info("Gift Card Response is: {}", giftCardsRedeemResponse);
+            if (
+                giftCardsRedeemResponse.getResponseCode().equals(Constants.RESPONSE_CODE) ||
+                    giftCardsRedeemResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
+            ) {
+
+                //set response
+                redemptionResponse.setVoucherCode(giftCardsRedeemResponse.getToken().getWiCode());
+                redemptionResponse.setExpiryDate(giftCardsRedeemResponse.getToken().getValidTillDate());
+
+                log.debug(redemptionResponse.toString());
+            } else { //failed
+                throw new WiGroupException(
+                    giftCardsRedeemResponseResponseEntity.getBody().getResponseDesc(),
+                    Status.INTERNAL_SERVER_ERROR
+                );
+            }
+        } else {
+            throw new AllocationException("Invalid Campaign", Status.NOT_FOUND);
+        }
+        return new ResponseEntity<>(redemptionResponse, HttpStatus.OK);
+    }
+
 }

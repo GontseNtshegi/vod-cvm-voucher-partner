@@ -485,7 +485,7 @@ components:
                                 - D
                                 - E
                                 - R
-                        wiCode:
+                        wicode:
                             description: The wiCode linked to the user token.
                             type: string
                         redeemFromTime:

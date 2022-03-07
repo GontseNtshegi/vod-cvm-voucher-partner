@@ -287,7 +287,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                             .atOffset(ZoneOffset.UTC)
                                             .plusDays(vpVoucherDef.getValidityPeriod());
 
-                                        String voucherCode = giftCardsResponse.getGiftcard().getWiCode();
+                                        String voucherCode = giftCardsResponse.getGiftcard().getWicode();
                                         try { //Encrypt code
                                             voucherCode =
                                                 vpVoucherDef.getEncryptedYN() != null &&

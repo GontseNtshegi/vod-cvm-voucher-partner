@@ -14,7 +14,7 @@ import javax.validation.constraints.*;
  * GiftCards from WiGroup
  */
 @ApiModel(description = "GiftCards from WiGroup")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-02-28T09:46:21.052981400+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-03-07T11:18:06.608682700+02:00[Africa/Harare]")
 public class GiftCardsRedeemResponseToken   {
   @JsonProperty("userRef")
   private String userRef;

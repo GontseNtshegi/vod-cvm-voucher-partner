@@ -152,40 +152,6 @@ paths:
                     description: Method Not Allowed
                 '500':
                     description: Internal Server Error
-    '/giftcards/{id}/wicode':
-        post:
-            tags:
-                - giftcards
-            summary: Customer voucher redemption
-            operationId: RedeemGiftcard
-            description: issue a wicode against giftcard for length of giftcard expiry
-            parameters:
-                -   name: id
-                    in: query
-                    required: true
-                    description: >-
-                        The original wigroup voucher id or VP_VOUCHER.ID used to issued the
-                        voucher
-                    schema:
-                        type: integer
-                        format: int64
-            responses:
-                '200':
-                    description: Sucessful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GiftCardsRedeemResponse'
-                '204':
-                    description: No content
-                '400':
-                    description: Bad Request
-                '404':
-                    description: Not Found
-                '405':
-                    description: Method Not Allowed
-                '500':
-                    description: Internal Server Error
 components:
     schemas:
         CouponsRequest:
@@ -485,7 +451,7 @@ components:
                                 - D
                                 - E
                                 - R
-                        wiCode:
+                        wicode:
                             description: The wiCode linked to the user token.
                             type: string
                         redeemFromTime:
@@ -494,46 +460,6 @@ components:
                         redeemToTime:
                             description: Until when the gift card is redeemable.
                             type: string
-                responseCode:
-                    description: The date by which the voucher has to be redeemed
-                    type: string
-                responseDesc:
-                    description: The date by which the voucher has to be redeemed
-                    type: string
-        GiftCardsRedeemResponse:
-            type: object
-            properties:
-                token:
-                    description: GiftCards from WiGroup
-                    type: object
-                    properties:
-                        userRef:
-                            description: >-
-                                A unique user reference as on the issuer channel system. This
-                                reference will be used to restrict user limits on campaigns.
-                            type: string
-                        wiCode:
-                            description: The wiCode linked to the user token.
-                            type: string
-                        createDate:
-                            description: The date the giftcard was created.
-                            type: string
-                        validTillDate:
-                            description: The date the wicode is valid to.
-                            type: string
-                        lastModifiedDate:
-                            description: The last modified date.
-                            type: string
-                        stateId:
-                            description: >-
-                                The current state of the GiftCard. A (Active) D (Deactivated) E
-                                (Expired) R (Redeemed)
-                            type: string
-                            enum:
-                                - A
-                                - D
-                                - E
-                                - R
                 responseCode:
                     description: The date by which the voucher has to be redeemed
                     type: string

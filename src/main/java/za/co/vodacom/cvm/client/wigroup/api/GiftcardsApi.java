@@ -5,6 +5,7 @@
  */
 package za.co.vodacom.cvm.client.wigroup.api;
 
+import za.co.vodacom.cvm.client.wigroup.model.GiftCardsBalanceResponse;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsRequest;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsResponse;
 import io.swagger.annotations.*;
@@ -22,7 +23,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-02-23T12:47:32.039955200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-03-10T08:13:28.436+02:00[Africa/Harare]")
 @Validated
 @Api(value = "Giftcards", description = "the Giftcards API")
 public interface GiftcardsApi {
@@ -54,5 +55,32 @@ public interface GiftcardsApi {
         consumes = "application/json"
     )
     ResponseEntity<GiftCardsResponse> updateVoucherToReserved(@NotNull @ApiParam(value = "The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher", required = true, defaultValue = "true") @Valid @RequestParam(value = "issueWiCode", required = true, defaultValue="true") Boolean issueWiCode,@ApiParam(value = ""  )  @Valid @RequestBody(required = false) GiftCardsRequest giftCardsRequest);
+
+
+    /**
+     * GET /giftcards/{id} : Customer voucher balance view
+     * This call can be used to retrieve (get) a wiGroup Gift Card
+     *
+     * @param id The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher (required)
+     * @return Sucessful operation (status code 200)
+     *         or No content (status code 204)
+     *         or Bad Request (status code 400)
+     *         or Not Found (status code 404)
+     *         or Method Not Allowed (status code 405)
+     *         or Internal Server Error (status code 500)
+     */
+    @ApiOperation(value = "Customer voucher balance view", nickname = "viewGiftcard", notes = "This call can be used to retrieve (get) a wiGroup Gift Card", response = GiftCardsBalanceResponse.class, tags={ "giftcards", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Sucessful operation", response = GiftCardsBalanceResponse.class),
+        @ApiResponse(code = 204, message = "No content"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 404, message = "Not Found"),
+        @ApiResponse(code = 405, message = "Method Not Allowed"),
+        @ApiResponse(code = 500, message = "Internal Server Error") })
+    @GetMapping(
+        value = "/giftcards/{id}",
+        produces = "application/json"
+    )
+    ResponseEntity<GiftCardsBalanceResponse> viewGiftcard(@NotNull @ApiParam(value = "The original wigroup voucher id or VP_VOUCHER.ID used to issued the voucher", required = true) @Valid @RequestParam(value = "id", required = true) Long id);
 
 }

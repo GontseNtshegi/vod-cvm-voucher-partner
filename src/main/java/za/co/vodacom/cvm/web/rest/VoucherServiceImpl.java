@@ -262,7 +262,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                 case Constants.ONLINE_GIFT_CARD:
 
                                     giftCardsRequest.setCampaignId(vpVoucherDef.getExtId());
-                                    giftCardsRequest.setBalance(voucherAllocationRequest.getValue().longValue());
+                                    giftCardsRequest.setBalance(voucherAllocationRequest.getValue().longValue() * 100);
                                     giftCardsRequest.setUserRef(msisdnConverter.convertToExternal(voucherAllocationRequest.getMsisdn()));
                                     giftCardsRequest.setMobileNumber(msisdnConverter.convertToExternal(voucherAllocationRequest.getMsisdn()));
                                     giftCardsRequest.setStateId(GiftCardsRequest.StateIdEnum.A);
@@ -287,7 +287,8 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                             .atOffset(ZoneOffset.UTC)
                                             .plusDays(vpVoucherDef.getValidityPeriod());
 
-                                        String voucherCode = giftCardsResponse.getGiftcard().getWiCode();
+                                        String voucherCode = giftCardsResponse.getGiftcard().getWicode() + "";
+
                                         try { //Encrypt code
                                             voucherCode =
                                                 vpVoucherDef.getEncryptedYN() != null &&
@@ -451,6 +452,50 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     //retry once
     public ResponseEntity<VoucherReturnResponse> returnVoucherFallback(Long voucherId, VoucherReturnRequest voucherReturnRequest) {
         return returnVoucher(voucherId, voucherReturnRequest);
+    }
+
+    @Override
+    public ResponseEntity<VoucherBalanceResponse> voucherbalance(Integer voucherid, String origin, String campaign) {
+        VoucherBalanceResponse VoucherBalanceResponse = new VoucherBalanceResponse();
+
+        //Check that the incoming campaign is valid as per VP_CAMPAIGN
+        Optional<VPCampaign> vpCampaign = vpCampaignService.findByName(campaign);
+
+        //if VP_Campaign is false throw an exception
+        if (!(vpCampaign.isPresent())){
+            throw new AllocationException("Invalid Campaign", Status.NOT_FOUND);
+        }
+        //if VP_Campaign is succesfully validated
+        else {
+            //call wi group
+            ResponseEntity<GiftCardsBalanceResponse> GiftCardsBalanceResponseEntity = giftcardsApiClient.viewGiftcard(voucherid.longValue());
+             GiftCardsBalanceResponse GiftCardsBalanceResponse = GiftCardsBalanceResponseEntity.getBody();
+
+             //logging response
+            log.debug("Gift Card Response is: {}", GiftCardsBalanceResponse);
+
+             //Check that the responseDesc field in the response object is set to "Success", if true proceed as follows
+            if (GiftCardsBalanceResponse.getResponseCode().equals(Constants.RESPONSE_CODE) ||
+                GiftCardsBalanceResponse.getResponseDesc().equals(Constants.RESPONSE_DESC)){
+
+                VoucherBalanceResponse.setBalance(GiftCardsBalanceResponse.getGiftcard().getBalance());
+                VoucherBalanceResponse.setExpiredAmount(GiftCardsBalanceResponse.getGiftcard().getExpiredAmount());
+                VoucherBalanceResponse.setExpiryDate(GiftCardsBalanceResponse.getGiftcard().getExpiryDate());
+                VoucherBalanceResponse.setIssuedAmount(GiftCardsBalanceResponse.getGiftcard().getIssuedAmount());
+                VoucherBalanceResponse.setRedeemedAmount(GiftCardsBalanceResponse.getGiftcard().getRedeemedAmount());
+
+                log.debug("Gift Card balance  Response is: {}", VoucherBalanceResponse);
+
+            } // if responseDesc field in the response object is NOT set to "Success"
+            else {
+                throw new WiGroupException(
+                    GiftCardsBalanceResponse.getResponseDesc(),Status.INTERNAL_SERVER_ERROR
+                );
+            }
+
+        }
+
+        return new ResponseEntity<>(VoucherBalanceResponse,HttpStatus.OK);
     }
 
 

@@ -13,7 +13,7 @@ import javax.validation.constraints.*;
 /**
  * GiftCardsRequest
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-02-28T09:46:21.052981400+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-03-10T08:13:28.436+02:00[Africa/Harare]")
 public class GiftCardsRequest   {
   @JsonProperty("campaignId")
   private String campaignId;

@@ -16,12 +16,12 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "GiftCards from WiGroup")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-03-10T08:13:28.436+02:00[Africa/Harare]")
-public class GiftCardsResponseGiftcard   {
+public class GiftCardsBalanceResponseGiftcard   {
   @JsonProperty("id")
   private Long id;
 
   @JsonProperty("campaignId")
-  private String campaignId;
+  private Integer campaignId;
 
   @JsonProperty("interfaceIssuerId")
   private String interfaceIssuerId;
@@ -41,8 +41,8 @@ public class GiftCardsResponseGiftcard   {
   @JsonProperty("redeemedAmount")
   private BigDecimal redeemedAmount;
 
-  @JsonProperty("expiryAmount")
-  private BigDecimal expiryAmount;
+  @JsonProperty("expiredAmount")
+  private BigDecimal expiredAmount;
 
   @JsonProperty("balance")
   private BigDecimal balance;
@@ -108,15 +108,9 @@ public class GiftCardsResponseGiftcard   {
   private StateIdEnum stateId;
 
   @JsonProperty("wicode")
-  private Long wicode;
+  private String wicode;
 
-  @JsonProperty("redeemFromTime")
-  private String redeemFromTime;
-
-  @JsonProperty("redeemToTime")
-  private String redeemToTime;
-
-  public GiftCardsResponseGiftcard id(Long id) {
+  public GiftCardsBalanceResponseGiftcard id(Long id) {
     this.id = id;
     return this;
   }
@@ -136,7 +130,7 @@ public class GiftCardsResponseGiftcard   {
     this.id = id;
   }
 
-  public GiftCardsResponseGiftcard campaignId(String campaignId) {
+  public GiftCardsBalanceResponseGiftcard campaignId(Integer campaignId) {
     this.campaignId = campaignId;
     return this;
   }
@@ -148,15 +142,15 @@ public class GiftCardsResponseGiftcard   {
   @ApiModelProperty(value = "campaignId")
 
 
-  public String getCampaignId() {
+  public Integer getCampaignId() {
     return campaignId;
   }
 
-  public void setCampaignId(String campaignId) {
+  public void setCampaignId(Integer campaignId) {
     this.campaignId = campaignId;
   }
 
-  public GiftCardsResponseGiftcard interfaceIssuerId(String interfaceIssuerId) {
+  public GiftCardsBalanceResponseGiftcard interfaceIssuerId(String interfaceIssuerId) {
     this.interfaceIssuerId = interfaceIssuerId;
     return this;
   }
@@ -176,7 +170,7 @@ public class GiftCardsResponseGiftcard   {
     this.interfaceIssuerId = interfaceIssuerId;
   }
 
-  public GiftCardsResponseGiftcard issuerId(Integer issuerId) {
+  public GiftCardsBalanceResponseGiftcard issuerId(Integer issuerId) {
     this.issuerId = issuerId;
     return this;
   }
@@ -196,7 +190,7 @@ public class GiftCardsResponseGiftcard   {
     this.issuerId = issuerId;
   }
 
-  public GiftCardsResponseGiftcard userRef(String userRef) {
+  public GiftCardsBalanceResponseGiftcard userRef(String userRef) {
     this.userRef = userRef;
     return this;
   }
@@ -216,7 +210,7 @@ public class GiftCardsResponseGiftcard   {
     this.userRef = userRef;
   }
 
-  public GiftCardsResponseGiftcard mobileNumber(String mobileNumber) {
+  public GiftCardsBalanceResponseGiftcard mobileNumber(String mobileNumber) {
     this.mobileNumber = mobileNumber;
     return this;
   }
@@ -236,7 +230,7 @@ public class GiftCardsResponseGiftcard   {
     this.mobileNumber = mobileNumber;
   }
 
-  public GiftCardsResponseGiftcard issuedAmount(BigDecimal issuedAmount) {
+  public GiftCardsBalanceResponseGiftcard issuedAmount(BigDecimal issuedAmount) {
     this.issuedAmount = issuedAmount;
     return this;
   }
@@ -257,7 +251,7 @@ public class GiftCardsResponseGiftcard   {
     this.issuedAmount = issuedAmount;
   }
 
-  public GiftCardsResponseGiftcard redeemedAmount(BigDecimal redeemedAmount) {
+  public GiftCardsBalanceResponseGiftcard redeemedAmount(BigDecimal redeemedAmount) {
     this.redeemedAmount = redeemedAmount;
     return this;
   }
@@ -278,28 +272,28 @@ public class GiftCardsResponseGiftcard   {
     this.redeemedAmount = redeemedAmount;
   }
 
-  public GiftCardsResponseGiftcard expiryAmount(BigDecimal expiryAmount) {
-    this.expiryAmount = expiryAmount;
+  public GiftCardsBalanceResponseGiftcard expiredAmount(BigDecimal expiredAmount) {
+    this.expiredAmount = expiredAmount;
     return this;
   }
 
   /**
    * The amount expired on the giftcard.
-   * @return expiryAmount
+   * @return expiredAmount
   */
   @ApiModelProperty(value = "The amount expired on the giftcard.")
 
   @Valid
 
-  public BigDecimal getExpiryAmount() {
-    return expiryAmount;
+  public BigDecimal getExpiredAmount() {
+    return expiredAmount;
   }
 
-  public void setExpiryAmount(BigDecimal expiryAmount) {
-    this.expiryAmount = expiryAmount;
+  public void setExpiredAmount(BigDecimal expiredAmount) {
+    this.expiredAmount = expiredAmount;
   }
 
-  public GiftCardsResponseGiftcard balance(BigDecimal balance) {
+  public GiftCardsBalanceResponseGiftcard balance(BigDecimal balance) {
     this.balance = balance;
     return this;
   }
@@ -320,7 +314,7 @@ public class GiftCardsResponseGiftcard   {
     this.balance = balance;
   }
 
-  public GiftCardsResponseGiftcard createDate(String createDate) {
+  public GiftCardsBalanceResponseGiftcard createDate(String createDate) {
     this.createDate = createDate;
     return this;
   }
@@ -340,7 +334,7 @@ public class GiftCardsResponseGiftcard   {
     this.createDate = createDate;
   }
 
-  public GiftCardsResponseGiftcard expiryDate(String expiryDate) {
+  public GiftCardsBalanceResponseGiftcard expiryDate(String expiryDate) {
     this.expiryDate = expiryDate;
     return this;
   }
@@ -360,7 +354,7 @@ public class GiftCardsResponseGiftcard   {
     this.expiryDate = expiryDate;
   }
 
-  public GiftCardsResponseGiftcard campaignName(String campaignName) {
+  public GiftCardsBalanceResponseGiftcard campaignName(String campaignName) {
     this.campaignName = campaignName;
     return this;
   }
@@ -380,7 +374,7 @@ public class GiftCardsResponseGiftcard   {
     this.campaignName = campaignName;
   }
 
-  public GiftCardsResponseGiftcard campaignType(String campaignType) {
+  public GiftCardsBalanceResponseGiftcard campaignType(String campaignType) {
     this.campaignType = campaignType;
     return this;
   }
@@ -400,7 +394,7 @@ public class GiftCardsResponseGiftcard   {
     this.campaignType = campaignType;
   }
 
-  public GiftCardsResponseGiftcard description(String description) {
+  public GiftCardsBalanceResponseGiftcard description(String description) {
     this.description = description;
     return this;
   }
@@ -420,7 +414,7 @@ public class GiftCardsResponseGiftcard   {
     this.description = description;
   }
 
-  public GiftCardsResponseGiftcard termsAndConditions(String termsAndConditions) {
+  public GiftCardsBalanceResponseGiftcard termsAndConditions(String termsAndConditions) {
     this.termsAndConditions = termsAndConditions;
     return this;
   }
@@ -440,7 +434,7 @@ public class GiftCardsResponseGiftcard   {
     this.termsAndConditions = termsAndConditions;
   }
 
-  public GiftCardsResponseGiftcard stateId(StateIdEnum stateId) {
+  public GiftCardsBalanceResponseGiftcard stateId(StateIdEnum stateId) {
     this.stateId = stateId;
     return this;
   }
@@ -460,7 +454,7 @@ public class GiftCardsResponseGiftcard   {
     this.stateId = stateId;
   }
 
-  public GiftCardsResponseGiftcard wicode(Long wicode) {
+  public GiftCardsBalanceResponseGiftcard wicode(String wicode) {
     this.wicode = wicode;
     return this;
   }
@@ -472,52 +466,12 @@ public class GiftCardsResponseGiftcard   {
   @ApiModelProperty(value = "The wiCode linked to the user token.")
 
 
-  public Long getWicode() {
+  public String getWicode() {
     return wicode;
   }
 
-  public void setWicode(Long wicode) {
+  public void setWicode(String wicode) {
     this.wicode = wicode;
-  }
-
-  public GiftCardsResponseGiftcard redeemFromTime(String redeemFromTime) {
-    this.redeemFromTime = redeemFromTime;
-    return this;
-  }
-
-  /**
-   * From which date the gift card can be redeemed
-   * @return redeemFromTime
-  */
-  @ApiModelProperty(value = "From which date the gift card can be redeemed")
-
-
-  public String getRedeemFromTime() {
-    return redeemFromTime;
-  }
-
-  public void setRedeemFromTime(String redeemFromTime) {
-    this.redeemFromTime = redeemFromTime;
-  }
-
-  public GiftCardsResponseGiftcard redeemToTime(String redeemToTime) {
-    this.redeemToTime = redeemToTime;
-    return this;
-  }
-
-  /**
-   * Until when the gift card is redeemable.
-   * @return redeemToTime
-  */
-  @ApiModelProperty(value = "Until when the gift card is redeemable.")
-
-
-  public String getRedeemToTime() {
-    return redeemToTime;
-  }
-
-  public void setRedeemToTime(String redeemToTime) {
-    this.redeemToTime = redeemToTime;
   }
 
 
@@ -529,38 +483,36 @@ public class GiftCardsResponseGiftcard   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    GiftCardsResponseGiftcard giftCardsResponseGiftcard = (GiftCardsResponseGiftcard) o;
-    return Objects.equals(this.id, giftCardsResponseGiftcard.id) &&
-        Objects.equals(this.campaignId, giftCardsResponseGiftcard.campaignId) &&
-        Objects.equals(this.interfaceIssuerId, giftCardsResponseGiftcard.interfaceIssuerId) &&
-        Objects.equals(this.issuerId, giftCardsResponseGiftcard.issuerId) &&
-        Objects.equals(this.userRef, giftCardsResponseGiftcard.userRef) &&
-        Objects.equals(this.mobileNumber, giftCardsResponseGiftcard.mobileNumber) &&
-        Objects.equals(this.issuedAmount, giftCardsResponseGiftcard.issuedAmount) &&
-        Objects.equals(this.redeemedAmount, giftCardsResponseGiftcard.redeemedAmount) &&
-        Objects.equals(this.expiryAmount, giftCardsResponseGiftcard.expiryAmount) &&
-        Objects.equals(this.balance, giftCardsResponseGiftcard.balance) &&
-        Objects.equals(this.createDate, giftCardsResponseGiftcard.createDate) &&
-        Objects.equals(this.expiryDate, giftCardsResponseGiftcard.expiryDate) &&
-        Objects.equals(this.campaignName, giftCardsResponseGiftcard.campaignName) &&
-        Objects.equals(this.campaignType, giftCardsResponseGiftcard.campaignType) &&
-        Objects.equals(this.description, giftCardsResponseGiftcard.description) &&
-        Objects.equals(this.termsAndConditions, giftCardsResponseGiftcard.termsAndConditions) &&
-        Objects.equals(this.stateId, giftCardsResponseGiftcard.stateId) &&
-        Objects.equals(this.wicode, giftCardsResponseGiftcard.wicode) &&
-        Objects.equals(this.redeemFromTime, giftCardsResponseGiftcard.redeemFromTime) &&
-        Objects.equals(this.redeemToTime, giftCardsResponseGiftcard.redeemToTime);
+    GiftCardsBalanceResponseGiftcard giftCardsBalanceResponseGiftcard = (GiftCardsBalanceResponseGiftcard) o;
+    return Objects.equals(this.id, giftCardsBalanceResponseGiftcard.id) &&
+        Objects.equals(this.campaignId, giftCardsBalanceResponseGiftcard.campaignId) &&
+        Objects.equals(this.interfaceIssuerId, giftCardsBalanceResponseGiftcard.interfaceIssuerId) &&
+        Objects.equals(this.issuerId, giftCardsBalanceResponseGiftcard.issuerId) &&
+        Objects.equals(this.userRef, giftCardsBalanceResponseGiftcard.userRef) &&
+        Objects.equals(this.mobileNumber, giftCardsBalanceResponseGiftcard.mobileNumber) &&
+        Objects.equals(this.issuedAmount, giftCardsBalanceResponseGiftcard.issuedAmount) &&
+        Objects.equals(this.redeemedAmount, giftCardsBalanceResponseGiftcard.redeemedAmount) &&
+        Objects.equals(this.expiredAmount, giftCardsBalanceResponseGiftcard.expiredAmount) &&
+        Objects.equals(this.balance, giftCardsBalanceResponseGiftcard.balance) &&
+        Objects.equals(this.createDate, giftCardsBalanceResponseGiftcard.createDate) &&
+        Objects.equals(this.expiryDate, giftCardsBalanceResponseGiftcard.expiryDate) &&
+        Objects.equals(this.campaignName, giftCardsBalanceResponseGiftcard.campaignName) &&
+        Objects.equals(this.campaignType, giftCardsBalanceResponseGiftcard.campaignType) &&
+        Objects.equals(this.description, giftCardsBalanceResponseGiftcard.description) &&
+        Objects.equals(this.termsAndConditions, giftCardsBalanceResponseGiftcard.termsAndConditions) &&
+        Objects.equals(this.stateId, giftCardsBalanceResponseGiftcard.stateId) &&
+        Objects.equals(this.wicode, giftCardsBalanceResponseGiftcard.wicode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, campaignId, interfaceIssuerId, issuerId, userRef, mobileNumber, issuedAmount, redeemedAmount, expiryAmount, balance, createDate, expiryDate, campaignName, campaignType, description, termsAndConditions, stateId, wicode, redeemFromTime, redeemToTime);
+    return Objects.hash(id, campaignId, interfaceIssuerId, issuerId, userRef, mobileNumber, issuedAmount, redeemedAmount, expiredAmount, balance, createDate, expiryDate, campaignName, campaignType, description, termsAndConditions, stateId, wicode);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class GiftCardsResponseGiftcard {\n");
+    sb.append("class GiftCardsBalanceResponseGiftcard {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    campaignId: ").append(toIndentedString(campaignId)).append("\n");
@@ -570,7 +522,7 @@ public class GiftCardsResponseGiftcard   {
     sb.append("    mobileNumber: ").append(toIndentedString(mobileNumber)).append("\n");
     sb.append("    issuedAmount: ").append(toIndentedString(issuedAmount)).append("\n");
     sb.append("    redeemedAmount: ").append(toIndentedString(redeemedAmount)).append("\n");
-    sb.append("    expiryAmount: ").append(toIndentedString(expiryAmount)).append("\n");
+    sb.append("    expiredAmount: ").append(toIndentedString(expiredAmount)).append("\n");
     sb.append("    balance: ").append(toIndentedString(balance)).append("\n");
     sb.append("    createDate: ").append(toIndentedString(createDate)).append("\n");
     sb.append("    expiryDate: ").append(toIndentedString(expiryDate)).append("\n");
@@ -580,8 +532,6 @@ public class GiftCardsResponseGiftcard   {
     sb.append("    termsAndConditions: ").append(toIndentedString(termsAndConditions)).append("\n");
     sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
     sb.append("    wicode: ").append(toIndentedString(wicode)).append("\n");
-    sb.append("    redeemFromTime: ").append(toIndentedString(redeemFromTime)).append("\n");
-    sb.append("    redeemToTime: ").append(toIndentedString(redeemToTime)).append("\n");
     sb.append("}");
     return sb.toString();
   }

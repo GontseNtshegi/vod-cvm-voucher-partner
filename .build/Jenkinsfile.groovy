@@ -21,7 +21,7 @@ targetNamespace			: "cvm-loyalty-voucher",            	// Edit here
 targetDeploymentConfig	: "voucher-partner",        		// Edit here N.B Ensure Image Stream for project exists on openshift
 targetBuildConfig		: "voucher-partner",             	// Edit here N.B Ensure Buildconfig
 sonarQubeUrl    		: 'https://sonarqube.orbit.vodacom.aws.corp/',
-codeCoverage			: 20
+codeCoverage			: 10
 
 ]
 

@@ -152,6 +152,40 @@ paths:
                     description: Method Not Allowed
                 '500':
                     description: Internal Server Error
+    '/giftcards/{id}':
+        get:
+            tags:
+                - giftcards
+            summary: Customer voucher balance view
+            operationId: ViewGiftcard
+            description: This call can be used to retrieve (get) a wiGroup Gift Card
+            parameters:
+                - name: id
+                  in: query
+                  required: true
+                  description: >-
+                      The original wigroup voucher id or VP_VOUCHER.ID used to issued the
+                      voucher
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                '200':
+                    description: Sucessful operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GiftCardsBalanceResponse'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad Request
+                '404':
+                    description: Not Found
+                '405':
+                    description: Method Not Allowed
+                '500':
+                    description: Internal Server Error
     '/giftcards/{id}/wicode':
         post:
             tags:
@@ -493,6 +527,85 @@ components:
                             type: string
                         redeemToTime:
                             description: Until when the gift card is redeemable.
+                            type: string
+                responseCode:
+                    description: The date by which the voucher has to be redeemed
+                    type: string
+                responseDesc:
+                    description: The date by which the voucher has to be redeemed
+                    type: string
+        GiftCardsBalanceResponse:
+            type: object
+            properties:
+                giftcard:
+                    description: GiftCards from WiGroup
+                    type: object
+                    properties:
+                        id:
+                            description: The id of the coupon.
+                            type: integer
+                            format: int64
+                        campaignId:
+                            description: campaignId
+                            type: integer
+                            format: in64
+                        interfaceIssuerId:
+                            description: The interface issuer id.
+                            type: string
+                        issuerId:
+                            description: The issuer id.
+                            type: integer
+                            format: int32
+                        userRef:
+                            description: >-
+                                A unique user reference as on the issuer channel system. This
+                                reference will be used to restrict user limits on campaigns.
+                            type: string
+                        mobileNumber:
+                            description: 'The users mobile number, if available.'
+                            type: string
+                        issuedAmount:
+                            description: The issued Amount.
+                            type: number
+                        redeemedAmount:
+                            description: The amount redeemed on the giftcard.
+                            type: number
+                        expiredAmount:
+                            description: The amount expired on the giftcard.
+                            type: number
+                        balance:
+                            description: The amount to issue on giftcard.
+                            type: number
+                        createDate:
+                            description: The date the giftcard was created.
+                            type: string
+                        expiryDate:
+                            description: The date the giftcard expired.
+                            type: string
+                        campaignName:
+                            description: The name of the campaign.
+                            type: string
+                        campaignType:
+                            description: The type of campaign.
+                            type: string
+                        description:
+                            description: A description of the campaign.
+                            type: string
+                        termsAndConditions:
+                            description: The terms and conditions of the coupon.
+                            type: string
+                        stateId:
+                            description: >-
+                                The current state of the GiftCard. A (Active) D (Deactivated) E
+                                (Expired) R (Redeemed)
+                            type: string
+                            enum:
+                                - A
+                                - D
+                                - E
+                                - R
+                        wicode:
+                            description: The wiCode linked to the user token.
                             type: string
                 responseCode:
                     description: The date by which the voucher has to be redeemed

@@ -1,17 +1,15 @@
-FROM 895155313774.dkr.ecr.af-south-1.amazonaws.com/maven-slave:openjdk11-jre-alpine
+FROM openjdk:8-jre-alpine
 LABEL maintainer="Vodacom CVM"
 LABEL service="Vodacom CVM cp-voucher-partner"
 ENV SPRING_OUTPUT_ANSI_ENABLED=ALWAYS
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
 EXPOSE 8080
-ADD VODACOMROOTCA.crt $JAVA_HOME/lib/security/VODACOMROOTCA.crt
-ADD gdroot-g2.crt $JAVA_HOME/lib/security/gdroot-g2.crt
+ADD VODACOMROOTCA.crt $JAVA_HOME/jre/lib/security/VODACOMROOTCA.crt
+ADD gdroot-g2.crt $JAVA_HOME/jre/lib/security/gdroot-g2.crt
 RUN \
-   cd $JAVA_HOME/lib/security \
-   && keytool -import -trustcacerts -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt -alias VODACOMROOTCA -file VODACOMROOTCA.crt \
-   && keytool -import -trustcacerts -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt -alias gdroot-g2 -file gdroot-g2.crt \
+   cd $JAVA_HOME/jre/lib/security \
+   && keytool -import -trustcacerts -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -noprompt -alias VODACOMROOTCA -import -file VODACOMROOTCA.crt \
+   && keytool -import -trustcacerts -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -noprompt -alias gdroot-g2 -import -file gdroot-g2.crt \
    && update-ca-certificates
-
 ADD http://nexus-cvm-microservices-prod.app.prod.tc.ocp.vodacom.corp/repository/appdynamics/opt/apdynamics/AppServerAgentt.zip /opt/appdynamics/
 COPY cp-voucher-partner.jar  /opt/appdynamics/cp-voucher-partner.jar
 RUN chmod 777 -R /opt/appdynamics/
@@ -32,5 +30,5 @@ CMD java \
          -Dappdynamics.agent.applicationName=CVM_Openshift \
          -Dappdynamics.agent.tierName=CP_VoucherPartner_DEV \
          -Dappdynamics.bciengine.limit.package.qualifiers=7 \
-        -jar -Djavax.net.ssl.trustStore=$JAVA_HOME/lib/security/cacerts /opt/appdynamics/cp-voucher-partner.jar
+        -jar -Djavax.net.ssl.trustStore=$JAVA_HOME/jre/lib/security/cacerts /opt/appdynamics/cp-voucher-partner.jar
 USER 1000

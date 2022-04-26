@@ -5,12 +5,14 @@ import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.Arrays;
 import java.util.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -71,5 +73,18 @@ public class RSAEncryption {
         return originalString;
 
     }*/
+    private static String decrypt45(String sSrc, String sKey) throws Exception {
+        byte[] encrypted1 = Base64.getDecoder().decode(sSrc.getBytes());
+        SecretKeySpec skeySpec = new SecretKeySpec(sKey.getBytes(), "AES");
+        final Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        AlgorithmParameterSpec gcmIv = new GCMParameterSpec(128, encrypted1, 0, 16);
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec, gcmIv);
+
+        //use everything from 16 bytes on as ciphertext
+        byte[] plainText = cipher.doFinal(encrypted1, 16, encrypted1.length - 16);
+        String originalString = new String(plainText, "utf-8");
+        return originalString;
+    }
+
 
 }

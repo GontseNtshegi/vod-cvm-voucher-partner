@@ -18,6 +18,9 @@ public class WiGroupRequestInterceptor implements RequestInterceptor {
         if (wigroup.equalsIgnoreCase(applicationProperties.getCoupons().getName())) { //Add wigroup Authentication
             requestTemplate.header("apiId", applicationProperties.getCoupons().getApiId());
             requestTemplate.header("apiPassword", applicationProperties.getCoupons().getApiPassword());
+        }else if (wigroup.equalsIgnoreCase(applicationProperties.getGiftCards().getName())) { //Add wigroup Authentication
+            requestTemplate.header("apiId", applicationProperties.getGiftCards().getApiId());
+            requestTemplate.header("apiPassword", applicationProperties.getGiftCards().getApiPassword());
         }
     }
 }

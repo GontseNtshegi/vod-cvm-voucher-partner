@@ -12,6 +12,11 @@ createArtifact			: true,                             //Package artifact?
 deployToNexus			: false,								//Send artifact to Nexus? N.B Cannot be set to true if project is on a feature/pull request branch
 createRelease			: false,                             //Send artifact to Open Shift?
 
+
+/*aws eks configs*/
+buildECRImage : true, //openshift ecr image build?
+createEKSRelease : true, //helm deploy to aws eks?
+
 /* Edit according to your project */
 buildProfile			: "",                               //Include extra profiles desired; excluding dev, prod and test. ( comma seperated) "buildProfile : zip, zipkif" etc
 //Leave empty if default buildProfile is prefered
@@ -21,7 +26,7 @@ targetNamespace			: "cvm-loyalty-voucher",            	// Edit here
 targetDeploymentConfig	: "voucher-partner",        		// Edit here N.B Ensure Image Stream for project exists on openshift
 targetBuildConfig		: "voucher-partner",             	// Edit here N.B Ensure Buildconfig
 sonarQubeUrl    		: 'https://sonarqube.orbit.vodacom.aws.corp/',
-codeCoverage			: 20
+codeCoverage			: 10
 
 ]
 

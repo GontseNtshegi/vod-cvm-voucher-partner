@@ -10,12 +10,12 @@ unitTests				: true,                            //Run/Skip Unit tests?
 qualityAnalysis			: true,                            //Run/Skip quality analysis?
 createArtifact			: true,                             //Package artifact?
 deployToNexus			: false,								//Send artifact to Nexus? N.B Cannot be set to true if project is on a feature/pull request branch
-createRelease			: false,                             //Send artifact to Open Shift?
+createRelease			: true,                             //Send artifact to Open Shift?
 
 
 /*aws eks configs*/
 buildECRImage : true, //openshift ecr image build?
-createEKSRelease : true, //helm deploy to aws eks?
+createEKSRelease : false, //helm deploy to aws eks?
 
 /* Edit according to your project */
 buildProfile			: "",                               //Include extra profiles desired; excluding dev, prod and test. ( comma seperated) "buildProfile : zip, zipkif" etc

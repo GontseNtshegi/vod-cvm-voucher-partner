@@ -22,7 +22,7 @@ CMD java \
          -javaagent:/opt/appdynamics/ver20.4.0.29862/javaagent.jar \
          -Dappdynamics.controller.hostName=vodacomsa-prod.saas.appdynamics.com \
          -Dappdynamics.controller.port=443 \
-         -Dappdynamics.controller.ssl.enabled=true \
+         -Dappdynamics.controller.ssl.enabled=false \
          -Dappdynamics.agent.accountName=vodacomsa-prod \
          -Dappdynamics.agent.accountAccessKey=2cc54bf9-b51e-41d6-81f9-c556152e9f98 \
          -Dappdynamics.agent.reuse.nodeName=true \

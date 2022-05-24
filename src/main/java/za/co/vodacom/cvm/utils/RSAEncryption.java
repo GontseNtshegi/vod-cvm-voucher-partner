@@ -23,15 +23,15 @@ public class RSAEncryption {
 
     private static String ivParameter = "1234567890123456";
 
-    public String encrypt(String code, String key)
-        throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
-        byte[] KeyData = key.getBytes();
-        SecretKeySpec KS = new SecretKeySpec(KeyData, "RSA");
-        Cipher cipher = Cipher.getInstance("RSA/None/OAEPWITHSHA-256ANDMGF1PADDING");
-        cipher.init(Cipher.ENCRYPT_MODE, KS);
-        String encryptedtext = Base64.getEncoder().encodeToString(cipher.doFinal(code.getBytes("UTF-8")));
-        return encryptedtext;
-    }
+//    public String encrypt(String code, String key)
+//        throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+//        byte[] KeyData = key.getBytes();
+//        SecretKeySpec KS = new SecretKeySpec(KeyData, "RSA");
+//        Cipher cipher = Cipher.getInstance("RSA/None/OAEPWITHSHA-256ANDMGF1PADDING");
+//        cipher.init(Cipher.ENCRYPT_MODE, KS);
+//        String encryptedtext = Base64.getEncoder().encodeToString(cipher.doFinal(code.getBytes("UTF-8")));
+//        return encryptedtext;
+//    }
 
     public String decrypt(String encryptedtext, String key)
         throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
@@ -46,7 +46,7 @@ public class RSAEncryption {
     }
 
     // encryption
-    /*public String encrypt2(String sSrc, String sKey) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+    public String encrypt(String sSrc, String sKey) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         byte[] raw = sKey.getBytes();
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
@@ -58,7 +58,7 @@ public class RSAEncryption {
     }
 
     // decryption
-    public String decrypt2(String sSrc, String sKey) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+   /* public String decrypt2(String sSrc, String sKey) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
 
         byte[] raw = sKey.getBytes("ASCII");
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");

@@ -243,7 +243,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         }
                                         //set response
                                         voucherAllocationResponse.setCollectPoint(vpVoucherDef.getVendor());
-                                        voucherAllocationResponse.setExpiryDate(ZonedDateTime.parse(couponsResponse.getCoupon().getRedeemToDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'+'SSSS").withZone(ZoneId.systemDefault())).toOffsetDateTime());
+                                        voucherAllocationResponse.setExpiryDate(expiryDate);
                                         voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                         voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                         voucherAllocationResponse.setVoucherCode(voucherCode);

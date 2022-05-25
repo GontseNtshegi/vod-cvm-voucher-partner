@@ -35,7 +35,10 @@ import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
 
 import javax.persistence.LockTimeoutException;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -141,13 +144,13 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         .getExpiryDate()
                                         .toLocalDate()
                                         .atTime(23, 59, 59)
-                                        .atOffset(ZoneOffset.UTC).toString()
+                                        .atOffset(ZoneOffset.UTC)
                                         : OffsetDateTime
                                         .now()
                                         .toLocalDate()
                                         .atTime(23, 59, 59)
                                         .atOffset(ZoneOffset.UTC)
-                                        .plusDays(vpVoucherDef.getValidityPeriod()).toString());
+                                        .plusDays(vpVoucherDef.getValidityPeriod()));
                                     voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                     voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                     voucherAllocationResponse.setVoucherCode(voucher.getVoucherCode());
@@ -185,7 +188,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
                                         //set response
                                         voucherAllocationResponse.setCollectPoint(vpVoucher.getCollectionPoint());
-                                        voucherAllocationResponse.setExpiryDate(expiryDate.toString());
+                                        voucherAllocationResponse.setExpiryDate(expiryDate);
                                         voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                         voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                         voucherAllocationResponse.setVoucherCode(voucherCode);
@@ -303,7 +306,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         }
                                         //set response
                                         voucherAllocationResponse.setCollectPoint(vpVoucherDef.getVendor());
-                                        voucherAllocationResponse.setExpiryDate(expiryDate.toString());
+                                        voucherAllocationResponse.setExpiryDate(expiryDate);
                                         voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                         voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                         voucherAllocationResponse.setVoucherCode(voucherCode);

@@ -15,7 +15,7 @@ createRelease			: true,                             //Send artifact to Open Shif
 
 /*aws eks configs*/
 buildECRImage : true, //openshift ecr image build?
-createEKSRelease : false, //helm deploy to aws eks?
+createEKSRelease : true, //helm deploy to aws eks?
 
 /* Edit according to your project */
 buildProfile			: "",                               //Include extra profiles desired; excluding dev, prod and test. ( comma seperated) "buildProfile : zip, zipkif" etc

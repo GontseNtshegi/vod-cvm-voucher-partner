@@ -165,7 +165,7 @@ application:
     apiId: vodacomqa_giftcard
     apiPassword: ENC(aMYdtF3FcPlnY7DbO8+kexkKGMm8LP5VSiXVtGkziMZXq0Zf9wpGYytjczaZiGBd)
   encryption:
-    key: ENC(P4W5VJ1eK/QxDjazIghFU7eaX5Erw8V6hY5tJi5/lw3N2VWfKV44yna6yP9UEGxZT/LMHmBO6kzV3YRhksppUw==)
+    key: WSKLTDC7RXD22B81
   proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080
   proxyPort: 8080
   proxyUser: vcacmang%40vodacom

@@ -1,4 +1,4 @@
-@Library('microservices-pipeline@master') _
+@Library('microservices-pipeline@feature/DPES-515-changes-to-deploy-on-dxl') _
 echo "test"
 /* Pipeline Configs */
 def configs = [

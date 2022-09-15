@@ -10,6 +10,7 @@ RUN \
    cd $JAVA_HOME/jre/lib/security \
    && keytool -import -trustcacerts -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -noprompt -alias VODACOMROOTCA -import -file VODACOMROOTCA.crt \
    && keytool -import -trustcacerts -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -noprompt -alias gdroot-g2 -import -file gdroot-g2.crt \
+   && keytool -import -trustcacerts -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -noprompt -alias AppdymicsCA -import -file AppdymicsCA.crt \
    && update-ca-certificates
 ADD http://nexus-cvm-microservices-prod.app.prod.tc.ocp.vodacom.corp/repository/appdynamics/opt/apdynamics/AppServerAgentt.zip /opt/appdynamics/
 COPY cp-voucher-partner.jar  /opt/appdynamics/cp-voucher-partner.jar

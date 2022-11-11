@@ -25,7 +25,7 @@ targetPlatformFS		: "master.prod.fs.ocp.vodacom.corp",// Edit here
 targetNamespace			: "cvm-loyalty-voucher",            	// Edit here
 targetDeploymentConfig	: "voucher-partner",        		// Edit here N.B Ensure Image Stream for project exists on openshift
 targetBuildConfig		: "voucher-partner",             	// Edit here N.B Ensure Buildconfig
-sonarQubeUrl    		: 'https://sonarqube.orbit.vodacom.aws.corp/',
+sonarQubeUrl    		: 'https://sonarqube.orbit.prod.vodacom.co.za/',
 codeCoverage			: 10
 
 ]

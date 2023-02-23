@@ -27,12 +27,14 @@ public class VPFileLoadServiceImpl implements VPFileLoadService {
 
     @Override
     public VPFileLoad save(VPFileLoad vPFileLoad) {
+        log.info("Request to save VPFileLoad");
         log.debug("Request to save VPFileLoad : {}", vPFileLoad);
         return vPFileLoadRepository.save(vPFileLoad);
     }
 
     @Override
     public Optional<VPFileLoad> partialUpdate(VPFileLoad vPFileLoad) {
+        log.info("Request to partially update VPFileLoad");
         log.debug("Request to partially update VPFileLoad : {}", vPFileLoad);
 
         return vPFileLoadRepository
@@ -67,6 +69,7 @@ public class VPFileLoadServiceImpl implements VPFileLoadService {
     @Override
     @Transactional(readOnly = true)
     public List<VPFileLoad> findAll() {
+        log.info("Request to get all VPFileLoads");
         log.debug("Request to get all VPFileLoads");
         return vPFileLoadRepository.findAll();
     }
@@ -74,12 +77,14 @@ public class VPFileLoadServiceImpl implements VPFileLoadService {
     @Override
     @Transactional(readOnly = true)
     public Optional<VPFileLoad> findOne(Long id) {
+        log.info("Request to get VPFileLoad");
         log.debug("Request to get VPFileLoad : {}", id);
         return vPFileLoadRepository.findById(id);
     }
 
     @Override
     public void delete(Long id) {
+        log.info("Request to delete VPFileLoad");
         log.debug("Request to delete VPFileLoad : {}", id);
         vPFileLoadRepository.deleteById(id);
     }

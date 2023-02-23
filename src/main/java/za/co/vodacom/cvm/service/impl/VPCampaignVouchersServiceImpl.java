@@ -33,6 +33,7 @@ public class VPCampaignVouchersServiceImpl implements VPCampaignVouchersService 
 
     @Override
     public Optional<VPCampaignVouchers> partialUpdate(VPCampaignVouchers vPCampaignVouchers) {
+        log.info("Request to partially update VPCampaignVouchers");
         log.debug("Request to partially update VPCampaignVouchers : {}", vPCampaignVouchers);
 
         return vPCampaignVouchersRepository
@@ -64,6 +65,7 @@ public class VPCampaignVouchersServiceImpl implements VPCampaignVouchersService 
     @Override
     @Transactional(readOnly = true)
     public List<VPCampaignVouchers> findAll() {
+        log.info("Request to get all VPCampaignVouchers");
         log.debug("Request to get all VPCampaignVouchers");
         return vPCampaignVouchersRepository.findAll();
     }
@@ -71,18 +73,21 @@ public class VPCampaignVouchersServiceImpl implements VPCampaignVouchersService 
     @Override
     @Transactional(readOnly = true)
     public Optional<VPCampaignVouchers> findOne(Long id) {
+        log.info("Request to get VPCampaignVouchers");
         log.debug("Request to get VPCampaignVouchers : {}", id);
         return vPCampaignVouchersRepository.findById(id);
     }
 
     @Override
     public void delete(Long id) {
+        log.info("Request to delete VPCampaignVouchers");
         log.debug("Request to delete VPCampaignVouchers : {}", id);
         vPCampaignVouchersRepository.deleteById(id);
     }
 
     @Override
     public Optional<VPCampaignVouchers> findByProductIdAndCampaignIdAndActiveYN(String productId, Long campaignId, String activeYN) {
+        log.info("Request to find by productIdin VPCampaignVouchers");
         log.debug("Request to find by productIdin VPCampaignVouchers : {}", productId);
         return vPCampaignVouchersRepository.findByProductIdAndCampaignIdAndActiveYN(productId, campaignId, activeYN);
     }

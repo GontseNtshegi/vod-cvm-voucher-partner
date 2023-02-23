@@ -27,12 +27,14 @@ public class VPBatchServiceImpl implements VPBatchService {
 
     @Override
     public VPBatch save(VPBatch vPBatch) {
+        log.info("Request to save VPBatch");
         log.debug("Request to save VPBatch : {}", vPBatch);
         return vPBatchRepository.save(vPBatch);
     }
 
     @Override
     public Optional<VPBatch> partialUpdate(VPBatch vPBatch) {
+        log.info("Request to partially update VPBatch");
         log.debug("Request to partially update VPBatch : {}", vPBatch);
 
         return vPBatchRepository
@@ -64,6 +66,7 @@ public class VPBatchServiceImpl implements VPBatchService {
     @Override
     @Transactional(readOnly = true)
     public List<VPBatch> findAll() {
+        log.info("Request to get all VPBatches");
         log.debug("Request to get all VPBatches");
         return vPBatchRepository.findAll();
     }
@@ -71,6 +74,7 @@ public class VPBatchServiceImpl implements VPBatchService {
     @Override
     @Transactional(readOnly = true)
     public Optional<VPBatch> findOne(Long id) {
+        log.info("Request to get VPBatch");
         log.debug("Request to get VPBatch : {}", id);
         return vPBatchRepository.findById(id);
     }

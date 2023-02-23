@@ -27,12 +27,14 @@ public class VPVoucherDefServiceImpl implements VPVoucherDefService {
 
     @Override
     public VPVoucherDef save(VPVoucherDef vPVoucherDef) {
+        log.info("Request to save VPVoucherDef");
         log.debug("Request to save VPVoucherDef : {}", vPVoucherDef);
         return vPVoucherDefRepository.save(vPVoucherDef);
     }
 
     @Override
     public Optional<VPVoucherDef> partialUpdate(VPVoucherDef vPVoucherDef) {
+        log.info("Request to partially update VPVoucherDef");
         log.debug("Request to partially update VPVoucherDef : {}", vPVoucherDef);
 
         return vPVoucherDefRepository
@@ -85,6 +87,7 @@ public class VPVoucherDefServiceImpl implements VPVoucherDefService {
     @Override
     @Transactional(readOnly = true)
     public List<VPVoucherDef> findAll() {
+        log.info("Request to get all VPVoucherDefs");
         log.debug("Request to get all VPVoucherDefs");
         return vPVoucherDefRepository.findAll();
     }
@@ -92,18 +95,21 @@ public class VPVoucherDefServiceImpl implements VPVoucherDefService {
     @Override
     //@Transactional(readOnly = true)
     public Optional<VPVoucherDef> findOne(String id) {
+        log.info("Request to get VPVoucherDef");
         log.debug("Request to get VPVoucherDef : {}", id);
         return vPVoucherDefRepository.findById(id);
     }
 
     @Override
     public void delete(String id) {
+        log.info("Request to delete VPVoucherDef");
         log.debug("Request to delete VPVoucherDef : {}", id);
         vPVoucherDefRepository.deleteById(id);
     }
 
     @Override
     public Optional<VPVoucherDef> findById(String id) {
+        log.info("Request to findByProductIdForUpdate VPVoucherDef");
         log.debug("Request to findByProductIdForUpdate VPVoucherDef : {}", id);
         return vPVoucherDefRepository.findById(id);
     }

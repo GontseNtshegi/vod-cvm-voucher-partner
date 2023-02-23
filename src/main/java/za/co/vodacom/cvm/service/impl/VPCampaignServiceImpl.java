@@ -33,6 +33,7 @@ public class VPCampaignServiceImpl implements VPCampaignService {
 
     @Override
     public Optional<VPCampaign> partialUpdate(VPCampaign vPCampaign) {
+        log.info("Request to partially update VPCampaign");
         log.debug("Request to partially update VPCampaign : {}", vPCampaign);
 
         return vPCampaignRepository
@@ -58,6 +59,7 @@ public class VPCampaignServiceImpl implements VPCampaignService {
     @Override
     @Transactional(readOnly = true)
     public List<VPCampaign> findAll() {
+        log.info("Request to get all VPCampaigns");
         log.debug("Request to get all VPCampaigns");
         return vPCampaignRepository.findAll();
     }
@@ -65,18 +67,21 @@ public class VPCampaignServiceImpl implements VPCampaignService {
     @Override
     @Transactional(readOnly = true)
     public Optional<VPCampaign> findOne(Long id) {
+        log.info("Request to get VPCampaign");
         log.debug("Request to get VPCampaign : {}", id);
         return vPCampaignRepository.findById(id);
     }
 
     @Override
     public void delete(Long id) {
+        log.info("Request to delete VPCampaign");
         log.debug("Request to delete VPCampaign : {}", id);
         vPCampaignRepository.deleteById(id);
     }
 
     @Override
     public Optional<VPCampaign> findByName(String name) {
+        log.info("Request to find by name in VPCampaign ");
         log.debug("Request to find by name in VPCampaign : {}", name);
         return vPCampaignRepository.findByName(name);
     }

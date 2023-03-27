@@ -314,6 +314,42 @@ paths:
           description: Method Not Allowed
         '500':
           description: Internal Server Error
+  /campaign/products/{campaignid}:
+    put:
+      tags:
+        - campaign
+      summary: Link / Delink voucher products from a campaign.
+      operationId: linkDelinkProduct
+      description: Link / Delink voucher products from a campaign.
+      parameters:
+        - name: campaignid
+          in: path
+          required: true
+          description: Campaign Identifier
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkDelinkRequest'
+      responses:
+        '200':
+          description: Sucessful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkDelinkResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
 components:
   schemas:
     VoucherAllocationRequest:
@@ -569,6 +605,30 @@ components:
           activeYN:
             type: string
             description: Whether the product is enabled for this campaign
+    LinkDelinkRequest:
+      type: object
+      properties:
+        addProducts:
+          description: A comma separated list of voucher products to add to this campaign
+          type: string
+        removeProducts:
+          description: A comma separated list of voucher products to remove from this campaign
+          type: string
+      required:
+        - productId
+    LinkDelinkResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          campaignId:
+            type: string
+            description: The unique campaign id
+          numAdded:
+            type: integer
+            description: The unique name of the campaign
+          numDeleted:
+            type: integer
     VoucherValidationResponse:
       type: object
       properties:

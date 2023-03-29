@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import za.co.vodacom.cvm.domain.VPBatch;
 
+
 /**
  * Service Interface for managing {@link VPBatch}.
  */
@@ -45,4 +46,11 @@ public interface VPBatchService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Find by batch name
+     * @param name
+     * @return
+     */
+    Optional<VPBatch> findByName(String name);
 }

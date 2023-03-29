@@ -34,6 +34,21 @@ public class VPBatch implements Serializable {
     private String comment;
 
     @NotNull
+    @Size(max = 50)
+    @Column(name = "name", length = 50, nullable = false)
+    private String name;
+
+    @NotNull
+    @Size(max = 100)
+    @Column(name = "create_user", length = 100, nullable = false)
+    private String createUser;
+
+    @NotNull
+    @Size(max = 1)
+    @Column(name = "status", length = 1, nullable = false)
+    private String status;
+
+    @NotNull
     @Size(max = 1)
     @Column(name = "restricted_yn", length = 1, nullable = false)
     private String restrictedYN;
@@ -121,6 +136,45 @@ public class VPBatch implements Serializable {
         this.userId = userId;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public VPBatch name(String name){
+        this.name = name;
+        return this;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public VPBatch createUser(String createUser){
+        this.createUser = createUser;
+        return this;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public VPBatch status(String status){
+        this.status = status;
+        return this;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -140,16 +194,20 @@ public class VPBatch implements Serializable {
         return getClass().hashCode();
     }
 
-    // prettier-ignore
+
+
     @Override
     public String toString() {
         return "VPBatch{" +
-            "id=" + getId() +
-            ", createDate='" + getCreateDate() + "'" +
-            ", loadDate='" + getLoadDate() + "'" +
-            ", comment='" + getComment() + "'" +
-            ", restrictedYN='" + getRestrictedYN() + "'" +
-            ", userId=" + getUserId() +
-            "}";
+            "id=" + id +
+            ", createDate=" + createDate +
+            ", loadDate=" + loadDate +
+            ", comment='" + comment + '\'' +
+            ", name='" + name + '\'' +
+            ", createUser='" + createUser + '\'' +
+            ", status='" + status + '\'' +
+            ", restrictedYN='" + restrictedYN + '\'' +
+            ", userId=" + userId +
+            '}';
     }
 }

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPBatch;
+import za.co.vodacom.cvm.domain.VPCampaign;
 import za.co.vodacom.cvm.repository.VPBatchRepository;
 import za.co.vodacom.cvm.service.VPBatchService;
 
@@ -83,5 +84,11 @@ public class VPBatchServiceImpl implements VPBatchService {
     public void delete(Long id) {
         log.debug("Request to delete VPBatch : {}", id);
         vPBatchRepository.deleteById(id);
+    }
+    @Override
+    public Optional<VPBatch> findByName(String name) {
+        log.info("Request to find by name in VPBatch ");
+        log.debug("Request to find by name in VPBatch : {}", name);
+        return vPBatchRepository.findByName(name);
     }
 }

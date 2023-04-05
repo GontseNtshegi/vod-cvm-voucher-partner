@@ -4,17 +4,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Status;
 import za.co.vodacom.cvm.domain.VPBatch;
 import za.co.vodacom.cvm.exception.BatchException;
 import za.co.vodacom.cvm.service.VPBatchService;
+import za.co.vodacom.cvm.web.api.ApiUtil;
 import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.BatchRequest;
 import za.co.vodacom.cvm.web.api.model.BatchResponse;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,7 +32,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
         this.vpBatchService = vpBatchService;
     }
 
-
+    @Override
     public ResponseEntity<BatchResponse> batch(BatchRequest batchRequest) {
         Optional<VPBatch> vpBatch = vpBatchService.findByName(batchRequest.getBatchName());
         BatchResponse batchResponse = new BatchResponse();
@@ -47,4 +51,5 @@ public class BatchServiceImpl implements BatchApiDelegate {
         }
         return new ResponseEntity<>(batchResponse, HttpStatus.OK);
     }
+
 }

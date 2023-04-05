@@ -3,11 +3,14 @@ package za.co.vodacom.cvm.web.rest;
 import brave.Tracer;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +24,9 @@ import za.co.vodacom.cvm.service.VPCampaignService;
 import za.co.vodacom.cvm.service.VPCampaignVouchersService;
 import za.co.vodacom.cvm.service.VPVoucherDefService;
 import za.co.vodacom.cvm.service.VPVouchersService;
+import za.co.vodacom.cvm.web.api.ApiUtil;
 import za.co.vodacom.cvm.web.api.ProductApiDelegate;
+import za.co.vodacom.cvm.web.api.model.ProductListResponseObject;
 import za.co.vodacom.cvm.web.api.model.ProductValidationResponse;
 
 @Service
@@ -146,5 +151,33 @@ public class ProductServiceImpl implements ProductApiDelegate {
     //retry once
     public ResponseEntity<ProductValidationResponse> validateVoucherFallback(String productId, String origin, String campaign) {
         return validateVoucher(productId, origin, campaign);
+    }
+
+    @Override
+    public ResponseEntity<List<ProductListResponseObject>> getProductList() {
+
+        List<ProductListResponseObject> productListResponseObjects = new ArrayList<>();
+
+        vpVoucherDefService.getAll()
+            .ifPresent(vpVoucherDefs -> {
+                vpVoucherDefs.forEach(vpVoucherDef -> {
+                    ProductListResponseObject productListResponseObject = new ProductListResponseObject();
+                    productListResponseObject.setProductId(vpVoucherDef.getId());
+                    productListResponseObject.setCacheQuantity(vpVoucherDef.getCacheQuantity().toString());
+                    productListResponseObject.setCategory(vpVoucherDef.getCategory());
+                    productListResponseObject.setEncryptedYN(vpVoucherDef.getEncryptedYN());
+                    productListResponseObject.setExtId(vpVoucherDef.getExtId());
+                    productListResponseObject.setDescription(vpVoucherDef.getDescription());
+                    productListResponseObject.setExtSyncSys(vpVoucherDef.getExtSystem());
+                    productListResponseObject.setType(vpVoucherDef.getType());
+                    productListResponseObject.setValidityPeriod(vpVoucherDef.getValidityPeriod().toString());
+                    productListResponseObject.setVendor(vpVoucherDef.getVendor());
+
+                    productListResponseObjects.add(productListResponseObject);
+                });
+            });
+
+        return new ResponseEntity<>(productListResponseObjects,HttpStatus.OK);
+
     }
 }

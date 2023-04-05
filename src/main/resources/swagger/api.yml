@@ -659,22 +659,25 @@ components:
     BatchListResponse:
       type: array
       items:
-        type: object
-        properties:
-          batchSeq:
-            type: integer
-            description: Batch Identifier
-          comment:
-            type: string
-            description: Comment
-          createDate:
-            description: Batch creation date
-            type: string
-            format: date-time
-          closedDate:
-            description: Batch closed date
-            type: string
-            format: date-time
+        $ref: '#/components/schemas/BatchListResponseObject'
+    BatchListResponseObject:
+      type: object
+      properties:
+        batchSeq:
+          type: integer
+          description: Batch Identifier
+        comment:
+          type: string
+          description: Comment
+        createDate:
+          description: Batch creation date
+          type: string
+          format: date-time
+        closedDate:
+          description: Batch closed date
+          type: string
+          format: date-time
+
     BatchDetailsResponse:
       type: object
       properties:

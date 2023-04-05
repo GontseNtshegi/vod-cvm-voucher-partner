@@ -1,0 +1,156 @@
+# ===================================================================
+# Spring Boot configuration for the "dev" profile.
+#
+# This configuration overrides the application.yml file.
+#
+# More information on profiles: https://www.jhipster.tech/profiles/
+# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+logging:
+  level:
+    ROOT: INFO
+    tech.jhipster: INFO
+    org.hibernate.SQL: DEBUG
+    za.co.vodacom.cvm: DEBUG
+    com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver: WARN
+
+eureka:
+  instance:
+    prefer-ip-address: false
+ #client:
+ #  service-url:
+ #    defaultZone: http://admin:${jhipster.registry.password}@localhost:8761/eureka/
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+      additional-exclude: static/**
+    livereload:
+      enabled: false # we use Webpack dev server + BrowserSync for livereload
+  jackson:
+    serialization:
+      indent-output: true
+  cloud:
+    config:
+     # uri: http://admin:${jhipster.registry.password}@localhost:8761/config
+      # name of the config server's property source (file.yml) that we want to use
+      name: voucherpartner
+      profile: dev
+      label: develop # toggle to switch to a different version of the configuration as stored in git
+      # it can be set to any label, branch or commit of the configuration source Git repository
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    #url: jdbc:mysql://vouchermanagement.cluster-custom-cepvu5oayajv.eu-west-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    #&verifyServerCertificate=true&useSSL=true&requireSSL=true
+    ##&verifyServerCertificate=true&useSSL=true&requireSSL=true&clientCertificateKey=file:/optclientkeyStore.jks&clientCertificateKeyStorePassword=mypass&trustCertificateKeyStoreUrl=file:/opt/truststore.jks&trustCertificateKeyStorePassword=mypass
+    #username: superuser
+    #password: ENC(2uDUJ5brB0fv8llNu+flAaG1pq0qg6U1SCBhvf1w+onpDFeedPjZ9tMVtPdMRmJPmAsaSV5S/gJ0Tdy6uMhxoQ==)
+    url: jdbc:mysql://cvm-voucher-nonprod.cluster-cztfqcf6zvwm.af-south-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: voucher-user-nonprod
+    password: '{cipher}d474c8eccbec28aabacd8b283067446847073b19f602e1c5724b54673bf1f067'
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+  jpa:
+  liquibase:
+    # Remove 'faker' if you do not want the sample data to be loaded automatically
+    contexts: dev #, faker
+  messages:
+    cache-duration: PT1S # 1 second, see the ISO 8601 standard
+  thymeleaf:
+    cache: false
+  sleuth:
+    sampler:
+      probability: 1 # report 100% of traces
+  #zipkin: # Use the "zipkin" Maven profile to have the Spring Cloud Zipkin dependencies
+  #  base-url: http://localhost:9411
+  #  enabled: false
+    locator:
+      discovery:
+        enabled: true
+
+server:
+  port: 8080
+
+# ===================================================================
+# JHipster specific properties
+#
+# Full reference is available at: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+jhipster:
+  cache: # Cache configuration
+    hazelcast: # Hazelcast distributed cache
+      time-to-live-seconds: 3600
+      backup-count: 1
+  #registry:
+  #  password: password
+  # CORS is disabled by default on microservices, as you should access them through a gateway.
+  # If you want to enable it, please uncomment the configuration below.
+  # cors:
+  #   allowed-origins: "http://localhost:9000"
+  #   allowed-methods: "*"
+  #   allowed-headers: "*"
+  #   exposed-headers: "Authorization,Link,X-Total-Count"
+  #   allow-credentials: true
+  #   max-age: 1800
+  security:
+    authentication:
+      jwt:
+        # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
+        #base64-secret: ZmMyZWFjY2E5ZmE0Zjc4YmZmNjUwNjkzNzI0YjY5NTE5NjBjOGE2ZDlhOTIwZDAyM2FiMGE3YzMwOWJhYTk5ZjQzYjNmZmJiMjJlZTUzZTNhMGIyNzFkMzZlNmNjYWQyM2E0NTk2NzQ0OTcwYTBjZDFmNTc5YmY0MTY2MDI5OWM=
+        # Token is valid 24 hours
+        token-validity-in-seconds: 86400
+        token-validity-in-seconds-for-remember-me: 2592000
+  #logging:
+  #  use-json-format: false # By default, logs are not in Json format
+  #  logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
+  #    enabled: false
+  #    host: localhost
+  #    port: 5000
+  #    queue-size: 512
+# ===================================================================
+# Application specific properties
+# Add your own application properties here, see the ApplicationProperties class
+# to have type-safe configuration, like in the JHipsterProperties above
+#
+# More documentation is available at:
+# https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+application:
+  msisdn:
+    internal: '^270[4-8][0-9][0-9][0-9]000[0-9]*'
+    external: '^27[4-8][0-9]*'
+  coupons:
+    url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
+    name: wigroup-coupons
+    apiId: vodacomqa_voucher
+    apiPassword: ENC(ZUiYvAm0vRQMpBU1dmQY+3Cl28UYMPs6eD168NvjIEK8q/jcxKfKaQsDubVxZke5)
+  giftCards:
+    url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
+    name: wigroup-giftcards
+    apiId: vodacomqa_giftcard
+    apiPassword: ENC(W8OsgnIPFfmlNv+UVwVE8dmYXZu28sj0tyydKFNkqfhGtWvi64J3JYw1BUv+fnbq)
+  encryption:
+    key: '{cipher}75e01519c0bde21320ffe039006c98b3cd5c529ee3e7c22dcc2900d7837009cb58ef94623dd96638d2c6efc1114ca5b5'
+  proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080
+  proxyPort: 8080
+  proxyUser: vcacmang%40vodacom
+  proxyPassword: '{cipher}e2936b5bcc92f185b69a9ab43f678fbf74299201d801337a20ed4c26bca3cc22'
+jasypt:
+  encryptor:
+    password: '{cipher}e6998bed24139d5e761a6ffa2ac61dd14ac1a27abcfe4c34875978babbc452e4'

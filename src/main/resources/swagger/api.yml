@@ -538,7 +538,6 @@ paths:
         '500':
           description: Internal Server Error
 
-
 components:
   schemas:
     VoucherAllocationRequest:
@@ -826,21 +825,24 @@ components:
       type: array
       items:
         type: object
-        properties:
-          campaignId:
-            type: string
-            description: Campaign Identifier
-          campaignName:
-            type: string
-            description: The unique name of the campaign
-          startDate:
-            type: string
-            format: date
-            description: The start date/time of the campaign
-          endDate:
-            type: string
-            format: date
-            description: The end date/time of the campaign
+        $ref: '#/components/schemas/Campaign'
+    Campaign:
+      properties:
+        campaignId:
+          type: string
+          description: Campaign Identifier
+        campaignName:
+          type: string
+          description: The unique name of the campaign
+        startDate:
+          type: string
+          format: date
+          description: The start date/time of the campaign
+        endDate:
+          type: string
+          format: date
+          description: The end date/time of the campaign
+
     VoucherProductsResponse:
       type: array
       items:

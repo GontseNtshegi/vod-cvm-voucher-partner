@@ -1,5 +1,6 @@
 package za.co.vodacom.cvm.repository;
 
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +20,7 @@ public interface VPVoucherDefRepository extends JpaRepository<VPVoucherDef, Stri
 
     // @Query(value = "select * vp_voucher_def  where id=:id", nativeQuery = true)
     Optional<VPVoucherDef> findById(String id);
+
+     @Query(value = "select * from vp_voucher_def  order by product_id", nativeQuery = true)
+    Optional<List<VPVoucherDef>> getAll();
 }

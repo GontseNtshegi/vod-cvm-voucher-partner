@@ -113,4 +113,11 @@ public class VPVoucherDefServiceImpl implements VPVoucherDefService {
         log.debug("Request to findByProductIdForUpdate VPVoucherDef : {}", id);
         return vPVoucherDefRepository.findById(id);
     }
+
+    @Override
+    public Optional<List<VPVoucherDef>> getAll(){
+        log.info("Request to getAll VPVoucherDef");
+        log.debug("Request to getAll VPVoucherDef :");
+        return vPVoucherDefRepository.getAll();
+    }
 }

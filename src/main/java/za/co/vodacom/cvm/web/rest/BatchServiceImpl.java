@@ -16,6 +16,7 @@ import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.BatchRequest;
 import za.co.vodacom.cvm.web.api.model.BatchResponse;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
     BatchServiceImpl(VPBatchService vpBatchService) {
         this.vpBatchService = vpBatchService;
     }
-
+    @Transactional
     @Override
     public ResponseEntity<BatchResponse> batch(BatchRequest batchRequest) {
         Optional<VPBatch> vpBatch = vpBatchService.findByName(batchRequest.getBatchName());
@@ -45,9 +46,11 @@ public class BatchServiceImpl implements BatchApiDelegate {
             newBatchEntry.setRestrictedYN("N");
             newBatchEntry.setCreateUser(batchRequest.getUserName());
             newBatchEntry.setStatus("O");
-            vpBatchService.save(newBatchEntry);
+            VPBatch result = vpBatchService.save(newBatchEntry);
 
-            batchResponse.setBatchId(BigDecimal.valueOf(newBatchEntry.getId()));
+            //add all columns to vpbatch
+
+            batchResponse.setBatchId(BigDecimal.valueOf(result.getId().longValue()));
         }
         return new ResponseEntity<>(batchResponse, HttpStatus.OK);
     }

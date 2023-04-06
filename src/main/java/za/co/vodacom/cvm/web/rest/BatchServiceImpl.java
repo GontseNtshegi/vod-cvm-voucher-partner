@@ -29,7 +29,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
        vpBatchService.getAll()
            .ifPresent(vpBatches -> {
                vpBatches.forEach(vpBatch -> {
-                   // to add other fields once db changes are made
+                   // ToDo to add other fields once db changes are made
 
                    BatchListResponseObject batchListResponseObject = new BatchListResponseObject();
                    batchListResponseObject.setBatchSeq(vpBatch.getId().intValue());

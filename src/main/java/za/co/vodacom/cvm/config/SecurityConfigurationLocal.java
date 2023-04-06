@@ -1,33 +1,31 @@
 package za.co.vodacom.cvm.config;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 import tech.jhipster.config.JHipsterProperties;
-import za.co.vodacom.cvm.security.*;
-import za.co.vodacom.cvm.security.jwt.*;
+import za.co.vodacom.cvm.security.AuthoritiesConstants;
+import za.co.vodacom.cvm.security.jwt.JWTConfigurer;
+import za.co.vodacom.cvm.security.jwt.TokenProvider;
 
-@Profile("!local")
+@Profile("local")
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @Import(SecurityProblemSupport.class)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfigurationLocal extends WebSecurityConfigurerAdapter {
 
     private final JHipsterProperties jHipsterProperties;
 
     private final TokenProvider tokenProvider;
     private final SecurityProblemSupport problemSupport;
 
-    public SecurityConfiguration(
+    public SecurityConfigurationLocal(
         TokenProvider tokenProvider,
         JHipsterProperties jHipsterProperties,
         SecurityProblemSupport problemSupport
@@ -63,10 +61,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers("/api/authenticate").permitAll()
             .antMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
-            .antMatchers("/api/product/**").hasAuthority(AuthoritiesConstants.VOUCHER_PARTNER)
+            .antMatchers("/api/product/**").permitAll()
             .antMatchers("/api/voucher/return/{voucherId}").permitAll()
-            .antMatchers("/api/voucher/**").hasAuthority(AuthoritiesConstants.VOUCHER_PARTNER)
-            .antMatchers("/api/**").authenticated()
+            .antMatchers("/api/voucher/**").permitAll()
+            .antMatchers("/api/**").permitAll()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/health/**").permitAll()
             .antMatchers("/management/info").permitAll()

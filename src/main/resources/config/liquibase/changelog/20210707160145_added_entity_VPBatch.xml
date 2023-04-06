@@ -17,9 +17,6 @@
             <column name="create_date" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
-            <column name="load_date" type="${datetimeType}">
-                <constraints nullable="true" />
-            </column>
             <column name="comment" type="varchar(100)">
                 <constraints nullable="false" />
             </column>
@@ -29,10 +26,29 @@
             <column name="user_id" type="integer">
                 <constraints nullable="false" />
             </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="create_user" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="status" type="varchar(1)">
+                <constraints nullable="false" />
+            </column>
+            <column name="activate_user" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="delete_user" type="varchar(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="delete_date" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
         <dropDefaultValue tableName="vp_batch" columnName="create_date" columnDataType="${datetimeType}"/>
         <dropDefaultValue tableName="vp_batch" columnName="load_date" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="vp_batch" columnName="delete_date" columnDataType="${datetimeType}"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->

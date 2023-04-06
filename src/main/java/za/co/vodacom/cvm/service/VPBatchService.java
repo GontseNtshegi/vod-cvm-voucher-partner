@@ -2,6 +2,8 @@ package za.co.vodacom.cvm.service;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.repository.query.Param;
 import za.co.vodacom.cvm.domain.VPBatch;
 
 /**
@@ -45,4 +47,6 @@ public interface VPBatchService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    Optional<VPBatch> getVoucherQuantity(Long id);
 }

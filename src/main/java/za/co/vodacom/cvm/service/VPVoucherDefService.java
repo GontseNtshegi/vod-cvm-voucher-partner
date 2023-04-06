@@ -52,4 +52,10 @@ public interface VPVoucherDefService {
      * @return
      */
     Optional<VPVoucherDef> findById(String id);
+
+    /**
+     *
+     * @return
+     */
+    Optional<List<VPVoucherDef>> getAll();
 }

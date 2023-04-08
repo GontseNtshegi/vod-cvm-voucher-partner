@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -29,11 +30,13 @@ import za.co.vodacom.cvm.service.VPVoucherDefService;
 import za.co.vodacom.cvm.service.VPVouchersService;
 import za.co.vodacom.cvm.utils.MSISDNConverter;
 import za.co.vodacom.cvm.utils.RSAEncryption;
+import za.co.vodacom.cvm.web.api.ApiUtil;
 import za.co.vodacom.cvm.web.api.VoucherApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
 
 import javax.persistence.LockTimeoutException;
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -535,6 +538,43 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
             throw new AllocationException("Invalid Campaign", Status.NOT_FOUND);
         }
         return new ResponseEntity<>(redemptionResponse, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<VoucherValidationResponse> voucherValidation(Integer couponId,
+                                                                        String productId) {
+       VoucherValidationResponse voucherValidationResponse = new VoucherValidationResponse();
+
+       Optional<VPVoucherDef> optionalVPVoucherDef = vpVoucherDefService.findById(productId);
+       if(optionalVPVoucherDef.isPresent()){
+           ResponseEntity<CouponsGetResponse> couponsGetResponseResponseEntity = couponsApiClient.getVoucher(couponId.longValue());
+           if(couponsGetResponseResponseEntity.getStatusCode().is2xxSuccessful()){
+               CouponsGetResponse couponsGetResponse = couponsGetResponseResponseEntity.getBody();
+
+               if (
+                   couponsGetResponse.getResponseCode().equals(Constants.RESPONSE_CODE) ||
+                       couponsGetResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
+               ) {
+                   voucherValidationResponse.setVoucherAmount(couponsGetResponse.getCoupon().getVoucherAmount());
+                   voucherValidationResponse.setMsisdn(couponsGetResponse.getCoupon().getMobileNumber());
+                   voucherValidationResponse.setDescription(couponsGetResponse.getCoupon().getDescription());
+                   voucherValidationResponse.setCouponId(BigDecimal.valueOf(couponsGetResponse.getCoupon().getId()));
+                   voucherValidationResponse.setStatus(couponsGetResponse.getCoupon().getStateId().getValue());
+                   voucherValidationResponse.setCreateDate(couponsGetResponse.getCoupon().getCreateDate().toLocalDate());
+               }
+               else
+                   throw new AllocationException("Coupon Validation Failed at WiGroup", Status.NOT_FOUND);
+
+
+           }
+       }
+       else
+           throw new AllocationException("Invalid Product ID", Status.NOT_FOUND);
+
+
+
+        return new ResponseEntity<>(voucherValidationResponse, HttpStatus.OK);
+
     }
 
 }

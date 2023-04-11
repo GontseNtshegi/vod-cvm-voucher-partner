@@ -45,4 +45,9 @@ public interface VPBatchService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+    /**
+     *
+     * @return
+     */
+    Optional<List<VPBatch>> getAll();
 }

@@ -6,33 +6,57 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import za.co.vodacom.cvm.service.VPBatchService;
+import za.co.vodacom.cvm.web.api.BatchApiDelegate;
+import za.co.vodacom.cvm.web.api.model.BatchListResponseObject;
+import java.util.ArrayList;
+import java.util.List;
 import org.zalando.problem.Status;
 import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPBatch;
 import za.co.vodacom.cvm.exception.BatchException;
-import za.co.vodacom.cvm.service.VPBatchService;
-import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.BatchRequest;
 import za.co.vodacom.cvm.web.api.model.BatchResponse;
-
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+
 
 @Service
 public class BatchServiceImpl implements BatchApiDelegate {
-    public static final Logger log = LoggerFactory.getLogger(BatchServiceImpl.class);
 
+    public static final Logger log = LoggerFactory.getLogger(BatchServiceImpl.class);
     @Autowired
-    private final VPBatchService vpBatchService;
+    VPBatchService vpBatchService;
 
     BatchServiceImpl(VPBatchService vpBatchService) {
         this.vpBatchService = vpBatchService;
     }
+
+    @Override
+    public ResponseEntity<List<BatchListResponseObject>> batchlist() {
+        List<BatchListResponseObject> batchListResponseObjects = new ArrayList<>();
+        vpBatchService.getAll()
+            .ifPresent(vpBatches -> {
+                vpBatches.forEach(vpBatch -> {
+                    BatchListResponseObject batchListResponseObject = new BatchListResponseObject();
+                    batchListResponseObject.setBatchSeq(vpBatch.getId().intValue());
+                    batchListResponseObject.setBatchComment(vpBatch.getComment());
+                    batchListResponseObject.setCreateDate(vpBatch.getCreateDate().toOffsetDateTime());
+                    batchListResponseObject.setBatchName(vpBatch.getName());
+                    batchListResponseObject.setStatus(vpBatch.getStatus());
+                    batchListResponseObject.setActivateUser(vpBatch.getActivateUser());
+                    batchListResponseObject.setLoadDate(vpBatch.getLoadDate().toOffsetDateTime());
+                    batchListResponseObject.setCreateUser(vpBatch.getCreateUser());
+                    batchListResponseObjects.add(batchListResponseObject);
+                });
+            });
+
+        log.debug("BatchList {} ", batchListResponseObjects);
+        return new ResponseEntity<>(batchListResponseObjects, HttpStatus.OK);
+    }
+
     @Transactional
     @Override
     public ResponseEntity<BatchResponse> batch(BatchRequest batchRequest) {

@@ -23,7 +23,7 @@ eureka:
 spring:
   profiles:
     # Uncomment the following line to enable tests against production database type rather than H2, using Testcontainers
-    #active: testcontainers
+    active: no-liquibase
   application:
     name: voucherpartner
   cloud:
@@ -31,10 +31,13 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:voucherpartner;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    name:
-    username:
-    password:
+    url: jdbc:mysql://cvm-voucher-nonprod.cluster-cztfqcf6zvwm.af-south-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: voucher-user-nonprod
+    password: 2oOmdNx0c6 #'{cipher}d474c8eccbec28aabacd8b283067446847073b19f602e1c5724b54673bf1f067'
+    #url: jdbc:h2:mem:voucherpartner;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    #name:
+    #username:
+    #password:
     hikari:
       auto-commit: false
   jackson:
@@ -133,3 +136,6 @@ application:
   proxyPort: 8080
   proxyUser: vcacmang%40vodacom
   proxyPassword: V0d4f0n3%402020
+jasypt:
+  encryptor:
+    password: CVMicroservices

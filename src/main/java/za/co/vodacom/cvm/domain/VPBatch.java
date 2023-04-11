@@ -34,6 +34,23 @@ public class VPBatch implements Serializable {
     private String comment;
 
     @NotNull
+    @Size(max = 1)
+    @Column(name = "restricted_yn", length = 1, nullable = false)
+    private String restrictedYN;
+
+    @NotNull
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
+
+    @Column(name = "delete_date")
+    private ZonedDateTime deleteDate;
+
+    @NotNull
+    @Size(max = 1)
+    @Column(name = "status", length = 1, nullable = false)
+    private String status;
+
+    @NotNull
     @Size(max = 50)
     @Column(name = "name", length = 50, nullable = false)
     private String name;
@@ -44,18 +61,14 @@ public class VPBatch implements Serializable {
     private String createUser;
 
     @NotNull
-    @Size(max = 1)
-    @Column(name = "status", length = 1, nullable = false)
-    private String status;
+    @Size(max = 100)
+    @Column(name = "activate_user", length = 100, nullable = false)
+    private String activateUser;
 
     @NotNull
-    @Size(max = 1)
-    @Column(name = "restricted_yn", length = 1, nullable = false)
-    private String restrictedYN;
-
-    @NotNull
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    @Size(max = 100)
+    @Column(name = "delete_user", length = 100, nullable = false)
+    private String deleteUser;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -136,45 +149,6 @@ public class VPBatch implements Serializable {
         this.userId = userId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public VPBatch name(String name){
-        this.name = name;
-        return this;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCreateUser() {
-        return createUser;
-    }
-
-    public VPBatch createUser(String createUser){
-        this.createUser = createUser;
-        return this;
-    }
-
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public VPBatch status(String status){
-        this.status = status;
-        return this;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -194,7 +168,53 @@ public class VPBatch implements Serializable {
         return getClass().hashCode();
     }
 
+    public ZonedDateTime getDeleteDate() {
+        return deleteDate;
+    }
 
+    public void setDeleteDate(ZonedDateTime deleteDate) {
+        this.deleteDate = deleteDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    public String getActivateUser() {
+        return activateUser;
+    }
+
+    public void setActivateUser(String activateUser) {
+        this.activateUser = activateUser;
+    }
+
+    public String getDeleteUser() {
+        return deleteUser;
+    }
+
+    public void setDeleteUser(String deleteUser) {
+        this.deleteUser = deleteUser;
+    }
 
     @Override
     public String toString() {
@@ -203,11 +223,14 @@ public class VPBatch implements Serializable {
             ", createDate=" + createDate +
             ", loadDate=" + loadDate +
             ", comment='" + comment + '\'' +
-            ", name='" + name + '\'' +
-            ", createUser='" + createUser + '\'' +
-            ", status='" + status + '\'' +
             ", restrictedYN='" + restrictedYN + '\'' +
             ", userId=" + userId +
+            ", deleteDate=" + deleteDate +
+            ", status='" + status + '\'' +
+            ", name='" + name + '\'' +
+            ", createUser='" + createUser + '\'' +
+            ", activateUser='" + activateUser + '\'' +
+            ", deleteUser='" + deleteUser + '\'' +
             '}';
     }
 }

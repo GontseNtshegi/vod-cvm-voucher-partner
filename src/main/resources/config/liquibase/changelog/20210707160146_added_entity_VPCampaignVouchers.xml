@@ -10,6 +10,11 @@
         Added the entity VPCampaignVouchers.
     -->
     <changeSet id="20210707160146-1" author="Gontse">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="vp_campaign_vouchers"/>
+            </not>
+        </preConditions>
         <createTable tableName="vp_campaign_vouchers">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>

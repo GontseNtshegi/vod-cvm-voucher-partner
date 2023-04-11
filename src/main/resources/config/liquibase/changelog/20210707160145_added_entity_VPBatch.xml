@@ -10,6 +10,11 @@
         Added the entity VPBatch.
     -->
     <changeSet id="20210707160145-1" author="jhipster">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="vp_batch"/>
+            </not>
+        </preConditions>
         <createTable tableName="vp_batch">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>

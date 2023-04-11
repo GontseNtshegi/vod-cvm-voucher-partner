@@ -10,6 +10,11 @@
         Added the entity VPUsers.
     -->
     <changeSet id="20210707160144-1" author="Gontse">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="vp_users"/>
+            </not>
+        </preConditions>
         <createTable tableName="vp_users">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>

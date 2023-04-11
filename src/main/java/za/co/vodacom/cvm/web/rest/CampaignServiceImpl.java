@@ -14,11 +14,9 @@ import za.co.vodacom.cvm.service.VPCampaignVouchersService;
 import za.co.vodacom.cvm.service.VPVoucherDefService;
 import za.co.vodacom.cvm.web.api.CampaignApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.bouncycastle.asn1.x500.style.BCStyle.T;
 
 @Service
 public class CampaignServiceImpl  implements CampaignApiDelegate {
@@ -31,14 +29,12 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
     private final VPCampaignVouchersService vpCampaignVouchersService;
     @Autowired
     private final VPVoucherDefService voucherDefService;
-    @Autowired
-    private final ProductServiceImpl vpProductService;
 
-    public CampaignServiceImpl(VPCampaignService vpCampaignService, VPCampaignVouchersService vpCampaignVouchersService, VPVoucherDefService voucherDefService, ProductServiceImpl vpProductService) {
+
+    public CampaignServiceImpl(VPCampaignService vpCampaignService, VPCampaignVouchersService vpCampaignVouchersService, VPVoucherDefService voucherDefService ) {
         this.vpCampaignService = vpCampaignService;
         this.vpCampaignVouchersService = vpCampaignVouchersService;
         this.voucherDefService = voucherDefService;
-        this.vpProductService = vpProductService;
     }
 
     @Override
@@ -52,7 +48,6 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
        log.debug(vpCampaignList.toString());
         List<CampaignListResponseObject> campaignsList = new ArrayList<>();
 
-        //Loop through list and map
         for(VPCampaign vpcampaign: vpCampaignList  )
         {
             campaignsList.add(new CampaignListResponseObject()
@@ -61,49 +56,43 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                 .startDate(vpcampaign.getStartDate().toLocalDate())
                 .endDate(vpcampaign.getEndDate().toLocalDate()));
         }
-        log.debug(campaignsList.toString());
+        log.debug("Campaign List{}",campaignsList.toString());
         return new ResponseEntity<>(campaignsList, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<List<VoucherProductResponseObject>> getCampaignProducts(String campaignId) {
-        List<VoucherProductResponseObject> voucherProductResponseObject = new ArrayList<>();
+        List<VoucherProductResponseObject> voucherListResponse = new ArrayList<>();
 
         Optional<VPCampaign> campaign = vpCampaignService.findOne(Long.valueOf(campaignId));
         log.debug(campaign.toString());
 
-       //check if list is empty then return 404
         if( campaign.isPresent())
         {
             Optional<VPCampaignVouchers> campaignVouchers = vpCampaignVouchersService.findOne(Long.valueOf(campaignId));
 
             if(campaignVouchers.isPresent()){
                 log.debug(campaignVouchers.toString());
-                 VoucherProductResponseObject voucherProductResponseObject1 = new VoucherProductResponseObject();
+                 VoucherProductResponseObject voucherProductResponseObject = new VoucherProductResponseObject();
 
                 VPCampaignVouchers campaignVoucher = campaignVouchers.get();
                 voucherDefService.findOne(campaignVoucher.getProductId())
                         .ifPresent(vpVoucherDef -> {
-                            voucherProductResponseObject1.setProductName(vpVoucherDef.getDescription());
+                            voucherProductResponseObject.setProductName(vpVoucherDef.getDescription());
                         });
-                voucherProductResponseObject1.setProductId(campaignVoucher.getProductId());
-                voucherProductResponseObject1.setId(String.valueOf(campaignVoucher.getId()));
-                voucherProductResponseObject1.setActiveYN(campaignVoucher.getActiveYN());
+                voucherProductResponseObject.setProductId(campaignVoucher.getProductId());
+                voucherProductResponseObject.setId(String.valueOf(campaignVoucher.getId()));
+                voucherProductResponseObject.setActiveYN(campaignVoucher.getActiveYN());
 
-                voucherProductResponseObject.add(voucherProductResponseObject1);
+                voucherListResponse.add(voucherProductResponseObject);
             }
-            //return list object
-            log.debug(voucherProductResponseObject.toString());
-            return new ResponseEntity<>(voucherProductResponseObject,HttpStatus.OK);
+            log.debug("List of campaign products{}",voucherListResponse.toString());
+            return new ResponseEntity<>(voucherListResponse,HttpStatus.OK);
         }
         else
         {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            //  throw new IllegalArgumentException("Invalid campaign ID");
         }
-
-
-
     }
 
 

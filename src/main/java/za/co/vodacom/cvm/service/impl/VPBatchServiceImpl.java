@@ -84,4 +84,10 @@ public class VPBatchServiceImpl implements VPBatchService {
         log.debug("Request to delete VPBatch : {}", id);
         vPBatchRepository.deleteById(id);
     }
+    @Override
+    public Optional<List<VPBatch>> getAll(){
+        log.info("Request to getAll VPBatch");
+        log.debug("Request to getAll VPBatch :");
+        return vPBatchRepository.getAll();
+    }
 }

@@ -791,19 +791,29 @@ components:
         batchSeq:
           type: integer
           description: Batch Identifier
-        comment:
+        batchName:
           type: string
-          description: Comment
+          description: The unique name of the batch
+        batchComment:
+          type: string
+          description: A descriptive comment for the batch
         createDate:
           description: Batch creation date
           type: string
           format: date-time
-        closedDate:
-          description: Batch closed date
+        loadDate:
+          description: The date when the loading was completed
           type: string
           format: date-time
-
-
+        status:
+          type: string
+          description: The status of the batch. Can be one of:(O)pen, (A)ctivated, (D)eleted
+        createUser:
+          type: string
+          description: The user who initially created the batch
+        activateUser:
+          type: string
+          description: The user who activated the batch
 
     BatchDetailsResponse:
       type: object

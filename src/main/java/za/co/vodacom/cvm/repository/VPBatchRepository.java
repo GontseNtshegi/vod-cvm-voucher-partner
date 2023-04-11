@@ -4,10 +4,12 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import za.co.vodacom.cvm.domain.VPBatch;
-import za.co.vodacom.cvm.service.dto.product.Product;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
+
+import java.util.List;
+
 
 /**
  * Spring Data SQL repository for the VPBatch entity.
@@ -52,4 +54,7 @@ public interface VPBatchRepository extends JpaRepository<VPBatch, Long> {
             "order by 1"
     )
     Optional<VPBatch> getVoucherQuantity(@Param("id") Long id,@Param("sysdate") ZonedDateTime sysdate);
+
+    @Query(value = "select * from vp_batch  order by id", nativeQuery = true)
+    Optional<List<VPBatch>> getAll();
 }

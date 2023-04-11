@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPBatch;
@@ -84,6 +83,12 @@ public class VPBatchServiceImpl implements VPBatchService {
     public void delete(Long id) {
         log.debug("Request to delete VPBatch : {}", id);
         vPBatchRepository.deleteById(id);
+    }
+    @Override
+    public Optional<List<VPBatch>> getAll(){
+        log.info("Request to getAll VPBatch");
+        log.debug("Request to getAll VPBatch :");
+        return vPBatchRepository.getAll();
     }
 
     @Override

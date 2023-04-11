@@ -31,10 +31,13 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:voucherpartner;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    name:
-    username:
-    password:
+    url: jdbc:mysql://loyalty.cluster-cc1yxzokhc4w.eu-west-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: superuser
+    password: ENC(AWLMQYuWBhMTte4NFtOqOFmrtz/h03+9ZFfJyJpkQfx9ZwU3WYvg7Jv5EIl30GUq4ezFf01+uswR0tXmFmQsyQ==)
+    #url: jdbc:h2:mem:voucherpartner;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    #name:
+    #username:
+    #password:
     hikari:
       auto-commit: false
   jackson:
@@ -133,3 +136,6 @@ application:
   proxyPort: 8080
   proxyUser: vcacmang%40vodacom
   proxyPassword: V0d4f0n3%402020
+jasypt:
+  encryptor:
+    password: CVMicroservices

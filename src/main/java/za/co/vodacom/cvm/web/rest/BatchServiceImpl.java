@@ -4,22 +4,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Status;
+import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPBatch;
 import za.co.vodacom.cvm.exception.BatchException;
 import za.co.vodacom.cvm.service.VPBatchService;
-import za.co.vodacom.cvm.web.api.ApiUtil;
 import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.BatchRequest;
 import za.co.vodacom.cvm.web.api.model.BatchResponse;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
@@ -43,13 +44,16 @@ public class BatchServiceImpl implements BatchApiDelegate {
             VPBatch newBatchEntry = new VPBatch();
             newBatchEntry.setName(batchRequest.getBatchName());
             newBatchEntry.setComment(batchRequest.getBatchComment());
-            newBatchEntry.setRestrictedYN("N");
+            newBatchEntry.setRestrictedYN(Constants.RESTRICTED_N);
             newBatchEntry.setCreateUser(batchRequest.getUserName());
-            newBatchEntry.setStatus("O");
+            newBatchEntry.setStatus(Constants.STATUS_O);
+            newBatchEntry.setLoadDate(ZonedDateTime.now());
+            newBatchEntry.setCreateDate(ZonedDateTime.now());
+            newBatchEntry.setDeleteUser(batchRequest.getUserName());
+            newBatchEntry.setActivateUser(batchRequest.getBatchName());
+
             VPBatch result = vpBatchService.save(newBatchEntry);
-
-            //add all columns to vpbatch
-
+            log.debug("VPBatch result {}", result);
             batchResponse.setBatchId(BigDecimal.valueOf(result.getId().longValue()));
         }
         return new ResponseEntity<>(batchResponse, HttpStatus.OK);

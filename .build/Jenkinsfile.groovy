@@ -18,7 +18,7 @@ buildECRImage : true, //openshift ecr image build?
 createEKSRelease : true, //helm deploy to aws eks?
 
 /* Edit according to your project */
-buildProfile			: "",                               //Include extra profiles desired; excluding dev, prod and test. ( comma seperated) "buildProfile : zip, zipkif" etc
+buildProfile			: "no-liquibase",                               //Include extra profiles desired; excluding dev, prod and test. ( comma seperated) "buildProfile : zip, zipkif" etc
 //Leave empty if default buildProfile is prefered
 targetPlatformTC		: "master.prod.tc.ocp.vodacom.corp",// Edit here
 targetPlatformFS		: "master.prod.fs.ocp.vodacom.corp",// Edit here

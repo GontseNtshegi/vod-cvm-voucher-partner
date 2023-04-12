@@ -24,9 +24,8 @@ import za.co.vodacom.cvm.web.api.model.BatchRequest;
 import za.co.vodacom.cvm.web.api.model.BatchResponse;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.Optional;
-import za.co.vodacom.cvm.domain.VPBatch;
+
 
 import java.util.Optional;
 

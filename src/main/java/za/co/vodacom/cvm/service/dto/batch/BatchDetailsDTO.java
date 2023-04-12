@@ -18,7 +18,9 @@ public class BatchDetailsDTO {
 
     private String fileName;
 
-    public BatchDetailsDTO(String id, String type, String description, String voucherDescription, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime expiryDate, String fileName) {
+    private Long count;
+
+    public BatchDetailsDTO(String id, String type, String description, String voucherDescription, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime expiryDate, String fileName,Long count) {
         this.id = id;
         this.type = type;
         this.description = description;
@@ -27,6 +29,7 @@ public class BatchDetailsDTO {
         this.endDate = endDate;
         this.expiryDate = expiryDate;
         this.fileName = fileName;
+        this.count = count;
     }
 
     public String getId() {
@@ -92,6 +95,13 @@ public class BatchDetailsDTO {
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
+    }
 
     @Override
     public String toString() {
@@ -104,6 +114,9 @@ public class BatchDetailsDTO {
             ", endDate=" + endDate +
             ", expiryDate=" + expiryDate +
             ", fileName='" + fileName + '\'' +
+            ", count=" + count +
             '}';
     }
+
+
 }

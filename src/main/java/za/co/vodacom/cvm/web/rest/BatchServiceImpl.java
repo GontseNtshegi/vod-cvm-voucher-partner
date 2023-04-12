@@ -16,6 +16,16 @@ import za.co.vodacom.cvm.web.api.model.BatchListResponseObject;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.zalando.problem.Status;
+import za.co.vodacom.cvm.config.Constants;
+import za.co.vodacom.cvm.domain.VPBatch;
+import za.co.vodacom.cvm.exception.BatchException;
+import za.co.vodacom.cvm.web.api.model.BatchRequest;
+import za.co.vodacom.cvm.web.api.model.BatchResponse;
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+import java.util.Optional;
 import za.co.vodacom.cvm.domain.VPBatch;
 
 import java.util.Optional;
@@ -26,6 +36,11 @@ public class BatchServiceImpl implements BatchApiDelegate {
     public static final Logger log = LoggerFactory.getLogger(BatchServiceImpl.class);
     @Autowired
     VPBatchService vpBatchService;
+
+    BatchServiceImpl(VPBatchService vpBatchService) {
+        this.vpBatchService = vpBatchService;
+    }
+
     @Override
     public ResponseEntity<List<BatchListResponseObject>> batchlist() {
         List<BatchListResponseObject> batchListResponseObjects = new ArrayList<>();
@@ -41,16 +56,40 @@ public class BatchServiceImpl implements BatchApiDelegate {
                     batchListResponseObject.setActivateUser(vpBatch.getActivateUser());
                     batchListResponseObject.setLoadDate(vpBatch.getLoadDate().toOffsetDateTime());
                     batchListResponseObject.setCreateUser(vpBatch.getCreateUser());
-
-
                     batchListResponseObjects.add(batchListResponseObject);
                 });
             });
-
         log.debug("BatchList {} ", batchListResponseObjects);
         return new ResponseEntity<>(batchListResponseObjects, HttpStatus.OK);
 
     }
+
+    @Transactional
+    @Override
+    public ResponseEntity<BatchResponse> batch(BatchRequest batchRequest) {
+        Optional<VPBatch> vpBatch = vpBatchService.findByName(batchRequest.getBatchName());
+        BatchResponse batchResponse = new BatchResponse();
+        if (vpBatch.isPresent()) {
+            throw new BatchException("Batch name already exists", Status.CONFLICT);
+        } else {
+            VPBatch newBatchEntry = new VPBatch();
+            newBatchEntry.setName(batchRequest.getBatchName());
+            newBatchEntry.setComment(batchRequest.getBatchComment());
+            newBatchEntry.setRestrictedYN(Constants.RESTRICTED_N);
+            newBatchEntry.setCreateUser(batchRequest.getUserName());
+            newBatchEntry.setStatus(Constants.STATUS_O);
+            newBatchEntry.setLoadDate(ZonedDateTime.now());
+            newBatchEntry.setCreateDate(ZonedDateTime.now());
+            newBatchEntry.setDeleteUser(batchRequest.getUserName());
+            newBatchEntry.setActivateUser(batchRequest.getBatchName());
+
+            VPBatch result = vpBatchService.save(newBatchEntry);
+            log.debug("VPBatch result {}", result);
+            batchResponse.setBatchId(BigDecimal.valueOf(result.getId().longValue()));
+        }
+        return new ResponseEntity<>(batchResponse, HttpStatus.OK);
+    }
+
 
     @Override
     public ResponseEntity<List<BatchDetailsResponseObject>> batchdetails(Integer batchId) {

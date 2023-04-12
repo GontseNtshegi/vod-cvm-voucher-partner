@@ -55,4 +55,10 @@ public interface VPBatchService {
     Optional<List<VPBatch>> getAll();
 
     List<BatchDetailsDTO> getVoucherQuantity(Long id, ZonedDateTime sysdate);
+    /**
+     * Find by batch name
+     * @param name
+     * @return
+     */
+    Optional<VPBatch> findByName(String name);
 }

@@ -101,4 +101,10 @@ public class VPBatchServiceImpl implements VPBatchService {
         return vPBatchRepository.getVoucherQuantity(id , sysdate);
     }
 
+    @Override
+    public Optional<VPBatch> findByName(String name) {
+        log.info("Request to find by name in VPBatch ");
+        log.debug("Request to find by name in VPBatch : {}", name);
+        return vPBatchRepository.findByName(name);
+    }
 }

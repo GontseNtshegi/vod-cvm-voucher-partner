@@ -90,4 +90,10 @@ public class VPBatchServiceImpl implements VPBatchService {
         log.debug("Request to getAll VPBatch :");
         return vPBatchRepository.getAll();
     }
+    @Override
+    public Optional<VPBatch> findByName(String name) {
+        log.info("Request to find by name in VPBatch ");
+        log.debug("Request to find by name in VPBatch : {}", name);
+        return vPBatchRepository.findByName(name);
+    }
 }

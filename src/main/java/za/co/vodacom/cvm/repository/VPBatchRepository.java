@@ -15,4 +15,7 @@ import java.util.Optional;
 public interface VPBatchRepository extends JpaRepository<VPBatch, Long> {
     @Query(value = "select * from vp_batch  order by id", nativeQuery = true)
     Optional<List<VPBatch>> getAll();
+
+    Optional<VPBatch> findByName(String name);
 }
+

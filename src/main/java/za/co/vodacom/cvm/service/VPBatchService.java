@@ -50,4 +50,10 @@ public interface VPBatchService {
      * @return
      */
     Optional<List<VPBatch>> getAll();
+    /**
+     * Find by batch name
+     * @param name
+     * @return
+     */
+    Optional<VPBatch> findByName(String name);
 }

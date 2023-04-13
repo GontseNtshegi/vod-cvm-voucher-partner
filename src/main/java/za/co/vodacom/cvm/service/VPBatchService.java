@@ -1,8 +1,11 @@
 package za.co.vodacom.cvm.service;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+
 import za.co.vodacom.cvm.domain.VPBatch;
+import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
 
 /**
  * Service Interface for managing {@link VPBatch}.
@@ -45,4 +48,17 @@ public interface VPBatchService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+    /**
+     *
+     * @return
+     */
+    Optional<List<VPBatch>> getAll();
+
+    List<BatchDetailsDTO> getVoucherQuantity(Long id, ZonedDateTime sysdate);
+    /**
+     * Find by batch name
+     * @param name
+     * @return
+     */
+    Optional<VPBatch> findByName(String name);
 }

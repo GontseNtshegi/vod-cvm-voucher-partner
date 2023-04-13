@@ -6,9 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import za.co.vodacom.cvm.service.VPBatchService;
+import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
 import za.co.vodacom.cvm.web.api.BatchApiDelegate;
+import za.co.vodacom.cvm.web.api.model.BatchDetailsResponseObject;
 import za.co.vodacom.cvm.web.api.model.BatchListResponseObject;
+
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.zalando.problem.Status;
@@ -19,9 +24,10 @@ import za.co.vodacom.cvm.web.api.model.BatchRequest;
 import za.co.vodacom.cvm.web.api.model.BatchResponse;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.Optional;
 
+
+import java.util.Optional;
 
 @Service
 public class BatchServiceImpl implements BatchApiDelegate {
@@ -35,7 +41,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
     }
 
     @Override
-    public ResponseEntity<List<BatchListResponseObject>> batchlist() {
+    public ResponseEntity<List<BatchListResponseObject>> batchList() {
         List<BatchListResponseObject> batchListResponseObjects = new ArrayList<>();
         vpBatchService.getAll()
             .ifPresent(vpBatches -> {
@@ -52,9 +58,9 @@ public class BatchServiceImpl implements BatchApiDelegate {
                     batchListResponseObjects.add(batchListResponseObject);
                 });
             });
-
         log.debug("BatchList {} ", batchListResponseObjects);
         return new ResponseEntity<>(batchListResponseObjects, HttpStatus.OK);
+
     }
 
     @Transactional
@@ -81,6 +87,39 @@ public class BatchServiceImpl implements BatchApiDelegate {
             batchResponse.setBatchId(BigDecimal.valueOf(result.getId().longValue()));
         }
         return new ResponseEntity<>(batchResponse, HttpStatus.OK);
+    }
+
+
+    @Override
+    public ResponseEntity<List<BatchDetailsResponseObject>> batchDetails(Integer batchId) {
+
+        Optional<VPBatch> vpBatch = vpBatchService.findOne(batchId.longValue());
+        List<BatchDetailsResponseObject> batchDetailsResponse = new ArrayList<>();
+
+        if(!vpBatch.isPresent()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Batch not found");
+        }else{
+            List<BatchDetailsDTO> batchDetailsDTOList = vpBatchService.getVoucherQuantity(batchId.longValue(), ZonedDateTime.now());
+
+            batchDetailsDTOList.forEach(batchDetailsDTO -> {
+                BatchDetailsResponseObject batchDetailsResponse1 = new BatchDetailsResponseObject();
+                batchDetailsResponse1.setEndDate(batchDetailsDTO.getEndDate().toLocalDate());
+                batchDetailsResponse1.setFileName(batchDetailsDTO.getFileName());
+                batchDetailsResponse1.setNumVouchers(Math.toIntExact(batchDetailsDTO.getCount()));
+                batchDetailsResponse1.setVoucherDescription(batchDetailsDTO.getVoucherDescription());
+                batchDetailsResponse1.setProductId(batchDetailsDTO.getId());
+                batchDetailsResponse1.setProductDescription(batchDetailsDTO.getDescription());
+                batchDetailsResponse1.setStartDate(batchDetailsDTO.getStartDate().toLocalDate());
+                batchDetailsResponse1.setEndDate(batchDetailsDTO.getEndDate().toLocalDate());
+                batchDetailsResponse1.setVoucherExpiryDate(batchDetailsDTO.getExpiryDate().toLocalDate());
+
+                batchDetailsResponse.add(batchDetailsResponse1);
+
+            });
+
+        }
+
+        return new ResponseEntity<>(batchDetailsResponse,HttpStatus.OK);
     }
 
 }

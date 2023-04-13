@@ -1,5 +1,6 @@
 package za.co.vodacom.cvm.service.impl;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPBatch;
 import za.co.vodacom.cvm.repository.VPBatchRepository;
 import za.co.vodacom.cvm.service.VPBatchService;
+import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
 
 /**
  * Service Implementation for managing {@link VPBatch}.
@@ -90,6 +92,15 @@ public class VPBatchServiceImpl implements VPBatchService {
         log.debug("Request to getAll VPBatch :");
         return vPBatchRepository.getAll();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BatchDetailsDTO> getVoucherQuantity(Long id , ZonedDateTime sysdate) {
+        log.info("Request to get Voucher Quantity");
+        log.debug("Request get Voucher Quantity: {}", id);
+        return vPBatchRepository.getVoucherQuantity(id , sysdate);
+    }
+
     @Override
     public Optional<VPBatch> findByName(String name) {
         log.info("Request to find by name in VPBatch ");

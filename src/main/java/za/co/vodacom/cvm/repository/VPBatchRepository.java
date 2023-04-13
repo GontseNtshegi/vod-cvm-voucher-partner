@@ -18,24 +18,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Repository
 public interface VPBatchRepository extends JpaRepository<VPBatch, Long> {
-//    @Query(
-//        value = "select " +
-//            "d.product_id," +
-//            " d.type, " +
-//            "d.description, " +
-//            "v.description as voucher_desc, " +
-//            "f.file_name, " +
-//            "count(*) ," +
-//            " v.start_date," +
-//            " v.end_date, " +
-//            "v.expiry_date " +
-//            "from vp_vouchers v, vp_voucher_def d, vp_file_load f " +
-//            "where v.product_id=d.product_id " +
-//            "and v.file_id=f.id " +
-//            "and v.batch_id=:id " +
-//            "and issued_date is null and end_date > now() group by product_id,d.type,d.description,v.description, f.file_name,v.start_date,v.end_date,v.expiry_date order by 1",
-//        nativeQuery = true
-//    )
+
     @Query(
         value ="select new za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO(d.id, " +
             "d.type," +

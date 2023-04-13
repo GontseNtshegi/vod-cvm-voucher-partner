@@ -265,7 +265,7 @@ paths:
       tags:
         - batch
       summary: Retrieves list of batches
-      operationId: batchlist
+      operationId: batchList
       description: Returns a list of batches
       responses:
         '200':
@@ -317,7 +317,7 @@ paths:
       tags:
         - batch
       summary: Returns the details of a specific batch
-      operationId: batchdetails
+      operationId: batchDetails
       description: Returns the details of a specific batch
       parameters:
         - name: batchId
@@ -348,7 +348,7 @@ paths:
       tags:
         - batch
       summary: Uploads a file containing voucher codes and links these to a batch
-      operationId: batchupload
+      operationId: batchUpload
       description: Uploads a file containing voucher codes and links these to a batch
       parameters:
         - name: batchId

@@ -41,7 +41,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
     }
 
     @Override
-    public ResponseEntity<List<BatchListResponseObject>> batchlist() {
+    public ResponseEntity<List<BatchListResponseObject>> batchList() {
         List<BatchListResponseObject> batchListResponseObjects = new ArrayList<>();
         vpBatchService.getAll()
             .ifPresent(vpBatches -> {
@@ -91,7 +91,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
 
     @Override
-    public ResponseEntity<List<BatchDetailsResponseObject>> batchdetails(Integer batchId) {
+    public ResponseEntity<List<BatchDetailsResponseObject>> batchDetails(Integer batchId) {
 
         Optional<VPBatch> vpBatch = vpBatchService.findOne(batchId.longValue());
         List<BatchDetailsResponseObject> batchDetailsResponse = new ArrayList<>();

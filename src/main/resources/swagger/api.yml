@@ -299,9 +299,18 @@ paths:
           schema:
             type: integer
             format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchStatusRequest'
       responses:
         '200':
           description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchStatusResponse'
         '204':
           description: No content
         '400':
@@ -964,6 +973,23 @@ components:
           type: string
           format: date
           description: The default validity period in days, relative to the date of issue
+    BatchStatusRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Incoming status of a batch
+        userName:
+          type: string
+          description: Vodacom username
+    BatchStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: New updated response
+
+
     Problem:
       type: object
       properties:

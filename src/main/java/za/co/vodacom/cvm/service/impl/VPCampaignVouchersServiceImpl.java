@@ -91,4 +91,13 @@ public class VPCampaignVouchersServiceImpl implements VPCampaignVouchersService 
         log.debug("Request to find by productIdin VPCampaignVouchers : {}", productId);
         return vPCampaignVouchersRepository.findByProductIdAndCampaignIdAndActiveYN(productId, campaignId, activeYN);
     }
-}
+
+    public Optional<List<VPCampaignVouchers>> getVouchersByProductId(List<String> campaignId) {
+        log.debug("Request to find vouchers related to a campaign using productId.");
+        return vPCampaignVouchersRepository.getVouchersByProductId(campaignId);
+    }
+
+    }
+
+
+

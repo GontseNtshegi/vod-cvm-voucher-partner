@@ -4,11 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import za.co.vodacom.cvm.domain.VPFileLoad;
 import za.co.vodacom.cvm.service.VPBatchService;
+import za.co.vodacom.cvm.service.VPFileLoadService;
 import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
+import za.co.vodacom.cvm.web.api.ApiUtil;
 import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 
@@ -31,8 +35,12 @@ public class BatchServiceImpl implements BatchApiDelegate {
     @Autowired
     VPBatchService vpBatchService;
 
-    BatchServiceImpl(VPBatchService vpBatchService) {
+    @Autowired
+    VPFileLoadService vpFileLoadService;
+
+    BatchServiceImpl(VPBatchService vpBatchService,VPFileLoadService vpFileLoadService) {
         this.vpBatchService = vpBatchService;
+        this.vpFileLoadService = vpFileLoadService;
     }
 
     @Override
@@ -154,5 +162,34 @@ public class BatchServiceImpl implements BatchApiDelegate {
         return new ResponseEntity<>(batchStatusResponse,HttpStatus.OK);
 
     }
+@Override
+    public ResponseEntity<BatchUploadResponse> batchUpload(Integer batchId,
+                                                            BatchUploadRequest batchUploadRequest) {
 
+        BatchUploadResponse batchUploadResponse = new BatchUploadResponse();
+
+        Optional<VPBatch> vpBatch = vpBatchService.getBatch(Long.valueOf(batchId));
+
+        if(vpBatch.isPresent()) {
+            Optional<VPFileLoad> vpFileLoad = vpFileLoadService.getFileByNameAndId(batchId,batchUploadRequest.getFileName());
+            if(vpFileLoad.isPresent()){
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "FileName already exists");
+            }else{
+                VPFileLoad vpFileLoad1 = new VPFileLoad();
+
+                vpFileLoad1.setBatchId(batchId);
+                vpFileLoad1.setFileName(batchUploadRequest.getFileName());
+                vpFileLoad1.setCompletedDate(ZonedDateTime.now());
+                vpFileLoad1.setCompletedDate(ZonedDateTime.now());
+                vpFileLoad1.setNumLoaded(0);
+                vpFileLoad1.setNumFailed(0);
+
+                vpFileLoadService.save(vpFileLoad1);
+            }
+
+        }else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid batch ID");
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

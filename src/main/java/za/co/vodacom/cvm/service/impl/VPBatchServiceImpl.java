@@ -107,4 +107,27 @@ public class VPBatchServiceImpl implements VPBatchService {
         log.debug("Request to find by name in VPBatch : {}", name);
         return vPBatchRepository.findByName(name);
     }
+
+    @Override
+    public Optional<VPBatch> getBatch(Long id) {
+        log.info("Request to find batch in VPBatch  ");
+        log.debug("Request to find batch in VPBatch with id : {}", id);
+        return vPBatchRepository.getBatch(id);
+    }
+
+    @Override
+    public Optional<VPBatch> getBatchWithStatus(Long id) {
+        log.info("Request to find batch in VPBatch");
+        log.debug("Request to find batch in VPBatch with id : {}", id);
+        return vPBatchRepository.getBatchWithStatus(id);
+    }
+
+    @Override
+    public void updateBatch(Long id, String name) {
+        vPBatchRepository.updateBatch(id,name);
+    }
+    @Override
+    public void updateReturnedBatch(Long id,String name){
+        vPBatchRepository.updateReturnedBatch(id,name);
+    }
 }

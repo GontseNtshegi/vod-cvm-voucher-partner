@@ -15,6 +15,8 @@ public final class Constants {
     public static final String YES = "Y";
     public static final String NO = "N";
     public static final String STATUS_O = "O";
+    public static final String STATUS_A = "A";
+    public static final String STATUS_D = "D";
     public static final String RESTRICTED_N = "N";
 
 

@@ -1,5 +1,8 @@
 package za.co.vodacom.cvm.web.rest;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +12,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import za.co.vodacom.cvm.domain.VPFileLoad;
+import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.service.VPBatchService;
 import za.co.vodacom.cvm.service.VPFileLoadService;
+import za.co.vodacom.cvm.service.VPVouchersService;
 import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
 import za.co.vodacom.cvm.web.api.ApiUtil;
 import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +47,12 @@ public class BatchServiceImpl implements BatchApiDelegate {
     @Autowired
     VPFileLoadService vpFileLoadService;
 
-    BatchServiceImpl(VPBatchService vpBatchService,VPFileLoadService vpFileLoadService) {
+    VPVouchersService vpVouchersService;
+
+    BatchServiceImpl(VPBatchService vpBatchService,VPFileLoadService vpFileLoadService, VPVouchersService vpVouchersService) {
         this.vpBatchService = vpBatchService;
         this.vpFileLoadService = vpFileLoadService;
+        this.vpVouchersService = vpVouchersService;
     }
 
     @Override
@@ -185,11 +197,50 @@ public class BatchServiceImpl implements BatchApiDelegate {
                 vpFileLoad1.setNumFailed(0);
 
                 vpFileLoadService.save(vpFileLoad1);
+
+                // process the csv file
+                try {
+                    List<VPVouchers> vpVouchers = csvToVPVouchers(batchUploadRequest.getData().getInputStream());
+                    List<VPVouchers> result = vpVouchersService.saveAll(vpVouchers);
+
+                    log.debug("Results returned from csv" , result.toString());
+
+                }catch (IOException e){
+                    throw new RuntimeException("Failed to store csv data : " + e.getMessage());
+                }
             }
 
         }else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid batch ID");
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    public static List<VPVouchers> csvToVPVouchers(InputStream inputStream) {
+        try {
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            CSVParser csvParser = new CSVParser(fileReader,
+                CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
+
+            List<VPVouchers> vpVouchers = new ArrayList<>();
+
+            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+
+            for(CSVRecord csvRecord : csvRecords){
+                VPVouchers vpVouchers1 = new VPVouchers(
+                    csvRecord.get("productId"),
+                    csvRecord.get("voucherCode"),
+                    csvRecord.get("Description"),
+                    ZonedDateTime.parse(csvRecord.get("startDate")),
+                    ZonedDateTime.parse(csvRecord.get("endDate")),
+                    ZonedDateTime.parse(csvRecord.get("expiryDate")),
+                    csvRecord.get("CollectionPoint"),
+                    Integer.parseInt(csvRecord.get("Quantity")));
+                vpVouchers.add(vpVouchers1);
+            }
+            return vpVouchers;
+
+        } catch(IOException e) {
+            throw new RuntimeException("Failed to parse CSV file: " + e.getMessage());
+        }
     }
 }

@@ -96,4 +96,6 @@ public interface VPVouchersService {
      * @return
      */
     Optional<Product> getValidVoucherForProductGenericVoucher(String productId);
+
+    List<VPVouchers> saveAll(Iterable<VPVouchers> vpVouchers);
 }

@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import za.co.vodacom.cvm.domain.VPCampaignVouchers;
 import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.repository.VPVouchersRepository;
 import za.co.vodacom.cvm.service.VPVouchersService;
@@ -155,5 +156,10 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     @Override
     public Optional<Product> getValidVoucherForProductGenericVoucher(String productId) {
         return vPVouchersRepository.getValidVoucherForProductGenericVoucher(productId);
+    }
+
+    @Override
+    public List<VPVouchers> saveAll(Iterable<VPVouchers> vpVouchers) {
+        return vPVouchersRepository.saveAll(vpVouchers);
     }
 }

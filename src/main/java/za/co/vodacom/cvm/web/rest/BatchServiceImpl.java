@@ -10,8 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import za.co.vodacom.cvm.service.VPBatchService;
 import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
 import za.co.vodacom.cvm.web.api.BatchApiDelegate;
-import za.co.vodacom.cvm.web.api.model.BatchDetailsResponseObject;
-import za.co.vodacom.cvm.web.api.model.BatchListResponseObject;
+import za.co.vodacom.cvm.web.api.model.*;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -20,13 +19,9 @@ import org.zalando.problem.Status;
 import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPBatch;
 import za.co.vodacom.cvm.exception.BatchException;
-import za.co.vodacom.cvm.web.api.model.BatchRequest;
-import za.co.vodacom.cvm.web.api.model.BatchResponse;
+
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.Optional;
-
-
 import java.util.Optional;
 
 @Service
@@ -120,6 +115,44 @@ public class BatchServiceImpl implements BatchApiDelegate {
         }
 
         return new ResponseEntity<>(batchDetailsResponse,HttpStatus.OK);
+    }
+
+    @Transactional
+    @Override
+    public ResponseEntity<BatchStatusResponse> batchStatus(Long batchId,
+                                                            BatchStatusRequest batchStatusRequest) {
+        BatchStatusResponse batchStatusResponse = new BatchStatusResponse();
+
+        if (batchStatusRequest.getStatus().equalsIgnoreCase(Constants.STATUS_A)) {
+            Optional <VPBatch> vpBatch = vpBatchService.getBatch(batchId);
+            if(!vpBatch.isPresent()){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid Batch ID");
+            }else{
+                VPBatch vpBatch1 = vpBatch.get();
+                log.debug(vpBatch1.toString());
+                log.info(vpBatch1.toString());
+                vpBatchService.updateBatch(batchId,batchStatusRequest.getUserName());
+                batchStatusResponse.setStatus(vpBatch1.getStatus());
+            }
+        } else if (batchStatusRequest.getStatus().equalsIgnoreCase(Constants.STATUS_D)) {
+            Optional<VPBatch> vpBatch = vpBatchService.getBatchWithStatus(batchId);
+            if(!vpBatch.isPresent()){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Invalid Batch ID");
+            }else{
+                VPBatch vpBatch1 = vpBatch.get();
+                log.debug(vpBatch1.toString());
+                log.info(vpBatch1.toString());
+                vpBatchService.updateReturnedBatch(batchId,batchStatusRequest.getUserName());
+                batchStatusResponse.setStatus(vpBatch1.getStatus());
+            }
+        }else{
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Invalid status");
+        }
+
+        log.debug(batchStatusResponse.toString());
+        log.info(batchStatusResponse.toString());
+        return new ResponseEntity<>(batchStatusResponse,HttpStatus.OK);
+
     }
 
 }

@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.repository.query.Param;
 import za.co.vodacom.cvm.domain.VPBatch;
 import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
 
@@ -61,4 +62,12 @@ public interface VPBatchService {
      * @return
      */
     Optional<VPBatch> findByName(String name);
+
+    Optional<VPBatch> getBatch(Long id);
+
+    Optional<VPBatch> getBatchWithStatus(Long id);
+
+    void updateBatch(Long id, String name);
+
+    void updateReturnedBatch(Long id,String name);
 }

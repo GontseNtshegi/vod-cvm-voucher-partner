@@ -14,9 +14,11 @@ import za.co.vodacom.cvm.service.VPCampaignService;
 import za.co.vodacom.cvm.service.VPCampaignVouchersService;
 import za.co.vodacom.cvm.service.VPVoucherDefService;
 import za.co.vodacom.cvm.service.VPVouchersService;
+import za.co.vodacom.cvm.service.dto.product.Quantity;
 import za.co.vodacom.cvm.web.api.CampaignApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -71,6 +73,8 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
     public ResponseEntity<List<VoucherProductResponseObject>> getCampaignProducts(String campaignId) {
         List<VoucherProductResponseObject> voucherListResponse = new ArrayList<>();
 
+        //Needs work. May have to create a sql query that does everything in one query.
+
         Optional<VPCampaign> campaign = vpCampaignService.findOne(Long.valueOf(campaignId));
         log.debug(campaign.toString());
 
@@ -107,13 +111,30 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
         //Check if campaign ID exists
         if (campaign.isPresent()) {
             //TODO: run query *select d.product_id,d_desc,v.descr as voucher_desc, count* from VP Vouchers
+            //May need to create a response DTO
+/*
+            List<Quantity> campaignVouchers = vpVouchersService.getVoucherQuantity();
+            log.debug("Quantity response object:{}",campaignVouchers);
 
-            return CampaignApiDelegate.super.getQuantities(campaignId);
+            List<QuantitiesResponseObject> quantitiesResponseObjectList = new ArrayList<>();
+           for(Quantity quantity : campaignVouchers){
+               quantitiesResponseObjectList.add(new QuantitiesResponseObject()
+                   .productId(quantity.getProductId())
+                   .quantity(quantity.getCount())
+                   .productType(QuantitiesResponseObject.ProductTypeEnum.valueOf(quantity.getType()))
+                   .productDescription(quantity.getProductDescription())
+                   .voucherDescription(quantity.getDescription())
+                   .endDate(LocalDate.from(quantity.getEndDate()))
+                   .voucherExpiryDate(LocalDate.from(quantity.getExpiryDate())));
+           }
+*/
+
+
+            return new ResponseEntity<>(/*quantitiesResponseObjectList,*/HttpStatus.OK);
         } else {
             //If it exists return 404 or Invalid Campaign
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
     }
 
     private static <T> Set<T> findCommonElements(List<T> first, List<T> second) {

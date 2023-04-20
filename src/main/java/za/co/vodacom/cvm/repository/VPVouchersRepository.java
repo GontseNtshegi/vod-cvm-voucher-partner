@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.service.dto.product.Product;
+import za.co.vodacom.cvm.service.dto.product.Quantity;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,4 +58,24 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
         value = "select new za.co.vodacom.cvm.service.dto.product.Product(quantity, endDate) from VPVouchers where productId=:productId and startDate< sysdate() and endDate>sysdate()"
     )
     Optional<Product> getValidVoucherForProductGenericVoucher(@Param("productId") String productId);
+
+/*    @Query(
+        value = "select new za.co.vodacom.cvm.service.dto.product.quantity(d.product_id, d.type, d.description, v.description as voucher_desc, count(*),v.start_date,v.end_date,v.expiry_date) from \n" +
+            "vp_vouchers v, " +
+            "vp_voucher_def d," +
+            " vp_campaign_vouchers c," +
+            " vp_batch b\n" +
+            "where v.product_id=d.product_id\n" +
+            "and v.batch_id=b.id\n" +
+            "and v.product_id=d.product_id\n" +
+            "and v.product_id=c.product_id\n" +
+            "and c.campaign_id=21\n" +
+            "and c.active_yn='Y'\n" +
+            "and b.status='O'\n" +
+            "and issued_date is null\n" +
+            "and end_date > now()\n" +
+            "group by product_id,d.type,d.description,v.description,\n" +
+            "v.start_date,v.end_date,v.expiry_date order by 1"
+    )
+    List<Quantity> getVoucherQuantity();*/
 }

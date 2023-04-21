@@ -112,7 +112,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
     public ResponseEntity<List<QuantitiesResponseObject>> getQuantities(String campaignId) {
         Optional<VPCampaign> vpCampaign = vpCampaignService.findOne(Long.valueOf(campaignId));
         List<QuantitiesResponseObject> quantitiesResponseObjectList = new ArrayList<>();
-        log.debug("List of campaigns:{}",vpCampaign);
+        log.debug(":{}",vpCampaign);
 
         //Check if campaign ID exists
         if (!vpCampaign.isPresent()) {
@@ -124,7 +124,21 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                 quantityDetailsDTOSList.forEach(quantityDetailsDTO -> {
                     QuantitiesResponseObject quantitiesResponseObject = new QuantitiesResponseObject();
                      quantitiesResponseObject.setProductId(quantityDetailsDTO.getProductId());
-                     quantitiesResponseObject.setProductType(QuantitiesResponseObject.ProductTypeEnum.valueOf(quantityDetailsDTO.getType()));
+                     switch(quantityDetailsDTO.getType()){
+                         case "Voucher":
+                             quantitiesResponseObject.setProductType(QuantitiesResponseObject.ProductTypeEnum.VOUCHER);
+                             break;
+                         case "GenericVoucher":
+                             quantitiesResponseObject.setProductType(QuantitiesResponseObject.ProductTypeEnum.GENERICVOUCHER);
+                             break;
+                         case "OnlineVoucher":
+                             quantitiesResponseObject.setProductType(QuantitiesResponseObject.ProductTypeEnum.ONLINEVOUCHER);
+                             break;
+                         case "OnlineGiftcard":
+                             quantitiesResponseObject.setProductType(QuantitiesResponseObject.ProductTypeEnum.ONLINEGIFTCARD);
+                             break;
+                         default:
+                     }
                      quantitiesResponseObject.setProductDescription(quantityDetailsDTO.getProductDescription());
                      quantitiesResponseObject.setQuantity(Math.toIntExact(quantityDetailsDTO.getCount()));
                      quantitiesResponseObject.setVoucherDescription(quantityDetailsDTO.getDescription());
@@ -132,6 +146,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
 
                     quantitiesResponseObjectList.add(quantitiesResponseObject);
                 });
+                log.debug("Response object{}",quantitiesResponseObjectList);
         }
 
         return new ResponseEntity<>(quantitiesResponseObjectList,HttpStatus.OK);

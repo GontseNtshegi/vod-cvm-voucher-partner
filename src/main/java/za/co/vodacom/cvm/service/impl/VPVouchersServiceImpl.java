@@ -161,7 +161,7 @@ public class VPVouchersServiceImpl implements VPVouchersService {
 
     @Override
     public List<QuantityDetailsDTO> getVoucherQuantity(Long campaignId, ZonedDateTime extDate) {
-        log.debug("Request to get campaign voucher quantity.");
+        log.debug("Request to get campaign vouchers quantities.");
         return vPVouchersRepository.getVoucherQuantity(campaignId,extDate);
     }
 

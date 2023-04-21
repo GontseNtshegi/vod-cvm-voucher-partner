@@ -1,47 +1,49 @@
-package za.co.vodacom.cvm.service.dto.product;
+package za.co.vodacom.cvm.service.dto.campaign;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
-public class Quantity {
+public class QuantityDetailsDTO {
     String productId;
-    String description;
-
-    String productDescription;
-    int count;
-    LocalDateTime startDate;
-    LocalDateTime endDate;
-    LocalDateTime expiryDate;
     String type;
+    String description;
+    String description_1;
+    ZonedDateTime startDate;
+    ZonedDateTime endDate;
+    ZonedDateTime expiryDate;
+    Long count;
 
-    public LocalDateTime getStartDate() {
+    public ZonedDateTime getStartDate() {
         return startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public ZonedDateTime getEndDate() {
         return endDate;
     }
 
-    public LocalDateTime getExpiryDate() {
+    public ZonedDateTime getExpiryDate() {
         return expiryDate;
     }
 
-    public Quantity(String productId, String description, String productDescription, int count, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime expiryDate, String type) {
+    public QuantityDetailsDTO(String productId, String type, String description, String description_1, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime expiryDate, Long count) {
         this.productId = productId;
+        this.type = type;
         this.description = description;
-        this.productDescription = productDescription;
-        this.count = count;
+        this.description_1 = description_1;
         this.startDate = startDate;
         this.endDate = endDate;
         this.expiryDate = expiryDate;
-        this.type = type;
+        this.count = count;
+    }
+
+    public QuantityDetailsDTO() {
     }
 
     public String getProductDescription() {
-        return productDescription;
+        return description_1;
     }
 
     public void setProductDescription(String productDescription) {
-        this.productDescription = productDescription;
+        this.description_1 = description_1;
     }
 
     public String getProductId() {
@@ -60,23 +62,23 @@ public class Quantity {
         this.description = description;
     }
 
-    public int getCount() {
+    public Long getCount() {
         return count;
     }
 
-    public void setCount(int count) {
+    public void setCount(Long count) {
         this.count = count;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(ZonedDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(ZonedDateTime endDate) {
         this.endDate = endDate;
     }
 
-    public void setExpiryDate(LocalDateTime expiryDate) {
+    public void setExpiryDate(ZonedDateTime expiryDate) {
         this.expiryDate = expiryDate;
     }
 
@@ -88,12 +90,20 @@ public class Quantity {
         this.type = type;
     }
 
+    public String getDescription_1() {
+        return description_1;
+    }
+
+    public void setDescription_1(String description_1) {
+        this.description_1 = description_1;
+    }
+
     @Override
     public String toString() {
         return "Quantity{" +
             "productId='" + productId + '\'' +
             ", description='" + description + '\'' +
-            ", productDescription='" + productDescription + '\'' +
+            ", productDescription='" + description_1 + '\'' +
             ", count=" + count +
             ", startDate=" + startDate +
             ", endDate=" + endDate +

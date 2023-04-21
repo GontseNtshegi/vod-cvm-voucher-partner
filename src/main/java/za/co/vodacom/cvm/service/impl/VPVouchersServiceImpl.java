@@ -1,5 +1,6 @@
 package za.co.vodacom.cvm.service.impl;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -8,12 +9,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import za.co.vodacom.cvm.domain.VPCampaignVouchers;
 import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.repository.VPVouchersRepository;
 import za.co.vodacom.cvm.service.VPVouchersService;
+import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
 import za.co.vodacom.cvm.service.dto.product.Product;
-import za.co.vodacom.cvm.service.dto.product.Quantity;
 
 /**
  * Service Implementation for managing {@link VPVouchers}.
@@ -159,9 +159,10 @@ public class VPVouchersServiceImpl implements VPVouchersService {
         return vPVouchersRepository.getValidVoucherForProductGenericVoucher(productId);
     }
 
-/*    @Override
-    public List<Quantity> getVoucherQuantity() {
+    @Override
+    public List<QuantityDetailsDTO> getVoucherQuantity(Long campaignId, ZonedDateTime extDate) {
         log.debug("Request to get campaign voucher quantity.");
-        return vPVouchersRepository.getVoucherQuantity();
-    }*/
+        return vPVouchersRepository.getVoucherQuantity(campaignId,extDate);
+    }
+
 }

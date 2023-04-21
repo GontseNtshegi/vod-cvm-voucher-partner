@@ -10,18 +10,19 @@ import org.springframework.web.server.ResponseStatusException;
 import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPCampaign;
 import za.co.vodacom.cvm.domain.VPCampaignVouchers;
-import za.co.vodacom.cvm.service.VPCampaignService;
-import za.co.vodacom.cvm.service.VPCampaignVouchersService;
-import za.co.vodacom.cvm.service.VPVoucherDefService;
-import za.co.vodacom.cvm.service.VPVouchersService;
-import za.co.vodacom.cvm.service.dto.product.Quantity;
+import za.co.vodacom.cvm.service.*;
+import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
+import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
 import za.co.vodacom.cvm.web.api.CampaignApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.time.LocalTime.now;
 
 
 @Service
@@ -37,14 +38,18 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
     private final VPVoucherDefService voucherDefService;
     @Autowired
     private final VPVouchersService vpVouchersService;
+    @Autowired
+    private final VPBatchService vpBatchService;
+
     private boolean found = false;
 
 
-    public CampaignServiceImpl(VPCampaignService vpCampaignService, VPCampaignVouchersService vpCampaignVouchersService, VPVoucherDefService voucherDefService, VPVouchersService vpVouchersService) {
+    public CampaignServiceImpl(VPCampaignService vpCampaignService, VPCampaignVouchersService vpCampaignVouchersService, VPVoucherDefService voucherDefService, VPVouchersService vpVouchersService, VPBatchService vpBatchService) {
         this.vpCampaignService = vpCampaignService;
         this.vpCampaignVouchersService = vpCampaignVouchersService;
         this.voucherDefService = voucherDefService;
         this.vpVouchersService = vpVouchersService;
+        this.vpBatchService = vpBatchService;
     }
 
     @Override
@@ -63,7 +68,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                 .campaignId(vpcampaign.getId().toString())
                 .campaignName(vpcampaign.getName())
                 .startDate(vpcampaign.getStartDate().toLocalDate())
-                .endDate(vpcampaign.getEndDate().toLocalDate()));
+                .endDate(vpcampaign.getEndDate() == null? null:vpcampaign.getEndDate().toLocalDate()));
         }
         log.debug("Campaign List{}", campaignsList.toString());
         return new ResponseEntity<>(campaignsList, HttpStatus.OK);
@@ -74,7 +79,6 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
         List<VoucherProductResponseObject> voucherListResponse = new ArrayList<>();
 
         //Needs work. May have to create a sql query that does everything in one query.
-
         Optional<VPCampaign> campaign = vpCampaignService.findOne(Long.valueOf(campaignId));
         log.debug(campaign.toString());
 
@@ -106,35 +110,31 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
 
     @Override
     public ResponseEntity<List<QuantitiesResponseObject>> getQuantities(String campaignId) {
-        Optional<VPCampaign> campaign = vpCampaignService.findOne(Long.valueOf(campaignId));
+        Optional<VPCampaign> vpCampaign = vpCampaignService.findOne(Long.valueOf(campaignId));
+        List<QuantitiesResponseObject> quantitiesResponseObjectList = new ArrayList<>();
+        log.debug("List of campaigns:{}",vpCampaign);
 
         //Check if campaign ID exists
-        if (campaign.isPresent()) {
-            //TODO: run query *select d.product_id,d_desc,v.descr as voucher_desc, count* from VP Vouchers
-            //May need to create a response DTO
-/*
-            List<Quantity> campaignVouchers = vpVouchersService.getVoucherQuantity();
-            log.debug("Quantity response object:{}",campaignVouchers);
+        if (!vpCampaign.isPresent()) {
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Campaign not found.");
+        }else {
+                List<QuantityDetailsDTO> quantityDetailsDTOSList = vpVouchersService.getVoucherQuantity(Long.valueOf(campaignId),ZonedDateTime.now());
+                log.debug("List of quantityDTO's",quantityDetailsDTOSList);
 
-            List<QuantitiesResponseObject> quantitiesResponseObjectList = new ArrayList<>();
-           for(Quantity quantity : campaignVouchers){
-               quantitiesResponseObjectList.add(new QuantitiesResponseObject()
-                   .productId(quantity.getProductId())
-                   .quantity(quantity.getCount())
-                   .productType(QuantitiesResponseObject.ProductTypeEnum.valueOf(quantity.getType()))
-                   .productDescription(quantity.getProductDescription())
-                   .voucherDescription(quantity.getDescription())
-                   .endDate(LocalDate.from(quantity.getEndDate()))
-                   .voucherExpiryDate(LocalDate.from(quantity.getExpiryDate())));
-           }
-*/
+                quantityDetailsDTOSList.forEach(quantityDetailsDTO -> {
+                    QuantitiesResponseObject quantitiesResponseObject = new QuantitiesResponseObject();
+                     quantitiesResponseObject.setProductId(quantityDetailsDTO.getProductId());
+                     quantitiesResponseObject.setProductType(QuantitiesResponseObject.ProductTypeEnum.valueOf(quantityDetailsDTO.getType()));
+                     quantitiesResponseObject.setProductDescription(quantityDetailsDTO.getProductDescription());
+                     quantitiesResponseObject.setQuantity(Math.toIntExact(quantityDetailsDTO.getCount()));
+                     quantitiesResponseObject.setVoucherDescription(quantityDetailsDTO.getDescription());
+                     quantitiesResponseObject.setEndDate(quantityDetailsDTO.getEndDate() == null? null:quantityDetailsDTO.getEndDate().toLocalDate());
 
-
-            return new ResponseEntity<>(/*quantitiesResponseObjectList,*/HttpStatus.OK);
-        } else {
-            //If it exists return 404 or Invalid Campaign
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                    quantitiesResponseObjectList.add(quantitiesResponseObject);
+                });
         }
+
+        return new ResponseEntity<>(quantitiesResponseObjectList,HttpStatus.OK);
     }
 
     private static <T> Set<T> findCommonElements(List<T> first, List<T> second) {

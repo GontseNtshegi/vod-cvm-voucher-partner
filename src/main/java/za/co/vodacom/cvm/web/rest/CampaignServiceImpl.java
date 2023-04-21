@@ -125,21 +125,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                 quantityDetailsDTOSList.forEach(quantityDetailsDTO -> {
                     QuantitiesResponseObject quantitiesResponseObject = new QuantitiesResponseObject();
                      quantitiesResponseObject.setProductId(quantityDetailsDTO.getProductId());
-                     switch(quantityDetailsDTO.getType()){
-                         case Constants.VOUCHER:
-                             quantitiesResponseObject.setProductType(Constants.VOUCHER);
-                             break;
-                         case Constants.GENERIC_VOUCHER:
-                             quantitiesResponseObject.setProductType(Constants.GENERIC_VOUCHER);
-                             break;
-                         case Constants.ONLINE_VOUCHER:
-                             quantitiesResponseObject.setProductType(Constants.ONLINE_VOUCHER);
-                             break;
-                         case Constants.ONLINE_GIFT_CARD:
-                             quantitiesResponseObject.setProductType(Constants.ONLINE_GIFT_CARD);
-                             break;
-                         default:
-                     }
+                     quantitiesResponseObject.setProductType(quantityDetailsDTO.getType());
                      quantitiesResponseObject.setProductDescription(quantityDetailsDTO.getProductDescription());
                      quantitiesResponseObject.setQuantity(Math.toIntExact(quantityDetailsDTO.getCount()));
                      quantitiesResponseObject.setVoucherDescription(quantityDetailsDTO.getDescription());

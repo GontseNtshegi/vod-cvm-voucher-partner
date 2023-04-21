@@ -76,7 +76,7 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
             "and v.productId = c.productId " +
             "and c.campaignId = :id " +
             "and c.activeYN ='Y' " +
-            "and b.status ='O' " +
+            "and b.status ='A' " +
             "and v.issuedDate is null " +
             "and v.endDate > :sysdate " +
             "group by d.id,d.type,d.description,v.description,v.startDate,v.endDate,v.expiryDate " +

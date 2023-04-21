@@ -98,6 +98,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                 voucherProductResponseObject.setId(String.valueOf(campaignVoucher.getId()));
                 voucherProductResponseObject.setActiveYN(campaignVoucher.getActiveYN());
 
+
                 voucherListResponse.add(voucherProductResponseObject);
             }
             log.debug("List of campaign products{}", voucherListResponse.toString());
@@ -126,16 +127,16 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                      quantitiesResponseObject.setProductId(quantityDetailsDTO.getProductId());
                      switch(quantityDetailsDTO.getType()){
                          case Constants.VOUCHER:
-                             quantitiesResponseObject.setProductType(QuantitiesResponseObject.ProductTypeEnum.VOUCHER);
+                             quantitiesResponseObject.setProductType(Constants.VOUCHER);
                              break;
                          case Constants.GENERIC_VOUCHER:
-                             quantitiesResponseObject.setProductType(QuantitiesResponseObject.ProductTypeEnum.GENERICVOUCHER);
+                             quantitiesResponseObject.setProductType(Constants.GENERIC_VOUCHER);
                              break;
                          case Constants.ONLINE_VOUCHER:
-                             quantitiesResponseObject.setProductType(QuantitiesResponseObject.ProductTypeEnum.ONLINEVOUCHER);
+                             quantitiesResponseObject.setProductType(Constants.ONLINE_VOUCHER);
                              break;
                          case Constants.ONLINE_GIFT_CARD:
-                             quantitiesResponseObject.setProductType(QuantitiesResponseObject.ProductTypeEnum.ONLINEGIFTCARD);
+                             quantitiesResponseObject.setProductType(Constants.ONLINE_GIFT_CARD);
                              break;
                          default:
                      }
@@ -143,7 +144,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                      quantitiesResponseObject.setQuantity(Math.toIntExact(quantityDetailsDTO.getCount()));
                      quantitiesResponseObject.setVoucherDescription(quantityDetailsDTO.getDescription());
                      quantitiesResponseObject.setEndDate(quantityDetailsDTO.getEndDate() == null? null:quantityDetailsDTO.getEndDate().toLocalDate());
-
+                     quantitiesResponseObject.setVoucherExpiryDate(LocalDate.from(quantityDetailsDTO.getExpiryDate()));
                     quantitiesResponseObjectList.add(quantitiesResponseObject);
                 });
                 log.debug("Response object{}",quantitiesResponseObjectList);

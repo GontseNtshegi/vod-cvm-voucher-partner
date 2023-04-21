@@ -70,9 +70,13 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
             "v.endDate,  " +
             "v.expiryDate , "+
             "count(d.id))"+
-            "from VPVouchers v, VPVoucherDef d " +
+            "from VPVouchers v, VPVoucherDef d, VPCampaignVouchers c, VPBatch b " +
             "where v.productId = d.id " +
-            "and v.batchId=:id " +
+            "and v.batchId = b.id " +
+            "and v.productId = c.productId " +
+            "and c.campaignId = :id " +
+            "and c.activeYN ='Y' " +
+            "and b.status ='O' " +
             "and v.issuedDate is null " +
             "and v.endDate > :sysdate " +
             "group by d.id,d.type,d.description,v.description,v.startDate,v.endDate,v.expiryDate " +

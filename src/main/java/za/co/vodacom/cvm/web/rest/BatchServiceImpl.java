@@ -7,9 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import za.co.vodacom.cvm.domain.VPFileLoad;
 import za.co.vodacom.cvm.domain.VPVouchers;
@@ -17,7 +17,6 @@ import za.co.vodacom.cvm.service.VPBatchService;
 import za.co.vodacom.cvm.service.VPFileLoadService;
 import za.co.vodacom.cvm.service.VPVouchersService;
 import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
-import za.co.vodacom.cvm.web.api.ApiUtil;
 import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 
@@ -26,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import org.zalando.problem.Status;
@@ -36,6 +36,7 @@ import za.co.vodacom.cvm.exception.BatchException;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class BatchServiceImpl implements BatchApiDelegate {
@@ -174,25 +175,28 @@ public class BatchServiceImpl implements BatchApiDelegate {
         return new ResponseEntity<>(batchStatusResponse,HttpStatus.OK);
 
     }
-@Override
+    @Transactional
+    @Override
     public ResponseEntity<BatchUploadResponse> batchUpload(Integer batchId,
-                                                            BatchUploadRequest batchUploadRequest) {
+                                                           String fileName,
+                                                           MultipartFile data) {
 
         BatchUploadResponse batchUploadResponse = new BatchUploadResponse();
 
         Optional<VPBatch> vpBatch = vpBatchService.getBatch(Long.valueOf(batchId));
 
         if(vpBatch.isPresent()) {
-            Optional<VPFileLoad> vpFileLoad = vpFileLoadService.getFileByNameAndId(batchId,batchUploadRequest.getFileName());
+            Optional<VPFileLoad> vpFileLoad = vpFileLoadService.getFileByNameAndId(batchId,fileName);
             if(vpFileLoad.isPresent()){
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "FileName already exists");
             }else{
                 VPFileLoad vpFileLoad1 = new VPFileLoad();
 
                 vpFileLoad1.setBatchId(batchId);
-                vpFileLoad1.setFileName(batchUploadRequest.getFileName());
+                vpFileLoad1.setFileName(fileName);
                 vpFileLoad1.setCompletedDate(ZonedDateTime.now());
                 vpFileLoad1.setCompletedDate(ZonedDateTime.now());
+                vpFileLoad1.setCreateDate(ZonedDateTime.now());
                 vpFileLoad1.setNumLoaded(0);
                 vpFileLoad1.setNumFailed(0);
 
@@ -200,10 +204,22 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
                 // process the csv file
                 try {
-                    List<VPVouchers> vpVouchers = csvToVPVouchers(batchUploadRequest.getData().getInputStream());
-                    List<VPVouchers> result = vpVouchersService.saveAll(vpVouchers);
+                    List<VPVouchers> vpVouchers = csvToVPVouchers(data.getInputStream());
+                    log.debug("vpVoucher object {}" , vpVouchers);
+                    AtomicInteger count = new AtomicInteger();
 
-                    log.debug("Results returned from csv" , result.toString());
+                    vpVouchers.forEach(vpVouchers1 -> {
+                        count.getAndIncrement();
+                        vpVouchersService.save(vpVouchers1);
+                    });
+
+                    batchUploadResponse.setNumLoaded(BigDecimal.valueOf(count.getAndIncrement()));
+
+                    log.debug("Count returned ", count);
+
+                   // List<VPVouchers> result = vpVouchersService.saveAll(vpVouchers);
+
+//                    log.debug("Results returned from csv" , result.toString());
 
                 }catch (IOException e){
                     throw new RuntimeException("Failed to store csv data : " + e.getMessage());
@@ -213,7 +229,8 @@ public class BatchServiceImpl implements BatchApiDelegate {
         }else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid batch ID");
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        return new ResponseEntity<>(batchUploadResponse,HttpStatus.OK);
     }
     public static List<VPVouchers> csvToVPVouchers(InputStream inputStream) {
         try {
@@ -226,15 +243,18 @@ public class BatchServiceImpl implements BatchApiDelegate {
             Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
             for(CSVRecord csvRecord : csvRecords){
-                VPVouchers vpVouchers1 = new VPVouchers(
-                    csvRecord.get("productId"),
-                    csvRecord.get("voucherCode"),
-                    csvRecord.get("Description"),
-                    ZonedDateTime.parse(csvRecord.get("startDate")),
-                    ZonedDateTime.parse(csvRecord.get("endDate")),
-                    ZonedDateTime.parse(csvRecord.get("expiryDate")),
-                    csvRecord.get("CollectionPoint"),
-                    Integer.parseInt(csvRecord.get("Quantity")));
+                VPVouchers vpVouchers1 = new VPVouchers();
+                vpVouchers1.setId(Long.parseLong(csvRecord.get("id")));
+                vpVouchers1.setProductId(csvRecord.get("product_id"));
+                vpVouchers1.setVoucherCode(csvRecord.get("voucher_code"));
+                vpVouchers1.setDescription(csvRecord.get("description"));
+                vpVouchers1.setQuantity(Integer.parseInt(csvRecord.get("quantity")));
+//                vpVouchers1.setStartDate(ZonedDateTime.parse(csvRecord.get("start_date"), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+//                vpVouchers1.setEndDate(ZonedDateTime.parse(csvRecord.get("end_date")));
+//                vpVouchers1.setExpiryDate(ZonedDateTime.parse(csvRecord.get("expiry_date")));
+                vpVouchers1.setCollectionPoint(csvRecord.get("collection_point"));
+                vpVouchers1.setBatchId(Integer.parseInt(csvRecord.get("batch_id")));
+
                 vpVouchers.add(vpVouchers1);
             }
             return vpVouchers;

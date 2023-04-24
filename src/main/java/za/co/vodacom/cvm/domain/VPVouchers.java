@@ -86,18 +86,6 @@ public class VPVouchers implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-
-    public VPVouchers(String productId, String voucherCode, String description, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime expiryDate, String collectionPoint, Integer quantity) {
-        this.productId = productId;
-        this.voucherCode = voucherCode;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.expiryDate = expiryDate;
-        this.collectionPoint = collectionPoint;
-        this.quantity = quantity;
-    }
-
     public Long getId() {
         return id;
     }

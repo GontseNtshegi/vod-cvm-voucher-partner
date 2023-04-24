@@ -211,7 +211,7 @@ components:
         subIdType:
           description: Subscriber type, either VS, OM or Vodapay
           type: string
-          enum: [VP, OM, VS]
+          enum: [VP, OM, VS, VK]
         subId:
           description: Subcriber Id Type
           type: string

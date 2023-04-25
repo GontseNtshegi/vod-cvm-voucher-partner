@@ -1,0 +1,4 @@
+"id","batch_id","product_id","voucher_code","description","collection_point","quantity"
+2,1,"FOMO_Nan1","Nandos25","Nando's Voucher for R25 (50% OFF)","Any Nando's",300000
+3,1,"MSY_1000","Cash1000","a R1000 Cash Prize","https://bit.ly/2PdRWaW",1
+4,1,"MSY_1044","Power100","an Alcatel 1s Power Gray","https://bit.ly/2PdRWaW",1

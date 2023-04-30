@@ -260,13 +260,20 @@ paths:
         '500':
           description: Internal Server Error
 
-  /batch/list:
+  /batch/list/{period}:
     get:
       tags:
         - batch
       summary: Retrieves list of batches
       operationId: batchList
       description: Returns a list of batches
+      parameters:
+        - name: period
+          in: path
+          required: true
+          description: The period in number of days in the past to which the query should be limited
+          schema:
+            type: integer
       responses:
         '200':
           description: Successful operation

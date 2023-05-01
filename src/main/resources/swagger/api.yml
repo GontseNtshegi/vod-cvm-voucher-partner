@@ -925,20 +925,19 @@ components:
       required:
         - productId
     LinkDelinkResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/LinkDelinkResponseObject'
-    LinkDelinkResponseObject:
       type: object
       properties:
         campaignId:
           type: string
           description: The unique campaign id
         numAdded:
-          type: number
-          description: The unique name of the campaign
+          type: integer
+          format: int32
+          description: The number if products linked
         numDeleted:
-          type: number
+          type: integer
+          format: int32
+          description: The number if products delinked
     QuantitesResponse:
       type: array
       items:
@@ -952,16 +951,12 @@ components:
         productType:
           type: string
           description: Type
-          enum: [Voucher,GenericVoucher,OnlineVoucher,OnlineGiftcard]
         productDescription:
           type: string
           description: Description
         voucherDescription:
           type: string
           description: Category
-        fileName:
-          type: string
-          description: Vendor
         quantity:
           type: integer
           description: The number of vouchers.

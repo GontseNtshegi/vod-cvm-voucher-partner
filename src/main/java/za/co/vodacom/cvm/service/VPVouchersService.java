@@ -1,8 +1,11 @@
 package za.co.vodacom.cvm.service;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+
 import za.co.vodacom.cvm.domain.VPVouchers;
+import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
 import za.co.vodacom.cvm.service.dto.product.Product;
 
 /**
@@ -97,5 +100,6 @@ public interface VPVouchersService {
      */
     Optional<Product> getValidVoucherForProductGenericVoucher(String productId);
 
-    List<VPVouchers> saveAll(Iterable<VPVouchers> vpVouchers);
+    List<QuantityDetailsDTO> getVoucherQuantity(Long campaignId, ZonedDateTime extDate);
+
 }

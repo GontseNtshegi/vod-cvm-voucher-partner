@@ -7,14 +7,14 @@
 
     <groupId>za.co.vodacom.cvm</groupId>
     <artifactId>cp-voucher-partner</artifactId>
-    <version>1.2.64-SNAPSHOT</version>
+    <version>1.1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Voucherpartner</name>
 
     <repositories>
       <repository>
         <id>maven-group</id>
-        <url>http://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/maven-group/</url>
+        <url>https://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/maven-group/</url>
       </repository>
         <!-- jhipster-needle-maven-repository -->
     </repositories>
@@ -23,7 +23,7 @@
         <!-- jhipster-needle-maven-plugin-repository -->
         <pluginRepository>
             <id>maven-group</id>
-            <url>http://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/maven-group/</url>
+            <url>https://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/maven-group/</url>
         </pluginRepository>
     </pluginRepositories>
 
@@ -31,11 +31,11 @@
     <distributionManagement>
         <repository>
             <id>maven</id>
-            <url>http://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/cvm-voucher-partner-releases/</url>
+            <url>https://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/cvm-voucher-partner-releases/</url>
         </repository>
         <snapshotRepository>
             <id>maven</id>
-            <url>http://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/cvm-voucher-partner-snapshot/</url>
+            <url>https://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/cvm-voucher-partner-snapshot/</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -377,6 +377,21 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bus-amqp</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-batch</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
+            <scope>compile</scope>
+        </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
 
@@ -667,10 +682,10 @@
                         <changeLogFile>${project.basedir}/src/main/resources/config/liquibase/master.xml</changeLogFile>
                         <diffChangeLogFile>${project.basedir}/src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
                         <driver>com.mysql.cj.jdbc.Driver</driver>
-                        <url>jdbc:mysql://loyalty.cluster-cc1yxzokhc4w.eu-west-1.rds.amazonaws.com:3306/voucherpartner</url>
+                        <url>jdbc:mysql://cvm-voucher-nonprod.cluster-cztfqcf6zvwm.af-south-1.rds.amazonaws.com:3306/voucherpartner</url>
                         <defaultSchemaName>voucherpartner</defaultSchemaName>
-                        <username>superuser</username>
-                        <password>VoucherManagement1Test</password>
+                        <username>voucher-user-nonprod</username>
+                        <password>2oOmdNx0c6</password>
                         <referenceUrl>hibernate:spring:za.co.vodacom.cvm.domain?dialect=org.hibernate.dialect.MySQL8Dialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>
                         <verbose>true</verbose>
                         <logging>debug</logging>

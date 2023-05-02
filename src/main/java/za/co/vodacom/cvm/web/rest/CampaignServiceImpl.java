@@ -67,8 +67,8 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
             campaignsList.add(new CampaignListResponseObject()
                 .campaignId(vpcampaign.getId().toString())
                 .campaignName(vpcampaign.getName())
-                .startDate(vpcampaign.getStartDate().toLocalDate())
-                .endDate(vpcampaign.getEndDate() == null? null:vpcampaign.getEndDate().toLocalDate()));
+                .startDate(LocalDateTime.from(vpcampaign.getStartDate()))
+                .endDate(vpcampaign.getEndDate() == null? null: LocalDateTime.from(vpcampaign.getEndDate())));
         }
         log.debug("Campaign List{}", campaignsList.toString());
         return new ResponseEntity<>(campaignsList, HttpStatus.OK);

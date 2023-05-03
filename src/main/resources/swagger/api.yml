@@ -888,11 +888,11 @@ components:
           description: The unique name of the campaign
         startDate:
           type: string
-          format: date
+          example: '2021-03-03 16:40:35.796'
           description: The start date/time of the campaign
         endDate:
           type: string
-          format: date
+          example: '2021-03-03 16:40:35.796'
           description: The end date/time of the campaign
     VoucherProductsResponse:
       type: array

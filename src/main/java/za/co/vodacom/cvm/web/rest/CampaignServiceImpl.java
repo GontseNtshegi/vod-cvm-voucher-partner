@@ -68,7 +68,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                 .campaignId(vpcampaign.getId().toString())
                 .campaignName(vpcampaign.getName())
                 .startDate(vpcampaign.getStartDate().toLocalDateTime().toString())
-                .endDate(vpcampaign.getEndDate() == null? null:vpcampaign.getEndDate().toLocalDateTime().toString()));
+                .endDate(vpcampaign.getEndDate() == null? null: vpcampaign.getEndDate().toLocalDateTime().toString()));
         }
         log.debug("Campaign List{}", campaignsList.toString());
         return new ResponseEntity<>(campaignsList, HttpStatus.OK);
@@ -130,7 +130,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                      quantitiesResponseObject.setQuantity(Math.toIntExact(quantityDetailsDTO.getCount()));
                      quantitiesResponseObject.setVoucherDescription(quantityDetailsDTO.getDescription());
                      quantitiesResponseObject.setEndDate(quantityDetailsDTO.getEndDate() == null? null:quantityDetailsDTO.getEndDate().toLocalDate());
-                    quantitiesResponseObject.setVoucherExpiryDate(quantityDetailsDTO.getExpiryDate() == null? null:quantityDetailsDTO.getExpiryDate().toLocalDate());
+                     quantitiesResponseObject.setVoucherExpiryDate(LocalDate.from(quantityDetailsDTO.getExpiryDate()));
                     quantitiesResponseObjectList.add(quantitiesResponseObject);
                 });
                 log.debug("Response object{}",quantitiesResponseObjectList);

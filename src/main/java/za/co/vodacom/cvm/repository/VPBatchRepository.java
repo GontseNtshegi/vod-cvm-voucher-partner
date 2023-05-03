@@ -49,12 +49,12 @@ public interface VPBatchRepository extends JpaRepository<VPBatch, Long> {
     @Query(value = "select * from vp_batch where id=:id and status in ('O','A')", nativeQuery = true)
     Optional<VPBatch> getBatchWithStatus(@Param("id") Long id);
 
-    @Modifying
+    @Modifying(flushAutomatically = true)
     @Query(value = "update vp_batch set activate_user =:name , status = 'A', load_date = CURRENT_TIMESTAMP where id=:id", nativeQuery = true)
     void updateBatch(@Param("id") Long id, @Param("name") String name);
 
-    @Modifying
-    @Query(value = "update vp_batch set delete_user=:name, status='D', delete_date= CURRENT_TIMESTAMP  where id=:id", nativeQuery = true)
+    @Modifying(flushAutomatically = true)
+    @Query(value = "update vp_batch set delete_user=:name, status ='D', delete_date= CURRENT_TIMESTAMP  where id=:id", nativeQuery = true)
     void updateReturnedBatch(@Param("id") Long id,  @Param("name") String name);
 
     Optional<VPBatch> findByName(String name);

@@ -139,11 +139,13 @@ public class BatchServiceImpl implements BatchApiDelegate {
             if(!vpBatch.isPresent()){
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Invalid Batch ID");
             }else{
-                VPBatch vpBatch1 = vpBatch.get();
-                log.debug(vpBatch1.toString());
-                log.info(vpBatch1.toString());
                 vpBatchService.updateReturnedBatch(batchId,batchStatusRequest.getUserName());
-                batchStatusResponse.setStatus(vpBatch1.getStatus());
+                VPBatch vpBatch1 = new VPBatch();
+                Optional<VPBatch> result = vpBatchService.findOne(batchId);
+                log.debug(vpBatch1.getClass().getName());
+                log.info(vpBatch1.toString());
+                System.out.println("Username is : " + result.get());
+                batchStatusResponse.setStatus(result.get().getStatus());
             }
         }else{
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Invalid status");

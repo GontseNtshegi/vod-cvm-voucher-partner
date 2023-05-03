@@ -45,7 +45,6 @@ public class BatchServiceImpl implements BatchApiDelegate {
         } else {
             listOptional = vpBatchService.getAll();
         }
-
         listOptional.ifPresent(vpBatches -> vpBatches.forEach(vpBatch -> {
             BatchListResponseObject batchListResponseObject = new BatchListResponseObject();
             batchListResponseObject.setBatchSeq(vpBatch.getId().intValue());
@@ -58,7 +57,8 @@ public class BatchServiceImpl implements BatchApiDelegate {
             batchListResponseObject.setCreateUser(vpBatch.getCreateUser());
             batchListResponseObjects.add(batchListResponseObject);
         }));
-        log.debug("BatchList {} ", batchListResponseObjects);
+
+        log.debug("BatchList : {} ", batchListResponseObjects);
         return new ResponseEntity<>(batchListResponseObjects, HttpStatus.OK);
 
     }

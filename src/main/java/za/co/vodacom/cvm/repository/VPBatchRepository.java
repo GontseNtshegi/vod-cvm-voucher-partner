@@ -58,5 +58,7 @@ public interface VPBatchRepository extends JpaRepository<VPBatch, Long> {
     void updateReturnedBatch(@Param("id") Long id,  @Param("name") String name);
 
     Optional<VPBatch> findByName(String name);
+    @Query(value = "select * from vp_batch where create_date > sysdate() - INTERVAL :period DAY order by id", nativeQuery = true)
+    Optional<List<VPBatch>> getAllListWithInterval(@Param("period") Integer period);
 }
 

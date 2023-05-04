@@ -120,5 +120,9 @@ public class VPBatchServiceImpl implements VPBatchService {
         log.debug("Request to find batch in VPBatch with id : {}", id);
         return vPBatchRepository.getBatchWithStatus(id);
     }
+    @Override
+    public Optional<List<VPBatch>> getAllListWithInterval(Integer period){
+        return vPBatchRepository.getAllListWithInterval(period);
+    }
 
 }

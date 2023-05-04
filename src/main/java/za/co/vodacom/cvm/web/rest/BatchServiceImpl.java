@@ -38,24 +38,29 @@ public class BatchServiceImpl implements BatchApiDelegate {
     }
 
     @Override
-    public ResponseEntity<List<BatchListResponseObject>> batchList() {
+    public ResponseEntity<List<BatchListResponseObject>> batchList(Integer period) {
         List<BatchListResponseObject> batchListResponseObjects = new ArrayList<>();
-        vpBatchService.getAll()
-            .ifPresent(vpBatches -> {
-                vpBatches.forEach(vpBatch -> {
-                    BatchListResponseObject batchListResponseObject = new BatchListResponseObject();
-                    batchListResponseObject.setBatchSeq(vpBatch.getId().intValue());
-                    batchListResponseObject.setBatchComment(vpBatch.getComment());
-                    batchListResponseObject.setCreateDate(vpBatch.getCreateDate().toOffsetDateTime());
-                    batchListResponseObject.setBatchName(vpBatch.getName());
-                    batchListResponseObject.setStatus(vpBatch.getStatus());
-                    batchListResponseObject.setActivateUser(vpBatch.getActivateUser());
-                    batchListResponseObject.setLoadDate(vpBatch.getLoadDate().toOffsetDateTime());
-                    batchListResponseObject.setCreateUser(vpBatch.getCreateUser());
-                    batchListResponseObjects.add(batchListResponseObject);
-                });
-            });
-        log.debug("BatchList {} ", batchListResponseObjects);
+        Optional<List<VPBatch>> listOptional ;
+
+        if(period!=null && period > 0) {
+          listOptional = vpBatchService.getAllListWithInterval(period);
+        } else {
+            listOptional = vpBatchService.getAll();
+        }
+        listOptional.ifPresent(vpBatches -> vpBatches.forEach(vpBatch -> {
+            BatchListResponseObject batchListResponseObject = new BatchListResponseObject();
+            batchListResponseObject.setBatchSeq(vpBatch.getId().intValue());
+            batchListResponseObject.setBatchComment(vpBatch.getComment());
+            batchListResponseObject.setCreateDate(vpBatch.getCreateDate().toOffsetDateTime());
+            batchListResponseObject.setBatchName(vpBatch.getName());
+            batchListResponseObject.setStatus(vpBatch.getStatus());
+            batchListResponseObject.setActivateUser(vpBatch.getActivateUser());
+            batchListResponseObject.setLoadDate(vpBatch.getLoadDate().toOffsetDateTime());
+            batchListResponseObject.setCreateUser(vpBatch.getCreateUser());
+            batchListResponseObjects.add(batchListResponseObject);
+        }));
+
+        log.debug("BatchList : {} ", batchListResponseObjects);
         return new ResponseEntity<>(batchListResponseObjects, HttpStatus.OK);
 
     }

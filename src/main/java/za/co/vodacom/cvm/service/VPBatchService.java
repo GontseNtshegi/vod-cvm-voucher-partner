@@ -67,7 +67,4 @@ public interface VPBatchService {
 
     Optional<VPBatch> getBatchWithStatus(Long id);
 
-    void updateBatch(Long id, String name);
-
-    void updateReturnedBatch(Long id,String name);
 }

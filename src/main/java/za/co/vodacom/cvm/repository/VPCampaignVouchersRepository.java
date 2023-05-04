@@ -3,6 +3,7 @@ package za.co.vodacom.cvm.repository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import za.co.vodacom.cvm.domain.VPCampaignVouchers;
 
@@ -16,6 +17,6 @@ public interface VPCampaignVouchersRepository extends JpaRepository<VPCampaignVo
 
     @Query(
         value = "select u from VPCampaignVouchers u where u.productId IN :list")
-    Optional<List<VPCampaignVouchers>> getVouchersByProductId(List<String> list);
+    Optional<List<VPCampaignVouchers>> getVouchersByProductId(@Param("list")List<String> list);
 
 }

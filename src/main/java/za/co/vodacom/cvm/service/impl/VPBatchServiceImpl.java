@@ -130,4 +130,8 @@ public class VPBatchServiceImpl implements VPBatchService {
     public void updateReturnedBatch(Long id,String name){
         vPBatchRepository.updateReturnedBatch(id,name);
     }
+    @Override
+    public Optional<List<VPBatch>> getAllListWithInterval(Integer period){
+        return vPBatchRepository.getAllListWithInterval(period);
+    }
 }

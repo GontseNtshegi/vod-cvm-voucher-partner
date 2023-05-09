@@ -5,6 +5,14 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +28,7 @@ import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
 import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -42,11 +47,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BatchServiceImpl implements BatchApiDelegate {
 
     public static final Logger log = LoggerFactory.getLogger(BatchServiceImpl.class);
+    private final String TEMP_STORAGE = "C:/Users/tsotm001/OneDrive - Vodafone Group/Desktop/temp/";
     @Autowired
     VPBatchService vpBatchService;
 
     @Autowired
     VPFileLoadService vpFileLoadService;
+    @Autowired
+    private JobLauncher jobLauncher;
+    @Autowired
+    private Job job;
 
     VPVouchersService vpVouchersService;
 
@@ -175,7 +185,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
         return new ResponseEntity<>(batchStatusResponse,HttpStatus.OK);
 
     }
-    @Transactional
+
     @Override
     public ResponseEntity<BatchUploadResponse> batchUpload(Integer batchId,
                                                            String fileName,
@@ -183,18 +193,35 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
         BatchUploadResponse batchUploadResponse = new BatchUploadResponse();
 
+
+//                    List<VPVouchers> vpVouchers = csvToVPVouchers(data.getInputStream());
+//                   log.debug("vpVoucher object {}" , vpVouchers);
+//                   AtomicInteger count = new AtomicInteger();
+//
+//                    vpVouchers.forEach(vpVouchers1 -> {
+//                     count.getAndIncrement();
+//                      vpVouchersService.save(vpVouchers1);
+//                   });
+
+//                    batchUploadResponse.setNumLoaded(BigDecimal.valueOf(count.getAndIncrement()));
+//
+//                    log.debug("Count returned ", count);
+//
+//             List<VPVouchers> result = vpVouchersService.saveAll(vpVouchers);
+//
+//                    log.debug("Results returned from csv" , result.toString());
+
         Optional<VPBatch> vpBatch = vpBatchService.getBatch(Long.valueOf(batchId));
 
         if(vpBatch.isPresent()) {
             Optional<VPFileLoad> vpFileLoad = vpFileLoadService.getFileByNameAndId(batchId,fileName);
             if(vpFileLoad.isPresent()){
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "FileName already exists");
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Filename already used");
             }else{
                 VPFileLoad vpFileLoad1 = new VPFileLoad();
 
                 vpFileLoad1.setBatchId(batchId);
                 vpFileLoad1.setFileName(fileName);
-                vpFileLoad1.setCompletedDate(ZonedDateTime.now());
                 vpFileLoad1.setCompletedDate(ZonedDateTime.now());
                 vpFileLoad1.setCreateDate(ZonedDateTime.now());
                 vpFileLoad1.setNumLoaded(0);
@@ -202,28 +229,32 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
                 vpFileLoadService.save(vpFileLoad1);
 
-                // process the csv file
-                try {
-                    List<VPVouchers> vpVouchers = csvToVPVouchers(data.getInputStream());
-                    log.debug("vpVoucher object {}" , vpVouchers);
-                    AtomicInteger count = new AtomicInteger();
 
-                    vpVouchers.forEach(vpVouchers1 -> {
-                        count.getAndIncrement();
-                        vpVouchersService.save(vpVouchers1);
-                    });
+                // process the csv file using batch
 
-                    batchUploadResponse.setNumLoaded(BigDecimal.valueOf(count.getAndIncrement()));
+//                    List<VPVouchers> vpVouchers = csvToVPVouchers(data.getInputStream());
+//                   log.debug("vpVoucher object {}" , vpVouchers);
+//                   AtomicInteger count = new AtomicInteger();
 
-                    log.debug("Count returned ", count);
+                    String originalName = data.getOriginalFilename();
+                    File fileToImport = new File(TEMP_STORAGE + originalName);
+                    try {
+                        data.transferTo(fileToImport);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
 
-                   // List<VPVouchers> result = vpVouchersService.saveAll(vpVouchers);
+                    JobParameters Parameters = new JobParametersBuilder()
+                        .addString("fullPathFileName", TEMP_STORAGE + originalName)
+                        .addLong("StartAt", System.currentTimeMillis()).toJobParameters();
+                    try {
+                        jobLauncher.run(job, Parameters);
+                    } catch (JobExecutionAlreadyRunningException | JobRestartException
+                             | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
 
-//                    log.debug("Results returned from csv" , result.toString());
+                        e.printStackTrace();
+                    }
 
-                }catch (IOException e){
-                    throw new RuntimeException("Failed to store csv data : " + e.getMessage());
-                }
             }
 
         }else {

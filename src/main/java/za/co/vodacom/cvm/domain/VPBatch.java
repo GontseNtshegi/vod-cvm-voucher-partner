@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -37,10 +38,6 @@ public class VPBatch implements Serializable {
     @Size(max = 1)
     @Column(name = "restricted_yn", length = 1, nullable = false)
     private String restrictedYN;
-
-    @NotNull
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
 
     @Column(name = "delete_date")
     private ZonedDateTime deleteDate;
@@ -136,18 +133,6 @@ public class VPBatch implements Serializable {
         this.restrictedYN = restrictedYN;
     }
 
-    public Integer getUserId() {
-        return this.userId;
-    }
-
-    public VPBatch userId(Integer userId) {
-        this.userId = userId;
-        return this;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -224,7 +209,6 @@ public class VPBatch implements Serializable {
             ", loadDate=" + loadDate +
             ", comment='" + comment + '\'' +
             ", restrictedYN='" + restrictedYN + '\'' +
-            ", userId=" + userId +
             ", deleteDate=" + deleteDate +
             ", status='" + status + '\'' +
             ", name='" + name + '\'' +

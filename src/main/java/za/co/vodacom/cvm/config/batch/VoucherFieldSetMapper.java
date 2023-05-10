@@ -17,19 +17,24 @@ public class VoucherFieldSetMapper implements FieldSetMapper<VPFileLoad> {
     @Override
     public VPFileLoad mapFieldSet(FieldSet fieldSet) throws BindException {
         VPFileLoad vpFileLoad = new VPFileLoad();
-        vpFileLoad.setFileName(fieldSet.readString(0));
-        vpFileLoad.setBatchId(fieldSet.readInt(1));
-        vpFileLoad.setCreateDate(ZonedDateTime.parse(fieldSet.readString(2) ,DATE_TIME_FORMATTER.withZone(ZoneOffset.UTC)));
-        vpFileLoad.setNumLoaded(fieldSet.readInt(3));
-        vpFileLoad.setNumFailed(fieldSet.readInt(4));
 
-        String date = fieldSet.readString(3);
-//        try {
-//            vpFileLoad.setCreateDate(ZonedDateTime.from(ZonedDateTime.parse(fieldSet.readString("create_date")).toLocalDate()));
-//           // vpFileLoad.setCompletedDate(ZonedDateTime.parse(fieldSet.readString("completed_date")));
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            vpFileLoad.setFileName(fieldSet.readString(0));
+            vpFileLoad.setBatchId(fieldSet.readInt(1));
+            vpFileLoad.setCreateDate(ZonedDateTime.parse(fieldSet.readString(2), DATE_TIME_FORMATTER.withZone(ZoneOffset.UTC)));
+            vpFileLoad.setNumLoaded(fieldSet.readInt(3));
+            vpFileLoad.setNumFailed(fieldSet.readInt(4));
+        }catch (ParseException e) {
+                  e.printStackTrace();
+           }
+
+//        String date = fieldSet.readString(3);
+////        try {
+////            vpFileLoad.setCreateDate(ZonedDateTime.from(ZonedDateTime.parse(fieldSet.readString("create_date")).toLocalDate()));
+////           // vpFileLoad.setCompletedDate(ZonedDateTime.parse(fieldSet.readString("completed_date")));
+////        } catch (ParseException e) {
+////            e.printStackTrace();
+////        }
         System.out.println("VPFile load returned : , "+ vpFileLoad);
 
         return vpFileLoad;

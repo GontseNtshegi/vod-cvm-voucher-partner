@@ -25,6 +25,7 @@ import za.co.vodacom.cvm.service.VPBatchService;
 import za.co.vodacom.cvm.service.VPFileLoadService;
 import za.co.vodacom.cvm.service.VPVouchersService;
 import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
+import za.co.vodacom.cvm.service.dto.voucher.VPVoucherDTO;
 import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 
@@ -55,6 +56,9 @@ public class BatchServiceImpl implements BatchApiDelegate {
     VPFileLoadService vpFileLoadService;
     @Autowired
     private JobLauncher jobLauncher;
+
+    @Autowired
+    VPVoucherDTO vpVoucherDTO ;
     @Autowired
     private Job job;
 
@@ -193,24 +197,6 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
         BatchUploadResponse batchUploadResponse = new BatchUploadResponse();
 
-
-//                    List<VPVouchers> vpVouchers = csvToVPVouchers(data.getInputStream());
-//                   log.debug("vpVoucher object {}" , vpVouchers);
-//                   AtomicInteger count = new AtomicInteger();
-//
-//                    vpVouchers.forEach(vpVouchers1 -> {
-//                     count.getAndIncrement();
-//                      vpVouchersService.save(vpVouchers1);
-//                   });
-
-//                    batchUploadResponse.setNumLoaded(BigDecimal.valueOf(count.getAndIncrement()));
-//
-//                    log.debug("Count returned ", count);
-//
-//             List<VPVouchers> result = vpVouchersService.saveAll(vpVouchers);
-//
-//                    log.debug("Results returned from csv" , result.toString());
-
         Optional<VPBatch> vpBatch = vpBatchService.getBatch(Long.valueOf(batchId));
 
         if(vpBatch.isPresent()) {
@@ -229,31 +215,33 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
                 vpFileLoadService.save(vpFileLoad1);
 
+                String originalName = data.getOriginalFilename();
+                File fileToImport = new File(TEMP_STORAGE + originalName);
+                try {
+                    data.transferTo(fileToImport);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
-                // process the csv file using batch
+                JobParameters Parameters = new JobParametersBuilder()
+                    .addString("fullPathFileName", TEMP_STORAGE + originalName)
+                    .addLong("StartAt", System.currentTimeMillis()).toJobParameters();
+                try {
+                    jobLauncher.run(job, Parameters);
+                } catch (JobExecutionAlreadyRunningException | JobRestartException
+                         | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
 
-//                    List<VPVouchers> vpVouchers = csvToVPVouchers(data.getInputStream());
-//                   log.debug("vpVoucher object {}" , vpVouchers);
-//                   AtomicInteger count = new AtomicInteger();
+                    e.printStackTrace();
+                }
 
-                    String originalName = data.getOriginalFilename();
-                    File fileToImport = new File(TEMP_STORAGE + originalName);
-                    try {
-                        data.transferTo(fileToImport);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                vpFileLoad1.setBatchId(batchId);
+                vpFileLoad1.setNumFailed(vpVoucherDTO.getNumFailed());
+                vpFileLoad1.setNumLoaded(vpVoucherDTO.getNumLoaded());
+                vpFileLoadService.partialUpdate(vpFileLoad1);
 
-                    JobParameters Parameters = new JobParametersBuilder()
-                        .addString("fullPathFileName", TEMP_STORAGE + originalName)
-                        .addLong("StartAt", System.currentTimeMillis()).toJobParameters();
-                    try {
-                        jobLauncher.run(job, Parameters);
-                    } catch (JobExecutionAlreadyRunningException | JobRestartException
-                             | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
-
-                        e.printStackTrace();
-                    }
+                batchUploadResponse.setNumFailed(BigDecimal.valueOf(vpVoucherDTO.getNumFailed()));
+                batchUploadResponse.setNumLoaded(BigDecimal.valueOf(vpVoucherDTO.getNumLoaded()));
+                System.out.println("....................................."+vpVoucherDTO);
 
             }
 
@@ -263,35 +251,5 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
         return new ResponseEntity<>(batchUploadResponse,HttpStatus.OK);
     }
-    public static List<VPVouchers> csvToVPVouchers(InputStream inputStream) {
-        try {
-            BufferedReader fileReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-            CSVParser csvParser = new CSVParser(fileReader,
-                CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
 
-            List<VPVouchers> vpVouchers = new ArrayList<>();
-
-            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
-
-            for(CSVRecord csvRecord : csvRecords){
-                VPVouchers vpVouchers1 = new VPVouchers();
-                vpVouchers1.setId(Long.parseLong(csvRecord.get("id")));
-                vpVouchers1.setProductId(csvRecord.get("product_id"));
-                vpVouchers1.setVoucherCode(csvRecord.get("voucher_code"));
-                vpVouchers1.setDescription(csvRecord.get("description"));
-                vpVouchers1.setQuantity(Integer.parseInt(csvRecord.get("quantity")));
-//                vpVouchers1.setStartDate(ZonedDateTime.parse(csvRecord.get("start_date"), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-//                vpVouchers1.setEndDate(ZonedDateTime.parse(csvRecord.get("end_date")));
-//                vpVouchers1.setExpiryDate(ZonedDateTime.parse(csvRecord.get("expiry_date")));
-                vpVouchers1.setCollectionPoint(csvRecord.get("collection_point"));
-                vpVouchers1.setBatchId(Integer.parseInt(csvRecord.get("batch_id")));
-
-                vpVouchers.add(vpVouchers1);
-            }
-            return vpVouchers;
-
-        } catch(IOException e) {
-            throw new RuntimeException("Failed to parse CSV file: " + e.getMessage());
-        }
-    }
 }

@@ -1,12 +1,15 @@
 package za.co.vodacom.cvm.config.batch;
 
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.listener.JobExecutionListenerSupport;
+import org.springframework.batch.core.listener.StepExecutionListenerSupport;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.data.RepositoryItemWriter;
@@ -23,6 +26,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import za.co.vodacom.cvm.domain.VPFileLoad;
 import za.co.vodacom.cvm.repository.VPFileLoadRepository;
+import za.co.vodacom.cvm.service.dto.voucher.VPVoucherDTO;
 
 import java.io.File;
 
@@ -69,6 +73,57 @@ public class VoucherConfig {
     }
 
     @Bean
+    public StepExecutionListener stepExecutionListener() {
+        return new StepExecutionListenerSupport() {
+            @Override
+            public ExitStatus afterStep(StepExecution stepExecution) {
+                int readCount = stepExecution.getReadCount();
+                int writeCount = stepExecution.getWriteCount();
+               // int commitCount = stepExecution.getCommitCount();
+                int failed = stepExecution.getSkipCount();
+
+
+
+                stepExecution.getJobExecution().getExecutionContext().putInt("processedCount", writeCount);
+                stepExecution.getJobExecution().getExecutionContext().putInt("failedCount", failed);
+
+                return super.afterStep(stepExecution);
+            }
+        };
+    }
+
+    @Bean
+    public VPVoucherDTO responseDTO() {
+        return new VPVoucherDTO();
+    }
+    @Bean
+    public JobExecutionListener jobExecutionListener() {
+        return new JobExecutionListenerSupport() {
+            @Override
+            public void afterJob(JobExecution jobExecution) {
+                int processedCount = jobExecution.getExecutionContext().getInt("processedCount");
+                int failedCount = jobExecution.getExecutionContext().getInt("failedCount");
+
+                // Set the processed count as a custom field in your response DTO
+
+                VPVoucherDTO responseDTO =  responseDTO();
+
+                responseDTO.setNumLoaded(processedCount);
+                responseDTO.setNumFailed(failedCount);
+
+                System.out.println("Voucher DTO ............." + responseDTO);
+
+
+                // Set the response DTO as the job execution exit message
+                try {
+                    jobExecution.setExitStatus(new ExitStatus("COMPLETED", new ObjectMapper().writeValueAsString(responseDTO)));
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+    }
+    @Bean
     public Step step(ItemReader<VPFileLoad> itemReader , ItemWriter<VPFileLoad> itemWriter) throws Exception {
         return this.stepBuilderFactory.get("step")
             .<VPFileLoad,VPFileLoad>chunk(2)
@@ -78,6 +133,7 @@ public class VoucherConfig {
             .faultTolerant()
             .skipLimit(10)
             .skip(FlatFileParseException.class)
+            .listener(stepExecutionListener())
             .build();
     }
 
@@ -85,8 +141,8 @@ public class VoucherConfig {
     public Job vpFileUpdateJob(JobCompletionNotificationListener listener, Step step) throws Exception {
         return this.jobBuilderFactory.get("VPFile-Job")
             .incrementer(new RunIdIncrementer())
-            .listener(listener)
             .start(step)
+            .listener(jobExecutionListener())
             .build();
 
     }

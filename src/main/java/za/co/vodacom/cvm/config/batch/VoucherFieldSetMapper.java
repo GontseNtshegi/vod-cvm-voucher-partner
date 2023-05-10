@@ -1,42 +1,46 @@
 package za.co.vodacom.cvm.config.batch;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.validation.BindException;
 import za.co.vodacom.cvm.domain.VPFileLoad;
+import za.co.vodacom.cvm.domain.VPVouchers;
+import za.co.vodacom.cvm.web.rest.BatchServiceImpl;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class VoucherFieldSetMapper implements FieldSetMapper<VPFileLoad> {
+public class VoucherFieldSetMapper implements FieldSetMapper<VPVouchers> {
 
-        private static final DateTimeFormatter DATE_TIME_FORMATTER =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+
+    public static final Logger log = LoggerFactory.getLogger(VoucherFieldSetMapper.class);
     @Override
-    public VPFileLoad mapFieldSet(FieldSet fieldSet) throws BindException {
-        VPFileLoad vpFileLoad = new VPFileLoad();
+    public VPVouchers mapFieldSet(FieldSet fieldSet) throws BindException {
+        VPVouchers vpVouchers = new VPVouchers();
 
         try {
-            vpFileLoad.setFileName(fieldSet.readString("file_name"));
-            vpFileLoad.setBatchId(fieldSet.readInt("batch_id"));
-            vpFileLoad.setCreateDate(ZonedDateTime.parse(fieldSet.readString("create_date"), DATE_TIME_FORMATTER.withZone(ZoneOffset.UTC)));
-            vpFileLoad.setNumLoaded(fieldSet.readInt("num_loaded"));
-            vpFileLoad.setNumFailed(fieldSet.readInt("num_failed"));
+
+            vpVouchers.setQuantity(fieldSet.readInt("quantity"));
+            vpVouchers.setProductId(fieldSet.readString("product_id"));
+            vpVouchers.setDescription(fieldSet.readString("description"));
+            vpVouchers.setVoucherCode(fieldSet.readString("voucher_code"));
+            vpVouchers.setCollectionPoint(fieldSet.readString("collection_point"));
+            vpVouchers.setStartDate(ZonedDateTime.parse(fieldSet.readString("start_date"), DATE_TIME_FORMATTER.withZone(ZoneOffset.UTC)));
+            vpVouchers.setEndDate(ZonedDateTime.parse(fieldSet.readString("end_date"), DATE_TIME_FORMATTER.withZone(ZoneOffset.UTC)));
+            vpVouchers.setExpiryDate(ZonedDateTime.parse(fieldSet.readString("expiry_date"), DATE_TIME_FORMATTER.withZone(ZoneOffset.UTC)));
+
         }catch (ParseException e) {
-                  e.printStackTrace();
-           }
+            e.printStackTrace();
+        }
 
-//        String date = fieldSet.readString(3);
-////        try {
-////            vpFileLoad.setCreateDate(ZonedDateTime.from(ZonedDateTime.parse(fieldSet.readString("create_date")).toLocalDate()));
-////           // vpFileLoad.setCompletedDate(ZonedDateTime.parse(fieldSet.readString("completed_date")));
-////        } catch (ParseException e) {
-////            e.printStackTrace();
-////        }
-        System.out.println("VPFile load returned : , "+ vpFileLoad);
+        log.info("VPVouchers returned : {}", vpVouchers);
 
-        return vpFileLoad;
+        return vpVouchers;
     }
 }

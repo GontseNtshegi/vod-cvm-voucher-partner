@@ -1,5 +1,7 @@
 package za.co.vodacom.cvm.config.batch;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -21,7 +23,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.FileSystemResource;
 import za.co.vodacom.cvm.domain.VPFileLoad;
+import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.repository.VPFileLoadRepository;
+import za.co.vodacom.cvm.repository.VPVouchersRepository;
 import za.co.vodacom.cvm.service.dto.voucher.VPVoucherDTO;
 
 import java.io.File;
@@ -36,31 +40,33 @@ public class VoucherConfig {
     public StepBuilderFactory stepBuilderFactory;
     @Autowired
     @Lazy
-    public VPFileLoadRepository vpFileLoadRepository;
+    public VPVouchersRepository vpVouchersRepository;
 
     @Bean
     public VoucherFieldSetMapper voucherFieldSetMapper(){
         return new VoucherFieldSetMapper();
     }
 
-
+    public static final Logger log = LoggerFactory.getLogger(VoucherConfig.class);
     @Bean
     @StepScope
     public FlatFileItemReader reader(@Value("#{jobParameters[fullPathFileName]}") String pathToFile){
 
-        return new FlatFileItemReaderBuilder<VPFileLoad>()
+        return new FlatFileItemReaderBuilder<VPVouchers>()
             .name("File-Reader")
             .resource(new FileSystemResource(new File(pathToFile)))
             .delimited()
-            .names("file_name","batch_id","create_date","num_loaded","num_failed")
+            .names("quantity","product_id","description","voucher_code",
+                "collection_point","start_date","end_date",
+                "expiry_date")
             .fieldSetMapper(voucherFieldSetMapper()).linesToSkip(1)
             .build();
     }
 
     @Bean
-    public RepositoryItemWriter<VPFileLoad> writer(){
-        RepositoryItemWriter<VPFileLoad> itemWriter = new RepositoryItemWriter<>();
-        itemWriter.setRepository(vpFileLoadRepository);
+    public RepositoryItemWriter<VPVouchers> writer(){
+        RepositoryItemWriter<VPVouchers> itemWriter = new RepositoryItemWriter<>();
+        itemWriter.setRepository(vpVouchersRepository);
         itemWriter.setMethodName("save");
         return itemWriter;
     }
@@ -73,12 +79,8 @@ public class VoucherConfig {
         return new StepExecutionListenerSupport() {
             @Override
             public ExitStatus afterStep(StepExecution stepExecution) {
-                int readCount = stepExecution.getReadCount();
                 int writeCount = stepExecution.getWriteCount();
-               // int commitCount = stepExecution.getCommitCount();
                 int failed = stepExecution.getSkipCount();
-
-
 
                 stepExecution.getJobExecution().getExecutionContext().putInt("processedCount", writeCount);
                 stepExecution.getJobExecution().getExecutionContext().putInt("failedCount", failed);
@@ -99,21 +101,21 @@ public class VoucherConfig {
             public void afterJob(JobExecution jobExecution) {
                 int processedCount = jobExecution.getExecutionContext().getInt("processedCount");
                 int failedCount = jobExecution.getExecutionContext().getInt("failedCount");
-                // Set the processed count as a custom field in your response DTO
+
                 VPVoucherDTO responseDTO = responseDTO();
 
                 responseDTO.setNumLoaded(processedCount);
                 responseDTO.setNumFailed(failedCount);
 
-                System.out.println("Voucher DTO ............." + responseDTO);
+                log.debug("VPVoucherDTO {} ", responseDTO);
 
             }
         };
     }
     @Bean
-    public Step step(ItemReader<VPFileLoad> itemReader , ItemWriter<VPFileLoad> itemWriter) throws Exception {
+    public Step step(ItemReader<VPVouchers> itemReader , ItemWriter<VPVouchers> itemWriter) throws Exception {
         return this.stepBuilderFactory.get("step")
-            .<VPFileLoad,VPFileLoad>chunk(10)
+            .<VPVouchers,VPVouchers>chunk(10)
             .reader(itemReader)
             .processor(processor())
             .writer(itemWriter)

@@ -28,9 +28,6 @@
             <column name="restricted_yn" type="varchar(1)">
                 <constraints nullable="false" />
             </column>
-            <column name="user_id" type="integer">
-                <constraints nullable="false" />
-            </column>
             <column name="name" type="varchar(50)">
                 <constraints nullable="false" />
             </column>

@@ -275,10 +275,19 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
                                     log.info(giftCardsRequest.toString());
                                     //call wi group
-                                    ResponseEntity<GiftCardsResponse> giftCardsResponseResponseEntity = giftcardsApiClient.updateVoucherToReserved(
-                                        true,
-                                        giftCardsRequest
-                                    );
+                                    ResponseEntity<GiftCardsResponse> giftCardsResponseResponseEntity = null;
+                                    try {
+                                        giftCardsResponseResponseEntity = giftcardsApiClient.updateVoucherToReserved(
+                                            true,
+                                            giftCardsRequest
+                                        );
+                                    } catch (Exception ex) {
+                                        log.error("Feign client exception - {}", ex.getMessage());
+                                        throw new WiGroupException(
+                                            ex.getMessage(),
+                                            Status.UNPROCESSABLE_ENTITY
+                                        );
+                                    }
                                     //success
                                     GiftCardsResponse giftCardsResponse = giftCardsResponseResponseEntity.getBody();
                                     log.info("Gift Card Response is: {}", giftCardsResponse);

@@ -1,11 +1,11 @@
 package za.co.vodacom.cvm.web.rest;
 
 import brave.Tracer;
+import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,6 @@ import za.co.vodacom.cvm.service.VPVoucherDefService;
 import za.co.vodacom.cvm.service.VPVouchersService;
 import za.co.vodacom.cvm.utils.MSISDNConverter;
 import za.co.vodacom.cvm.utils.RSAEncryption;
-import za.co.vodacom.cvm.web.api.ApiUtil;
 import za.co.vodacom.cvm.web.api.VoucherApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
@@ -281,10 +280,11 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                             true,
                                             giftCardsRequest
                                         );
-                                    } catch (Exception ex) {
-                                        log.error("Feign client exception - {}", ex.getMessage());
+                                    } catch (FeignException ex) {
+                                        log.error("Feign client exception message - {}", ex.getMessage());
+                                        log.error("Feign client exception contentUTF8 - {}", ex.contentUTF8());
                                         throw new WiGroupException(
-                                            ex.getMessage(),
+                                            ex.contentUTF8(),
                                             Status.UNPROCESSABLE_ENTITY
                                         );
                                     }

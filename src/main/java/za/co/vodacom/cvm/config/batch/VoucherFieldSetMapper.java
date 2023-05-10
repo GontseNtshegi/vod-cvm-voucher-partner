@@ -19,11 +19,11 @@ public class VoucherFieldSetMapper implements FieldSetMapper<VPFileLoad> {
         VPFileLoad vpFileLoad = new VPFileLoad();
 
         try {
-            vpFileLoad.setFileName(fieldSet.readString(0));
-            vpFileLoad.setBatchId(fieldSet.readInt(1));
-            vpFileLoad.setCreateDate(ZonedDateTime.parse(fieldSet.readString(2), DATE_TIME_FORMATTER.withZone(ZoneOffset.UTC)));
-            vpFileLoad.setNumLoaded(fieldSet.readInt(3));
-            vpFileLoad.setNumFailed(fieldSet.readInt(4));
+            vpFileLoad.setFileName(fieldSet.readString("file_name"));
+            vpFileLoad.setBatchId(fieldSet.readInt("batch_id"));
+            vpFileLoad.setCreateDate(ZonedDateTime.parse(fieldSet.readString("create_date"), DATE_TIME_FORMATTER.withZone(ZoneOffset.UTC)));
+            vpFileLoad.setNumLoaded(fieldSet.readInt("num_loaded"));
+            vpFileLoad.setNumFailed(fieldSet.readInt("num_failed"));
         }catch (ParseException e) {
                   e.printStackTrace();
            }

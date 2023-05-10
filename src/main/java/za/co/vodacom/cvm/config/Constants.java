@@ -19,6 +19,8 @@ public final class Constants {
     public static final String STATUS_D = "D";
     public static final String RESTRICTED_N = "N";
 
+    public static final String TEMP_STORAGE = "C:/Users/tsotm001/OneDrive - Vodafone Group/Desktop/temp/";
+
 
     private Constants() {}
 }

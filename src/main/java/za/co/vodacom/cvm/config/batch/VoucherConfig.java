@@ -1,7 +1,5 @@
 package za.co.vodacom.cvm.config.batch;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -16,13 +14,11 @@ import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.FlatFileParseException;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
-import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import za.co.vodacom.cvm.domain.VPFileLoad;
 import za.co.vodacom.cvm.repository.VPFileLoadRepository;
@@ -103,30 +99,21 @@ public class VoucherConfig {
             public void afterJob(JobExecution jobExecution) {
                 int processedCount = jobExecution.getExecutionContext().getInt("processedCount");
                 int failedCount = jobExecution.getExecutionContext().getInt("failedCount");
-
                 // Set the processed count as a custom field in your response DTO
-
-                VPVoucherDTO responseDTO =  responseDTO();
+                VPVoucherDTO responseDTO = responseDTO();
 
                 responseDTO.setNumLoaded(processedCount);
                 responseDTO.setNumFailed(failedCount);
 
                 System.out.println("Voucher DTO ............." + responseDTO);
 
-
-                // Set the response DTO as the job execution exit message
-                try {
-                    jobExecution.setExitStatus(new ExitStatus("COMPLETED", new ObjectMapper().writeValueAsString(responseDTO)));
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
             }
         };
     }
     @Bean
     public Step step(ItemReader<VPFileLoad> itemReader , ItemWriter<VPFileLoad> itemWriter) throws Exception {
         return this.stepBuilderFactory.get("step")
-            .<VPFileLoad,VPFileLoad>chunk(2)
+            .<VPFileLoad,VPFileLoad>chunk(10)
             .reader(itemReader)
             .processor(processor())
             .writer(itemWriter)
@@ -138,7 +125,7 @@ public class VoucherConfig {
     }
 
     @Bean
-    public Job vpFileUpdateJob(JobCompletionNotificationListener listener, Step step) throws Exception {
+    public Job vpFileUpdateJob(Step step) throws Exception {
         return this.jobBuilderFactory.get("VPFile-Job")
             .incrementer(new RunIdIncrementer())
             .start(step)

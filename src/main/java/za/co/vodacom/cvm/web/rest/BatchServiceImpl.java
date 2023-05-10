@@ -1,8 +1,5 @@
 package za.co.vodacom.cvm.web.rest;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -20,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import za.co.vodacom.cvm.domain.VPFileLoad;
-import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.service.VPBatchService;
 import za.co.vodacom.cvm.service.VPFileLoadService;
 import za.co.vodacom.cvm.service.VPVouchersService;
@@ -31,7 +27,6 @@ import za.co.vodacom.cvm.web.api.model.*;
 
 import java.io.*;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import org.zalando.problem.Status;
@@ -42,13 +37,12 @@ import za.co.vodacom.cvm.exception.BatchException;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class BatchServiceImpl implements BatchApiDelegate {
 
     public static final Logger log = LoggerFactory.getLogger(BatchServiceImpl.class);
-    private final String TEMP_STORAGE = "C:/Users/tsotm001/OneDrive - Vodafone Group/Desktop/temp/";
+
     @Autowired
     VPBatchService vpBatchService;
 
@@ -56,7 +50,6 @@ public class BatchServiceImpl implements BatchApiDelegate {
     VPFileLoadService vpFileLoadService;
     @Autowired
     private JobLauncher jobLauncher;
-
     @Autowired
     VPVoucherDTO vpVoucherDTO ;
     @Autowired
@@ -215,8 +208,11 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
                 vpFileLoadService.save(vpFileLoad1);
 
+                log.info("VPFileload : {} ", vpFileLoad1);
+                log.debug("VPFileload : {} " , vpFileLoad1);
+
                 String originalName = data.getOriginalFilename();
-                File fileToImport = new File(TEMP_STORAGE + originalName);
+                File fileToImport = new File(Constants.TEMP_STORAGE + originalName);
                 try {
                     data.transferTo(fileToImport);
                 } catch (IOException e) {
@@ -224,7 +220,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
                 }
 
                 JobParameters Parameters = new JobParametersBuilder()
-                    .addString("fullPathFileName", TEMP_STORAGE + originalName)
+                    .addString("fullPathFileName", Constants.TEMP_STORAGE + originalName)
                     .addLong("StartAt", System.currentTimeMillis()).toJobParameters();
                 try {
                     jobLauncher.run(job, Parameters);
@@ -241,7 +237,6 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
                 batchUploadResponse.setNumFailed(BigDecimal.valueOf(vpVoucherDTO.getNumFailed()));
                 batchUploadResponse.setNumLoaded(BigDecimal.valueOf(vpVoucherDTO.getNumLoaded()));
-                System.out.println("....................................."+vpVoucherDTO);
 
             }
 

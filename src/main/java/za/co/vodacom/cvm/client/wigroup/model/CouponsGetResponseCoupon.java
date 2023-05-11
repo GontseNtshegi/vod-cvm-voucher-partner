@@ -6,11 +6,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.Objects;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
-import org.openapitools.jackson.nullable.JsonNullable;
 
 /**
  * Coupon from WiGroup
@@ -41,16 +38,14 @@ public class CouponsGetResponseCoupon {
     private String termsAndConditions;
 
     @JsonProperty("createDate")
-    @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-    private OffsetDateTime createDate;
+    private String createDate;
 
     @JsonProperty("redeemFromDate")
-    @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-    private OffsetDateTime redeemFromDate;
+    private String redeemFromDate;
 
     @JsonProperty("redeemToDate")
     @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-    private OffsetDateTime redeemToDate;
+    private String redeemToDate;
 
     @JsonProperty("wiCode")
     private Long wiCode;
@@ -114,7 +109,7 @@ public class CouponsGetResponseCoupon {
 
     @JsonProperty("redeemedDate")
     @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
-    private OffsetDateTime redeemedDate;
+    private String redeemedDate;
 
     public CouponsGetResponseCoupon id(Long id) {
         this.id = id;
@@ -226,26 +221,26 @@ public class CouponsGetResponseCoupon {
         this.termsAndConditions = termsAndConditions;
     }
 
-    public CouponsGetResponseCoupon createDate(OffsetDateTime createDate) {
+    public CouponsGetResponseCoupon createDate(String createDate) {
         this.createDate = createDate;
         return this;
     }
 
     /**
      * The date the couponCampaign was created.
+     *
      * @return createDate
      */
     @ApiModelProperty(value = "The date the couponCampaign was created.")
-    @Valid
-    public OffsetDateTime getCreateDate() {
+    public String getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(OffsetDateTime createDate) {
+    public void setCreateDate(String createDate) {
         this.createDate = createDate;
     }
 
-    public CouponsGetResponseCoupon redeemFromDate(OffsetDateTime redeemFromDate) {
+    public CouponsGetResponseCoupon redeemFromDate(String redeemFromDate) {
         this.redeemFromDate = redeemFromDate;
         return this;
     }
@@ -256,15 +251,15 @@ public class CouponsGetResponseCoupon {
      */
     @ApiModelProperty(value = "From which date the coupon can be redeemed")
     @Valid
-    public OffsetDateTime getRedeemFromDate() {
+    public String getRedeemFromDate() {
         return redeemFromDate;
     }
 
-    public void setRedeemFromDate(OffsetDateTime redeemFromDate) {
+    public void setRedeemFromDate(String redeemFromDate) {
         this.redeemFromDate = redeemFromDate;
     }
 
-    public CouponsGetResponseCoupon redeemToDate(OffsetDateTime redeemToDate) {
+    public CouponsGetResponseCoupon redeemToDate(String redeemToDate) {
         this.redeemToDate = redeemToDate;
         return this;
     }
@@ -275,11 +270,11 @@ public class CouponsGetResponseCoupon {
      */
     @ApiModelProperty(value = "Until when the coupon is redeemable.")
     @Valid
-    public OffsetDateTime getRedeemToDate() {
+    public String getRedeemToDate() {
         return redeemToDate;
     }
 
-    public void setRedeemToDate(OffsetDateTime redeemToDate) {
+    public void setRedeemToDate(String redeemToDate) {
         this.redeemToDate = redeemToDate;
     }
 
@@ -411,7 +406,7 @@ public class CouponsGetResponseCoupon {
         this.stateId = stateId;
     }
 
-    public CouponsGetResponseCoupon redeemedDate(OffsetDateTime redeemedDate) {
+    public CouponsGetResponseCoupon redeemedDate(String redeemedDate) {
         this.redeemedDate = redeemedDate;
         return this;
     }
@@ -422,11 +417,11 @@ public class CouponsGetResponseCoupon {
      */
     @ApiModelProperty(value = "The date on which the coupon was redeemed (if it was expire)")
     @Valid
-    public OffsetDateTime getRedeemedDate() {
+    public String getRedeemedDate() {
         return redeemedDate;
     }
 
-    public void setRedeemedDate(OffsetDateTime redeemedDate) {
+    public void setRedeemedDate(String redeemedDate) {
         this.redeemedDate = redeemedDate;
     }
 

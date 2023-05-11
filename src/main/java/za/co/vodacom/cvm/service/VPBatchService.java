@@ -55,6 +55,8 @@ public interface VPBatchService {
      */
     Optional<List<VPBatch>> getAll();
 
+    Optional<List<VPBatch>> getAllListWithInterval(Integer period);
+
     List<BatchDetailsDTO> getVoucherQuantity(Long id, ZonedDateTime sysdate);
     /**
      * Find by batch name
@@ -67,7 +69,4 @@ public interface VPBatchService {
 
     Optional<VPBatch> getBatchWithStatus(Long id);
 
-    void updateBatch(Long id, String name);
-
-    void updateReturnedBatch(Long id,String name);
 }

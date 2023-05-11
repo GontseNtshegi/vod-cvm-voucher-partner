@@ -3,6 +3,7 @@ package za.co.vodacom.cvm.service.impl;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -55,9 +56,6 @@ public class VPBatchServiceImpl implements VPBatchService {
                     if (vPBatch.getRestrictedYN() != null) {
                         existingVPBatch.setRestrictedYN(vPBatch.getRestrictedYN());
                     }
-                    if (vPBatch.getUserId() != null) {
-                        existingVPBatch.setUserId(vPBatch.getUserId());
-                    }
 
                     return existingVPBatch;
                 }
@@ -86,8 +84,9 @@ public class VPBatchServiceImpl implements VPBatchService {
         log.debug("Request to delete VPBatch : {}", id);
         vPBatchRepository.deleteById(id);
     }
+
     @Override
-    public Optional<List<VPBatch>> getAll(){
+    public Optional<List<VPBatch>> getAll() {
         log.info("Request to getAll VPBatch");
         log.debug("Request to getAll VPBatch :");
         return vPBatchRepository.getAll();
@@ -95,10 +94,10 @@ public class VPBatchServiceImpl implements VPBatchService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BatchDetailsDTO> getVoucherQuantity(Long id , ZonedDateTime sysdate) {
+    public List<BatchDetailsDTO> getVoucherQuantity(Long id, ZonedDateTime sysdate) {
         log.info("Request to get Voucher Quantity");
         log.debug("Request get Voucher Quantity: {}", id);
-        return vPBatchRepository.getVoucherQuantity(id , sysdate);
+        return vPBatchRepository.getVoucherQuantity(id, sysdate);
     }
 
     @Override
@@ -121,13 +120,9 @@ public class VPBatchServiceImpl implements VPBatchService {
         log.debug("Request to find batch in VPBatch with id : {}", id);
         return vPBatchRepository.getBatchWithStatus(id);
     }
+    @Override
+    public Optional<List<VPBatch>> getAllListWithInterval(Integer period){
+        return vPBatchRepository.getAllListWithInterval(period);
+    }
 
-    @Override
-    public void updateBatch(Long id, String name) {
-        vPBatchRepository.updateBatch(id,name);
-    }
-    @Override
-    public void updateReturnedBatch(Long id,String name){
-        vPBatchRepository.updateReturnedBatch(id,name);
-    }
 }

@@ -260,13 +260,20 @@ paths:
         '500':
           description: Internal Server Error
 
-  /batch/list:
+  /batch/list/{period}:
     get:
       tags:
         - batch
       summary: Retrieves list of batches
       operationId: batchList
       description: Returns a list of batches
+      parameters:
+        - name: period
+          in: path
+          required: true
+          description: The period in number of days in the past to which the query should be limited
+          schema:
+            type: integer
       responses:
         '200':
           description: Successful operation
@@ -888,12 +895,12 @@ components:
           description: The unique name of the campaign
         startDate:
           type: string
-          format: date
+          example: '2021-03-03 16:40:35.796'
           description: The start date/time of the campaign
         endDate:
-          type: string
-          format: date
-          description: The end date/time of the campaign
+           type: string
+           example: '2021-03-03 16:40:35.796'
+           description: The end date/time of the campaign
     VoucherProductsResponse:
       type: array
       items:
@@ -925,20 +932,19 @@ components:
       required:
         - productId
     LinkDelinkResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/LinkDelinkResponseObject'
-    LinkDelinkResponseObject:
       type: object
       properties:
         campaignId:
           type: string
           description: The unique campaign id
         numAdded:
-          type: number
-          description: The unique name of the campaign
+          type: integer
+          format: int32
+          description: The number if products linked
         numDeleted:
-          type: number
+          type: integer
+          format: int32
+          description: The number if products delinked
     QuantitesResponse:
       type: array
       items:
@@ -952,16 +958,12 @@ components:
         productType:
           type: string
           description: Type
-          enum: [Voucher,GenericVoucher,OnlineVoucher,OnlineGiftcard]
         productDescription:
           type: string
           description: Description
         voucherDescription:
           type: string
           description: Category
-        fileName:
-          type: string
-          description: Vendor
         quantity:
           type: integer
           description: The number of vouchers.

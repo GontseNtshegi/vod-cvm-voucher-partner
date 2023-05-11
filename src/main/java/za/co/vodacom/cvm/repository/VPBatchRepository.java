@@ -20,15 +20,15 @@ import java.util.List;
 public interface VPBatchRepository extends JpaRepository<VPBatch, Long> {
 
     @Query(
-        value ="select new za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO(d.id, " +
+        value = "select new za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO(d.id, " +
             "d.type," +
             "d.description," +
             "v.description ," +
-            "v.startDate, "+
+            "v.startDate, " +
             "v.endDate,  " +
-            "v.expiryDate , "+
+            "v.expiryDate , " +
             "f.fileName," +
-            "count(d.id))"+
+            "count(d.id))" +
             "from VPVouchers v, VPVoucherDef d, VPFileLoad f " +
             "where v.productId = d.id " +
             "and v.fileId=f.id " +
@@ -49,14 +49,8 @@ public interface VPBatchRepository extends JpaRepository<VPBatch, Long> {
     @Query(value = "select * from vp_batch where id=:id and status in ('O','A')", nativeQuery = true)
     Optional<VPBatch> getBatchWithStatus(@Param("id") Long id);
 
-    @Modifying
-    @Query(value = "update vp_batch set activate_user =:name , status = 'A', load_date = CURRENT_TIMESTAMP where id=:id", nativeQuery = true)
-    void updateBatch(@Param("id") Long id, @Param("name") String name);
-
-    @Modifying
-    @Query(value = "update vp_batch set delete_user=:name, status='D', delete_date= CURRENT_TIMESTAMP  where id=:id", nativeQuery = true)
-    void updateReturnedBatch(@Param("id") Long id,  @Param("name") String name);
-
     Optional<VPBatch> findByName(String name);
+    @Query(value = "select * from vp_batch where create_date > sysdate() - INTERVAL :period DAY order by id", nativeQuery = true)
+    Optional<List<VPBatch>> getAllListWithInterval(@Param("period") Integer period);
 }
 

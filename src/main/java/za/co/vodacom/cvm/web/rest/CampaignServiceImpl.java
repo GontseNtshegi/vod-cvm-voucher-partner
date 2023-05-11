@@ -130,7 +130,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                      quantitiesResponseObject.setQuantity(Math.toIntExact(quantityDetailsDTO.getCount()));
                      quantitiesResponseObject.setVoucherDescription(quantityDetailsDTO.getDescription());
                      quantitiesResponseObject.setEndDate(quantityDetailsDTO.getEndDate() == null? null:quantityDetailsDTO.getEndDate().toLocalDate());
-                     quantitiesResponseObject.setVoucherExpiryDate(LocalDate.from(quantityDetailsDTO.getExpiryDate().plusHours(-2)));
+                     quantitiesResponseObject.setVoucherExpiryDate(LocalDate.from(quantityDetailsDTO.getExpiryDate().minusHours(2)));
                     quantitiesResponseObjectList.add(quantitiesResponseObject);
                 });
                 log.debug("Response object{}",quantitiesResponseObjectList);

@@ -787,7 +787,6 @@ components:
           description: Status
         createDate:
           type: string
-          format: date
         msisdn:
           type: string
     BatchListResponse:

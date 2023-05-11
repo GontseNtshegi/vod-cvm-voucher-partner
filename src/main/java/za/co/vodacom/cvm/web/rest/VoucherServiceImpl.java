@@ -569,7 +569,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                    voucherValidationResponse.setDescription(couponsGetResponse.getCoupon().getDescription());
                    voucherValidationResponse.setCouponId(BigDecimal.valueOf(couponsGetResponse.getCoupon().getId()));
                    voucherValidationResponse.setStatus(couponsGetResponse.getCoupon().getStateId().getValue());
-                   voucherValidationResponse.setCreateDate(couponsGetResponse.getCoupon().getCreateDate().toLocalDate());
+                   voucherValidationResponse.setCreateDate(couponsGetResponse.getCoupon().getCreateDate());
                }
                else
                    throw new AllocationException("Coupon Validation Failed at WiGroup", Status.NOT_FOUND);

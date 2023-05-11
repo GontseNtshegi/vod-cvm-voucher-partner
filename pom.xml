@@ -7,7 +7,7 @@
 
     <groupId>za.co.vodacom.cvm</groupId>
     <artifactId>cp-voucher-partner</artifactId>
-    <version>1.2.69-SNAPSHOT</version>
+    <version>1.3.70-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Voucherpartner</name>
 
@@ -49,7 +49,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <start-class>za.co.vodacom.cvm.VoucherpartnerApp</start-class>
-        <argLine>-Djava.security.egd=file:/dev/./urandom -Xmx512m</argLine>
+        <argLine>-Djava.security.egd=file:/dev/./urandom -Xmx256m</argLine>
         <m2e.apt.activation>jdt_apt</m2e.apt.activation>
         <run.addResources>false</run.addResources>
         <!-- These remain empty unless the corresponding profile is active -->

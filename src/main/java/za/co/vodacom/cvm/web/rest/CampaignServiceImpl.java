@@ -15,14 +15,12 @@ import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
 import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
 import za.co.vodacom.cvm.web.api.CampaignApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.time.LocalTime.now;
 
 
 @Service
@@ -54,6 +52,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
 
     @Override
     public ResponseEntity<List<CampaignListResponseObject>> getCampaignList() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         List<VPCampaign> vpCampaignList = vpCampaignService.findAll();
 
@@ -67,8 +66,8 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
             campaignsList.add(new CampaignListResponseObject()
                 .campaignId(vpcampaign.getId().toString())
                 .campaignName(vpcampaign.getName())
-                .startDate(vpcampaign.getStartDate().minusHours(2).toLocalDateTime().toString())
-                .endDate(vpcampaign.getEndDate() == null? null: vpcampaign.getEndDate().toLocalDateTime().minusHours(2).toString()));
+                .startDate(vpcampaign.getStartDate().minusHours(2).format(formatter))
+                .endDate(vpcampaign.getEndDate() == null? null: vpcampaign.getEndDate().minusHours(2).format(formatter)));
         }
         log.debug("Campaign List{}", campaignsList.toString());
         return new ResponseEntity<>(campaignsList, HttpStatus.OK);

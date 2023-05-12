@@ -767,9 +767,6 @@ components:
         encryptedYN:
           type: string
           description: Whether the voucher code should be encrypted in the database. Should always be Y
-        extSyncSys:
-          type: string
-          description: Whether the stock levels in VP_VOUCHERS should be synced at certain intervals with another system such as Magento
     VoucherValidationResponse:
       type: object
       properties:

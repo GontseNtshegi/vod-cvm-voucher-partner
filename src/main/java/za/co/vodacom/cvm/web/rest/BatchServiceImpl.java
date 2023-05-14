@@ -49,7 +49,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
         }
         listOptional.ifPresent(vpBatches -> vpBatches.forEach(vpBatch -> {
             BatchListResponseObject batchListResponseObject = new BatchListResponseObject();
-            batchListResponseObject.setBatchSeq(vpBatch.getId().intValue());
+            batchListResponseObject.setID(vpBatch.getId().intValue());
             batchListResponseObject.setBatchComment(vpBatch.getComment());
             batchListResponseObject.setCreateDate(vpBatch.getCreateDate().toOffsetDateTime());
             batchListResponseObject.setBatchName(vpBatch.getName());

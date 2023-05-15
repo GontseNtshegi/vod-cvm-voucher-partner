@@ -32,7 +32,7 @@ import za.co.vodacom.cvm.web.api.model.ProductValidationResponse;
 @Service
 public class ProductServiceImpl implements ProductApiDelegate {
 
-    public static final Logger log = LoggerFactory.getLogger(VoucherServiceImpl.class);
+    public static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Autowired
     private final VPCampaignService vpCampaignService;

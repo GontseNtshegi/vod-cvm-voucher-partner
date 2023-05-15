@@ -28,7 +28,7 @@ import static java.time.LocalTime.now;
 @Service
 public class CampaignServiceImpl  implements CampaignApiDelegate {
 
-    public static final Logger log = LoggerFactory.getLogger(VoucherServiceImpl.class);
+    public static final Logger log = LoggerFactory.getLogger(CampaignServiceImpl.class);
 
     @Autowired
     private final VPCampaignService vpCampaignService;

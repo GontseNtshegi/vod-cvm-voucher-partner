@@ -25,6 +25,8 @@ import za.co.vodacom.cvm.service.dto.voucher.VPVoucherDTO;
 import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.io.*;
 import java.time.ZonedDateTime;
@@ -123,13 +125,13 @@ public class BatchServiceImpl implements BatchApiDelegate {
     @Override
     public ResponseEntity<List<BatchDetailsResponseObject>> batchDetails(Integer batchId) {
 
-        Optional<VPBatch> vpBatch = vpBatchService.findOne(batchId.longValue());
+        Optional<VPBatch> vpBatch = vpBatchService.findOne(Long.valueOf(batchId));
         List<BatchDetailsResponseObject> batchDetailsResponse = new ArrayList<>();
 
         if (!vpBatch.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Batch not found");
         } else {
-            List<BatchDetailsDTO> batchDetailsDTOList = vpBatchService.getVoucherQuantity(batchId.longValue(), ZonedDateTime.now());
+            List<BatchDetailsDTO> batchDetailsDTOList = vpBatchService.getVoucherQuantity(Long.valueOf(batchId), ZonedDateTime.now());
 
             batchDetailsDTOList.forEach(batchDetailsDTO -> {
                 BatchDetailsResponseObject batchDetailsResponse1 = new BatchDetailsResponseObject();
@@ -222,20 +224,18 @@ public class BatchServiceImpl implements BatchApiDelegate {
                 log.info("VPFileload : {} ", vpFileLoad1);
                 log.debug("VPFileload : {} " , vpFileLoad1);
 
-                String originalName = data.getOriginalFilename();
-                File fileToImport = new File(Constants.TEMP_STORAGE + originalName);
+                //Create temp file name
+                String tempName = "upload" + System.currentTimeMillis() + ".csv";
                 try {
-                    data.transferTo(fileToImport);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                    Path tempFile = Files.createTempFile(tempName, "");
+                    data.transferTo(tempFile);
 
                 JobParameters Parameters = new JobParametersBuilder()
-                    .addString("fullPathFileName", Constants.TEMP_STORAGE + originalName)
+                    .addString("fullPathFileName", tempFile.toString())
                     .addLong("StartAt", System.currentTimeMillis()).toJobParameters();
-                try {
+
                     jobLauncher.run(job, Parameters);
-                } catch (JobExecutionAlreadyRunningException | JobRestartException
+                } catch (IOException | JobExecutionAlreadyRunningException | JobRestartException
                          | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
 
                     e.printStackTrace();

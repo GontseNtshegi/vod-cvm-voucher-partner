@@ -842,7 +842,7 @@ components:
         fileName:
           type: string
           description: name of the given file
-        numVouchers:
+        quantity:
           type: integer
           description: quantities of vouchers linked to batch
         startDate:

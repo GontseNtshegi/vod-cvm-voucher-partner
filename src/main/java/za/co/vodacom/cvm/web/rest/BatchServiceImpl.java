@@ -101,19 +101,22 @@ public class BatchServiceImpl implements BatchApiDelegate {
         if (!vpBatch.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Batch not found");
         } else {
-            List<BatchDetailsDTO> batchDetailsDTOList = vpBatchService.getVoucherQuantity(batchId.longValue(), ZonedDateTime.now());
+            List<BatchDetailsDTO> batchDetailsDTOList = vpBatchService.getVoucherQuantity(batchId, ZonedDateTime.now());
 
             batchDetailsDTOList.forEach(batchDetailsDTO -> {
                 BatchDetailsResponseObject batchDetailsResponse1 = new BatchDetailsResponseObject();
-                batchDetailsResponse1.setEndDate(batchDetailsDTO.getEndDate().toLocalDate());
+                batchDetailsResponse1.setProductType(batchDetailsDTO.getType());
                 batchDetailsResponse1.setFileName(batchDetailsDTO.getFileName());
-                batchDetailsResponse1.setNumVouchers(Math.toIntExact(batchDetailsDTO.getCount()));
+                batchDetailsResponse1.setQuantity(Math.toIntExact(batchDetailsDTO.getCount()));
                 batchDetailsResponse1.setVoucherDescription(batchDetailsDTO.getVoucherDescription());
                 batchDetailsResponse1.setProductId(batchDetailsDTO.getId());
                 batchDetailsResponse1.setProductDescription(batchDetailsDTO.getDescription());
-                batchDetailsResponse1.setStartDate(batchDetailsDTO.getStartDate().toLocalDate());
-                batchDetailsResponse1.setEndDate(batchDetailsDTO.getEndDate().toLocalDate());
-                batchDetailsResponse1.setVoucherExpiryDate(batchDetailsDTO.getExpiryDate().toLocalDate());
+                batchDetailsResponse1.setStartDate(batchDetailsDTO.getStartDate() == null ? null :
+                    batchDetailsDTO.getStartDate().toLocalDate());
+                batchDetailsResponse1.setEndDate(batchDetailsDTO.getEndDate() == null ? null :
+                    batchDetailsDTO.getEndDate().toLocalDate());
+                batchDetailsResponse1.setVoucherExpiryDate(batchDetailsDTO.getExpiryDate() == null ? null :
+                    batchDetailsDTO.getExpiryDate().toLocalDate() );
 
                 batchDetailsResponse.add(batchDetailsResponse1);
 

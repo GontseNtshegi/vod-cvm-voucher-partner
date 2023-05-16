@@ -11,11 +11,11 @@ import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPCampaign;
 import za.co.vodacom.cvm.domain.VPCampaignVouchers;
 import za.co.vodacom.cvm.service.*;
-import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
+import za.co.vodacom.cvm.service.dto.campaign.CampaignProductDTO;
 import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
 import za.co.vodacom.cvm.web.api.CampaignApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
-
+import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -42,6 +42,8 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
     private final VPBatchService vpBatchService;
 
     private boolean found = false;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
 
 
     public CampaignServiceImpl(VPCampaignService vpCampaignService, VPCampaignVouchersService vpCampaignVouchersService, VPVoucherDefService voucherDefService, VPVouchersService vpVouchersService, VPBatchService vpBatchService) {
@@ -67,45 +69,53 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
             campaignsList.add(new CampaignListResponseObject()
                 .campaignId(vpcampaign.getId().toString())
                 .campaignName(vpcampaign.getName())
-                .startDate(vpcampaign.getStartDate().minusHours(2).toLocalDateTime().toString())
-                .endDate(vpcampaign.getEndDate() == null? null: vpcampaign.getEndDate().toLocalDateTime().minusHours(2).toString()));
+                .startDate(vpcampaign.getStartDate().minusHours(2).format(formatter))
+                .endDate(vpcampaign.getEndDate() == null? null: vpcampaign.getEndDate().minusHours(2).format(formatter)));
         }
         log.debug("Campaign List{}", campaignsList.toString());
         return new ResponseEntity<>(campaignsList, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<List<VoucherProductResponseObject>> getCampaignProducts(String campaignId) {
-        List<VoucherProductResponseObject> voucherListResponse = new ArrayList<>();
+    public ResponseEntity<CampaignProductsResponse> getCampaignProducts(String campaignId) {
+        //List<VoucherProductResponseObject> voucherListResponse = new ArrayList<>();
+        CampaignProductsResponse campaignProductsResponse = new CampaignProductsResponse();
 
         //Needs work. May have to create a sql query that does everything in one query.
         Optional<VPCampaign> campaign = vpCampaignService.findOne(Long.valueOf(campaignId));
         log.debug(campaign.toString());
 
         if (campaign.isPresent()) {
-            Optional<VPCampaignVouchers> campaignVouchers = vpCampaignVouchersService.findOne(Long.valueOf(campaignId));
-
-            if (campaignVouchers.isPresent()) {
-                log.debug(campaignVouchers.toString());
-                VoucherProductResponseObject voucherProductResponseObject = new VoucherProductResponseObject();
-
-                VPCampaignVouchers campaignVoucher = campaignVouchers.get();
-                voucherDefService.findOne(campaignVoucher.getProductId())
-                    .ifPresent(vpVoucherDef -> {
-                        voucherProductResponseObject.setProductName(vpVoucherDef.getDescription());
-                    });
-                voucherProductResponseObject.setProductId(campaignVoucher.getProductId());
-                voucherProductResponseObject.setId(String.valueOf(campaignVoucher.getId()));
-                voucherProductResponseObject.setActiveYN(campaignVoucher.getActiveYN());
+            Optional<VPCampaignVouchers> vpCampaign = vpCampaignVouchersService.findOne(Long.valueOf(campaignId));
+            if (vpCampaign.isPresent()) {
+                log.debug(vpCampaign.toString());
+                List<VoucherProductResponseObject> campaignProducts = new ArrayList<>();
 
 
-                voucherListResponse.add(voucherProductResponseObject);
+               // VPCampaignVouchers campaignVoucher = vpCampaign.get();
+                List<CampaignProductDTO> vpCampaignProducts = vpCampaignService.getCampaignProducts(campaignId);
+
+                if(vpCampaignProducts.isEmpty()){
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+                campaignProductsResponse.setCampaignName(campaign.get().getName());
+                campaignProductsResponse.setCampaignId(campaignId);
+                campaignProductsResponse.setStartDate(String.valueOf(campaign.get().getStartDate().format(formatter)));
+                campaignProductsResponse.setEndDate(String.valueOf(campaign.get().getEndDate().format(formatter)));
+
+                for(CampaignProductDTO cpProducts : vpCampaignProducts){
+                    VoucherProductResponseObject vpProduct = new VoucherProductResponseObject();
+                    vpProduct.setId(String.valueOf(cpProducts.getId()));
+                    vpProduct.setProductId(cpProducts.getproduct_id());
+                    vpProduct.productName(cpProducts.getDescription());
+                    vpProduct.setActiveYN(cpProducts.getActiveYN());
+                    campaignProducts.add(vpProduct);
+                }
+                campaignProductsResponse.setCampaignProductId(campaignProducts);
             }
-            log.debug("List of campaign products{}", voucherListResponse.toString());
-            return new ResponseEntity<>(voucherListResponse, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+          //  log.debug("List of campaign products{}", voucherListResponse.toString());
+            return new ResponseEntity<>(campaignProductsResponse, HttpStatus.OK);
     }
 
 
@@ -130,7 +140,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                      quantitiesResponseObject.setQuantity(Math.toIntExact(quantityDetailsDTO.getCount()));
                      quantitiesResponseObject.setVoucherDescription(quantityDetailsDTO.getDescription());
                      quantitiesResponseObject.setEndDate(quantityDetailsDTO.getEndDate() == null? null:quantityDetailsDTO.getEndDate().toLocalDate());
-                     quantitiesResponseObject.setVoucherExpiryDate(LocalDate.from(quantityDetailsDTO.getExpiryDate().minusHours(2)));
+                     quantitiesResponseObject.setVoucherExpiryDate(quantityDetailsDTO.getvoucherExpiryDate() == null? null: quantityDetailsDTO.getvoucherExpiryDate().toLocalDate());
                     quantitiesResponseObjectList.add(quantitiesResponseObject);
                 });
                 log.debug("Response object{}",quantitiesResponseObjectList);

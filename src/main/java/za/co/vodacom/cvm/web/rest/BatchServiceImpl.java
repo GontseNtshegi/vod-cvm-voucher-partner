@@ -80,7 +80,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
         }
         listOptional.ifPresent(vpBatches -> vpBatches.forEach(vpBatch -> {
             BatchListResponseObject batchListResponseObject = new BatchListResponseObject();
-            batchListResponseObject.setBatchSeq(vpBatch.getId().intValue());
+            batchListResponseObject.setID(vpBatch.getId().intValue());
             batchListResponseObject.setBatchComment(vpBatch.getComment());
             batchListResponseObject.setCreateDate(vpBatch.getCreateDate().toOffsetDateTime());
             batchListResponseObject.setBatchName(vpBatch.getName());
@@ -126,25 +126,28 @@ public class BatchServiceImpl implements BatchApiDelegate {
     @Override
     public ResponseEntity<List<BatchDetailsResponseObject>> batchDetails(Integer batchId) {
 
-        Optional<VPBatch> vpBatch = vpBatchService.findOne(Long.valueOf(batchId));
+        Optional<VPBatch> vpBatch = vpBatchService.findOne(batchId.longValue());
         List<BatchDetailsResponseObject> batchDetailsResponse = new ArrayList<>();
 
         if (!vpBatch.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Batch not found");
         } else {
-            List<BatchDetailsDTO> batchDetailsDTOList = vpBatchService.getVoucherQuantity(Long.valueOf(batchId), ZonedDateTime.now());
+            List<BatchDetailsDTO> batchDetailsDTOList = vpBatchService.getVoucherQuantity(batchId, ZonedDateTime.now());
 
             batchDetailsDTOList.forEach(batchDetailsDTO -> {
                 BatchDetailsResponseObject batchDetailsResponse1 = new BatchDetailsResponseObject();
-                batchDetailsResponse1.setEndDate(batchDetailsDTO.getEndDate().toLocalDate());
+                batchDetailsResponse1.setProductType(batchDetailsDTO.getType());
                 batchDetailsResponse1.setFileName(batchDetailsDTO.getFileName());
-                batchDetailsResponse1.setNumVouchers(Math.toIntExact(batchDetailsDTO.getCount()));
+                batchDetailsResponse1.setQuantity(Math.toIntExact(batchDetailsDTO.getCount()));
                 batchDetailsResponse1.setVoucherDescription(batchDetailsDTO.getVoucherDescription());
                 batchDetailsResponse1.setProductId(batchDetailsDTO.getId());
                 batchDetailsResponse1.setProductDescription(batchDetailsDTO.getDescription());
-                batchDetailsResponse1.setStartDate(batchDetailsDTO.getStartDate().toLocalDate());
-                batchDetailsResponse1.setEndDate(batchDetailsDTO.getEndDate().toLocalDate());
-                batchDetailsResponse1.setVoucherExpiryDate(batchDetailsDTO.getExpiryDate().toLocalDate());
+                batchDetailsResponse1.setStartDate(batchDetailsDTO.getStartDate() == null ? null :
+                    batchDetailsDTO.getStartDate().toLocalDate());
+                batchDetailsResponse1.setEndDate(batchDetailsDTO.getEndDate() == null ? null :
+                    batchDetailsDTO.getEndDate().toLocalDate());
+                batchDetailsResponse1.setVoucherExpiryDate(batchDetailsDTO.getExpiryDate() == null ? null :
+                    batchDetailsDTO.getExpiryDate().toLocalDate() );
 
                 batchDetailsResponse.add(batchDetailsResponse1);
 

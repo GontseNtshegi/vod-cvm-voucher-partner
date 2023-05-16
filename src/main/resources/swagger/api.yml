@@ -793,7 +793,7 @@ components:
     BatchListResponseObject:
       type: object
       properties:
-        batchSeq:
+        ID:
           type: integer
           description: Batch Identifier
         batchName:
@@ -842,7 +842,7 @@ components:
         fileName:
           type: string
           description: name of the given file
-        numVouchers:
+        quantity:
           type: integer
           description: quantities of vouchers linked to batch
         startDate:

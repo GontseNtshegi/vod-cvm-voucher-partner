@@ -13,8 +13,5 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 @Repository
 public interface VPFileLoadRepository extends JpaRepository<VPFileLoad, Long> {
-    @Query(
-        value = "select v from VPFileLoad v where v.batchId=:batchId and v.fileName=:fileName"
-    )
-    Optional<VPFileLoad> getFileByNameAndId(@Param("batchId") Integer batchId, @Param("fileName") String fileName);
+    Optional<VPFileLoad> findByBatchIdAndAndFileName(Integer batchId , String fileName);
 }

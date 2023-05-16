@@ -48,5 +48,5 @@ public interface VPFileLoadService {
      */
     void delete(Long id);
 
-    Optional<VPFileLoad> getFileByNameAndId(Integer batchId, String fileName);
+    Optional<VPFileLoad> findByBatchIdAndAndFileName(Integer batchId, String fileName);
 }

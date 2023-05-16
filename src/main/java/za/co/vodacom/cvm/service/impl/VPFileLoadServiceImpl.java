@@ -92,8 +92,8 @@ public class VPFileLoadServiceImpl implements VPFileLoadService {
     }
 
     @Override
-    public Optional<VPFileLoad> getFileByNameAndId(Integer batchId, String fileName) {
-        return vPFileLoadRepository.getFileByNameAndId(batchId, fileName);
+    public Optional<VPFileLoad> findByBatchIdAndAndFileName(Integer batchId, String fileName) {
+        return vPFileLoadRepository.findByBatchIdAndAndFileName(batchId, fileName);
     }
 
 }

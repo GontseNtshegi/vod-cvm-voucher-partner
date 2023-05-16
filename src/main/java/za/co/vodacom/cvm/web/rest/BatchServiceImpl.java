@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.io.*;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -206,7 +207,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
         Optional<VPBatch> vpBatch = vpBatchService.getBatch(Long.valueOf(batchId));
 
         if(vpBatch.isPresent()) {
-            Optional<VPFileLoad> vpFileLoad = vpFileLoadService.getFileByNameAndId(batchId,fileName);
+            Optional<VPFileLoad> vpFileLoad = vpFileLoadService.findByBatchIdAndAndFileName(batchId,fileName);
             if(vpFileLoad.isPresent()){
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Filename already used");
             }else{
@@ -214,8 +215,8 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
                 vpFileLoad1.setBatchId(batchId);
                 vpFileLoad1.setFileName(fileName);
-                vpFileLoad1.setCompletedDate(ZonedDateTime.now());
-                vpFileLoad1.setCreateDate(ZonedDateTime.now());
+                vpFileLoad1.setCompletedDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
+                vpFileLoad1.setCreateDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
                 vpFileLoad1.setNumLoaded(0);
                 vpFileLoad1.setNumFailed(0);
 

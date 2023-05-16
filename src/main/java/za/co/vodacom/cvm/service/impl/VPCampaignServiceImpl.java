@@ -1,7 +1,5 @@
 package za.co.vodacom.cvm.service.impl;
 
-import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -9,6 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPCampaign;
 import za.co.vodacom.cvm.repository.VPCampaignRepository;
 import za.co.vodacom.cvm.service.VPCampaignService;
+import za.co.vodacom.cvm.service.dto.campaign.CampaignProductDTO;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link VPCampaign}.
@@ -84,5 +86,11 @@ public class VPCampaignServiceImpl implements VPCampaignService {
         log.info("Request to find by name in VPCampaign ");
         log.debug("Request to find by name in VPCampaign : {}", name);
         return vPCampaignRepository.findByName(name);
+    }
+
+    @Override
+    public List<CampaignProductDTO> getCampaignProducts(String campaignId) {
+        log.debug("Request to get Campaign Products from campaign Id: {}",campaignId);
+        return vPCampaignRepository.getCampaignProducts(Long.valueOf(campaignId));
     }
 }

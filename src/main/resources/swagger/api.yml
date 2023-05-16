@@ -468,7 +468,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VoucherProductsResponse'
+                $ref: '#/components/schemas/CampaignProductsResponse'
         '204':
           description: No content
         '400':
@@ -894,13 +894,31 @@ components:
           example: '2021-03-03 16:40:35.796'
           description: The start date/time of the campaign
         endDate:
-           type: string
-           example: '2021-03-03 16:40:35.796'
-           description: The end date/time of the campaign
-    VoucherProductsResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/VoucherProductResponseObject'
+          type: string
+          example: '2021-03-03 16:40:35.796'
+          description: The end date/time of the campaign
+
+    CampaignProductsResponse:
+      type: object
+      properties:
+        campaignId:
+          type: string
+          description: Campaign Identifier
+        campaignName:
+          type: string
+          description: The unique name of the campaign
+        startDate:
+          type: string
+          example: '2021-03-03 16:40:35.796'
+          description: The start date/time of the campaign
+        endDate:
+          type: string
+          example: '2021-03-03 16:40:35.796'
+          description: The end date/time of the campaign
+        "campaignProductId":
+          type: array
+          items:
+            $ref: '#/components/schemas/VoucherProductResponseObject'
     VoucherProductResponseObject:
       type: object
       properties:
@@ -916,6 +934,7 @@ components:
         activeYN:
           type: string
           description: Whether the product is enabled for this campaign
+
     LinkDelinkRequest:
       type: object
       properties:

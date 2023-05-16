@@ -57,7 +57,7 @@ public interface VPBatchService {
 
     Optional<List<VPBatch>> getAllListWithInterval(Integer period);
 
-    List<BatchDetailsDTO> getVoucherQuantity(Long id, ZonedDateTime sysdate);
+    List<BatchDetailsDTO> getVoucherQuantity(Integer id, ZonedDateTime sysdate);
     /**
      * Find by batch name
      * @param name

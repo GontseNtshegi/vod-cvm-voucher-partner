@@ -38,7 +38,7 @@ public interface VPBatchRepository extends JpaRepository<VPBatch, Long> {
             "group by d.id,d.type,d.description,v.description,f.fileName,v.startDate,v.endDate,v.expiryDate " +
             "order by 1"
     )
-    List<BatchDetailsDTO> getVoucherQuantity(@Param("id") Long id, @Param("sysdate") ZonedDateTime sysdate);
+    List<BatchDetailsDTO> getVoucherQuantity(@Param("id") Integer id, @Param("sysdate") ZonedDateTime sysdate);
 
     @Query(value = "select * from vp_batch  order by id", nativeQuery = true)
     Optional<List<VPBatch>> getAll();

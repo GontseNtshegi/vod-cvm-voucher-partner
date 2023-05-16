@@ -94,7 +94,7 @@ public class VPBatchServiceImpl implements VPBatchService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BatchDetailsDTO> getVoucherQuantity(Long id, ZonedDateTime sysdate) {
+    public List<BatchDetailsDTO> getVoucherQuantity(Integer id, ZonedDateTime sysdate) {
         log.info("Request to get Voucher Quantity");
         log.debug("Request get Voucher Quantity: {}", id);
         return vPBatchRepository.getVoucherQuantity(id, sysdate);

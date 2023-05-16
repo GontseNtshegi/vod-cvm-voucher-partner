@@ -793,7 +793,7 @@ components:
     BatchListResponseObject:
       type: object
       properties:
-        batchSeq:
+        ID:
           type: integer
           description: Batch Identifier
         batchName:
@@ -842,7 +842,7 @@ components:
         fileName:
           type: string
           description: name of the given file
-        numVouchers:
+        quantity:
           type: integer
           description: quantities of vouchers linked to batch
         startDate:
@@ -894,9 +894,9 @@ components:
           example: '2021-03-03 16:40:35.796'
           description: The start date/time of the campaign
         endDate:
-           type: string
-           example: '2021-03-03 16:40:35.796'
-           description: The end date/time of the campaign
+          type: string
+          example: '2021-03-03 16:40:35.796'
+          description: The end date/time of the campaign
     VoucherProductsResponse:
       type: array
       items:

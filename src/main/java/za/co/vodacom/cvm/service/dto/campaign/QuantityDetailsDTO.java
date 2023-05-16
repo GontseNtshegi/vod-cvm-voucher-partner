@@ -9,7 +9,7 @@ public class QuantityDetailsDTO {
     String description_1;
     ZonedDateTime startDate;
     ZonedDateTime endDate;
-    ZonedDateTime expiryDate;
+    ZonedDateTime voucherExpiryDate;
     Long count;
 
     public ZonedDateTime getStartDate() {
@@ -20,18 +20,18 @@ public class QuantityDetailsDTO {
         return endDate;
     }
 
-    public ZonedDateTime getExpiryDate() {
-        return expiryDate;
+    public ZonedDateTime getvoucherExpiryDate() {
+        return voucherExpiryDate;
     }
 
-    public QuantityDetailsDTO(String productId, String type, String description, String description_1, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime expiryDate, Long count) {
+    public QuantityDetailsDTO(String productId, String type, String description, String description_1, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime voucherExpiryDate, Long count) {
         this.productId = productId;
         this.type = type;
         this.description = description;
         this.description_1 = description_1;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.expiryDate = expiryDate;
+        this.voucherExpiryDate = voucherExpiryDate;
         this.count = count;
     }
 
@@ -78,8 +78,8 @@ public class QuantityDetailsDTO {
         this.endDate = endDate;
     }
 
-    public void setExpiryDate(ZonedDateTime expiryDate) {
-        this.expiryDate = expiryDate;
+    public void setvoucherExpiryDate(ZonedDateTime voucherExpiryDate) {
+        this.voucherExpiryDate = voucherExpiryDate;
     }
 
     public String getType() {
@@ -107,7 +107,7 @@ public class QuantityDetailsDTO {
             ", count=" + count +
             ", startDate=" + startDate +
             ", endDate=" + endDate +
-            ", expiryDate=" + expiryDate +
+            ", voucherExpiryDate=" + voucherExpiryDate +
             ", type='" + type + '\'' +
             '}';
     }

@@ -70,7 +70,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                 .startDate(vpcampaign.getStartDate().minusHours(2).format(formatter))
                 .endDate(vpcampaign.getEndDate() == null? null: vpcampaign.getEndDate().minusHours(2).format(formatter)));
         }
-        log.debug("Campaign List{}", campaignsList.toString());
+
         return new ResponseEntity<>(campaignsList, HttpStatus.OK);
     }
 

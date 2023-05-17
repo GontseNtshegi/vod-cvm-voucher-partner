@@ -62,9 +62,8 @@ public class VPBatch implements Serializable {
     @Column(name = "activate_user", length = 100, nullable = false)
     private String activateUser;
 
-    @NotNull
     @Size(max = 100)
-    @Column(name = "delete_user", length = 100, nullable = false)
+    @Column(name = "delete_user", length = 100)
     private String deleteUser;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

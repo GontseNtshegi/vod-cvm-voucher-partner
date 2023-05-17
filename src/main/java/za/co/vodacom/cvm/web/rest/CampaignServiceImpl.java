@@ -136,7 +136,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                     QuantitiesResponseObject quantitiesResponseObject = new QuantitiesResponseObject();
                      quantitiesResponseObject.setProductId(quantityDetailsDTO.getProductId());
                      quantitiesResponseObject.setProductType(quantityDetailsDTO.getType());
-                     quantitiesResponseObject.setProductDescription(quantityDetailsDTO.getDescription_1());
+                     quantitiesResponseObject.setProductDescription(quantityDetailsDTO.getProductDescription());
                      quantitiesResponseObject.setQuantity(Math.toIntExact(quantityDetailsDTO.getCount()));
                      quantitiesResponseObject.setVoucherDescription(quantityDetailsDTO.getDescription());
                      quantitiesResponseObject.setEndDate(quantityDetailsDTO.getEndDate() == null? null: quantityDetailsDTO.getEndDate().minusHours(2).toLocalDate().toString());

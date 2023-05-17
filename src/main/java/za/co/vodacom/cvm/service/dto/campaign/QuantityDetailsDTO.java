@@ -6,16 +6,16 @@ public class QuantityDetailsDTO {
     String productId;
     String type;
     String description;
-    String description_1;
+    String productDescription;
     ZonedDateTime endDate;
     ZonedDateTime expiryDate;
     Long count;
 
-    public QuantityDetailsDTO(String productId, String type, String description, String description_1, ZonedDateTime endDate, ZonedDateTime expiryDate, Long count) {
+    public QuantityDetailsDTO(String productId, String type, String description, String productDescription, ZonedDateTime endDate, ZonedDateTime expiryDate, Long count) {
         this.productId = productId;
         this.type = type;
         this.description = description;
-        this.description_1 = description_1;
+        this.productDescription = productDescription;
         this.endDate = endDate;
         this.expiryDate = expiryDate;
         this.count = count;
@@ -48,12 +48,12 @@ public class QuantityDetailsDTO {
         this.description = description;
     }
 
-    public String getDescription_1() {
-        return description_1;
+    public String getProductDescription() {
+        return productDescription;
     }
 
-    public void setDescription_1(String description_1) {
-        this.description_1 = description_1;
+    public void setProductDescription(String productDescription) {
+        this.productDescription = productDescription;
     }
 
     public ZonedDateTime getEndDate() {

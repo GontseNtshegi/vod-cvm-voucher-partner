@@ -168,8 +168,7 @@ public class ProductServiceImpl implements ProductApiDelegate {
                     productListResponseObject.setEncryptedYN(vpVoucherDef.getEncryptedYN());
                     productListResponseObject.setExtId(vpVoucherDef.getExtId());
                     productListResponseObject.setDescription(vpVoucherDef.getDescription());
-                    productListResponseObject.setExtSystem(vpVoucherDef.getExtSystem());
-                    //productListResponseObject.setExtSyncSys(vpVoucherDef.getExtSyncSys());
+                    productListResponseObject.setExtSyncSys(vpVoucherDef.getExtSystem());
                     productListResponseObject.setType(vpVoucherDef.getType());
                     productListResponseObject.setValidityPeriod(vpVoucherDef.getValidityPeriod().toString());
                     productListResponseObject.setVendor(vpVoucherDef.getVendor());

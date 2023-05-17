@@ -15,11 +15,14 @@ import za.co.vodacom.cvm.service.dto.campaign.CampaignProductDTO;
 import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
 import za.co.vodacom.cvm.web.api.CampaignApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.time.LocalTime.now;
 
 
 @Service

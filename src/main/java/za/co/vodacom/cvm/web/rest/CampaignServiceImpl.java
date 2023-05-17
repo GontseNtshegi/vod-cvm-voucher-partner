@@ -15,6 +15,7 @@ import za.co.vodacom.cvm.service.dto.campaign.CampaignProductDTO;
 import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
 import za.co.vodacom.cvm.web.api.CampaignApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
+
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -75,21 +76,24 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
 
     @Override
     public ResponseEntity<CampaignProductsResponse> getCampaignProducts(String campaignId) {
-        //List<VoucherProductResponseObject> voucherListResponse = new ArrayList<>();
+
         CampaignProductsResponse campaignProductsResponse = new CampaignProductsResponse();
 
-        //Needs work. May have to create a sql query that does everything in one query.
+        //Needs work optimise db queries.
         Optional<VPCampaign> campaign = vpCampaignService.findOne(Long.valueOf(campaignId));
-        log.debug(campaign.toString());
+        log.debug("Searching for campaign with ID:{}",campaignId);
 
-        if (campaign.isPresent()) {
+        if (!campaign.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Campaign not found.");
+        }
             Optional<VPCampaignVouchers> vpCampaign = vpCampaignVouchersService.findOne(Long.valueOf(campaignId));
+            log.debug("Searching for products in campaign with ID:{}",campaignId);
             if (vpCampaign.isPresent()) {
                 log.debug(vpCampaign.toString());
                 List<VoucherProductResponseObject> campaignProducts = new ArrayList<>();
 
 
-               // VPCampaignVouchers campaignVoucher = vpCampaign.get();
+               // Get products from DB
                 List<CampaignProductDTO> vpCampaignProducts = vpCampaignService.getCampaignProducts(campaignId);
 
                 if(vpCampaignProducts.isEmpty()){
@@ -97,8 +101,8 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                 }
                 campaignProductsResponse.setCampaignName(campaign.get().getName());
                 campaignProductsResponse.setCampaignId(campaignId);
-                campaignProductsResponse.setStartDate(String.valueOf(campaign.get().getStartDate().format(formatter)));
-                campaignProductsResponse.setEndDate(String.valueOf(campaign.get().getEndDate().format(formatter)));
+                campaignProductsResponse.setStartDate(campaign.get().getStartDate().minusHours(2).format(formatter));
+                campaignProductsResponse.setEndDate(campaign.get().getEndDate().minusHours(2).format(formatter));
 
                 for(CampaignProductDTO cpProducts : vpCampaignProducts){
                     VoucherProductResponseObject vpProduct = new VoucherProductResponseObject();
@@ -108,10 +112,9 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                     vpProduct.setActiveYN(cpProducts.getActiveYN());
                     campaignProducts.add(vpProduct);
                 }
-                campaignProductsResponse.setCampaignProductId(campaignProducts);
+                campaignProductsResponse.products(campaignProducts);
             }
-        }
-          //  log.debug("List of campaign products{}", voucherListResponse.toString());
+
             return new ResponseEntity<>(campaignProductsResponse, HttpStatus.OK);
     }
 
@@ -126,21 +129,20 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
         if (!vpCampaign.isPresent()) {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Campaign not found.");
         }else {
-                List<QuantityDetailsDTO> quantityDetailsDTOSList = vpVouchersService.getVoucherQuantity(Long.valueOf(campaignId),ZonedDateTime.now());
+                List<QuantityDetailsDTO> quantityDetailsDTOSList = vpVouchersService.getVoucherQuantity(Long.valueOf(campaignId), ZonedDateTime.now());
                 log.debug("List of quantityDTO's",quantityDetailsDTOSList);
 
                 quantityDetailsDTOSList.forEach(quantityDetailsDTO -> {
                     QuantitiesResponseObject quantitiesResponseObject = new QuantitiesResponseObject();
                      quantitiesResponseObject.setProductId(quantityDetailsDTO.getProductId());
                      quantitiesResponseObject.setProductType(quantityDetailsDTO.getType());
-                     quantitiesResponseObject.setProductDescription(quantityDetailsDTO.getProductDescription());
+                     quantitiesResponseObject.setProductDescription(quantityDetailsDTO.getDescription_1());
                      quantitiesResponseObject.setQuantity(Math.toIntExact(quantityDetailsDTO.getCount()));
                      quantitiesResponseObject.setVoucherDescription(quantityDetailsDTO.getDescription());
-                     quantitiesResponseObject.setEndDate(quantityDetailsDTO.getEndDate() == null? null:quantityDetailsDTO.getEndDate().toLocalDate());
-                     quantitiesResponseObject.setVoucherExpiryDate(quantityDetailsDTO.getvoucherExpiryDate() == null? null: quantityDetailsDTO.getvoucherExpiryDate().toLocalDate());
+                     quantitiesResponseObject.setEndDate(quantityDetailsDTO.getEndDate() == null? null: quantityDetailsDTO.getEndDate().minusHours(2).toLocalDate().toString());
+                     quantitiesResponseObject.setVoucherExpiryDate(quantityDetailsDTO.getExpiryDate() == null? null: quantityDetailsDTO.getExpiryDate().minusHours(2).toLocalDate().toString());
                     quantitiesResponseObjectList.add(quantitiesResponseObject);
                 });
-                log.debug("Response object{}",quantitiesResponseObjectList);
         }
 
         return new ResponseEntity<>(quantitiesResponseObjectList,HttpStatus.OK);

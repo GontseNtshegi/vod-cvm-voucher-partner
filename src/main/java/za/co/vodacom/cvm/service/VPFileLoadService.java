@@ -2,8 +2,6 @@ package za.co.vodacom.cvm.service;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.data.repository.query.Param;
 import za.co.vodacom.cvm.domain.VPFileLoad;
 
 /**
@@ -47,6 +45,4 @@ public interface VPFileLoadService {
      * @param id the id of the entity.
      */
     void delete(Long id);
-
-    Optional<VPFileLoad> findByBatchIdAndAndFileName(Integer batchId, String fileName);
 }

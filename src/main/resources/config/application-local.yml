@@ -81,9 +81,6 @@ spring:
     locator:
       discovery:
         enabled: true
-  batch:
-    job:
-      enabled: false
 
 server:
   port: 8087

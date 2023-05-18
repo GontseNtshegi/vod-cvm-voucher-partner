@@ -2,7 +2,9 @@ package za.co.vodacom.cvm.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -29,11 +31,11 @@ public class VPCampaign implements Serializable {
 
     //@NotNull
     @Column(name = "start_date", nullable = false)
-    private LocalDateTime startDate;
+    private ZonedDateTime startDate;
 
     //@NotNull
     @Column(name = "end_date", nullable = false)
-    private LocalDateTime endDate;
+    private ZonedDateTime endDate;
 
     /*@OneToMany(mappedBy = "campaignId")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -67,29 +69,29 @@ public class VPCampaign implements Serializable {
         this.name = name;
     }
 
-    public LocalDateTime getStartDate() {
+    public ZonedDateTime getStartDate() {
         return this.startDate;
     }
 
-    public VPCampaign startDate(LocalDateTime startDate) {
+    public VPCampaign startDate(ZonedDateTime startDate) {
         this.startDate = startDate;
         return this;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(ZonedDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public ZonedDateTime getEndDate() {
         return this.endDate;
     }
 
-    public VPCampaign endDate(LocalDateTime endDate) {
+    public VPCampaign endDate(ZonedDateTime endDate) {
         this.endDate = endDate;
         return this;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(ZonedDateTime endDate) {
         this.endDate = endDate;
     }
 

@@ -377,14 +377,14 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BatchUploadRequest'
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
       responses:
         '200':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BatchUploadResponse'
         '204':
           description: No content
         '400':
@@ -767,9 +767,6 @@ components:
         encryptedYN:
           type: string
           description: Whether the voucher code should be encrypted in the database. Should always be Y
-        extSyncSys:
-          type: string
-          description: Whether the stock levels in VP_VOUCHERS should be synced at certain intervals with another system such as Magento
     VoucherValidationResponse:
       type: object
       properties:
@@ -1006,25 +1003,6 @@ components:
         status:
           type: string
           description: New updated response
-    BatchUploadRequest:
-      type: object
-      properties:
-        fileName:
-          type: string
-          description: Name of incoming csv file
-        data:
-          type: string
-          format: binary
-          description: Incoming csv file
-    BatchUploadResponse:
-      type: object
-      properties:
-        numLoaded:
-          type: number
-          description: number of successfully loaded rows
-        numFailed:
-          type: number
-          description: number of failed rows
 
 
     Problem:

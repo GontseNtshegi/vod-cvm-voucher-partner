@@ -918,7 +918,7 @@ components:
           type: string
           example: '2021-03-03 16:40:35.796'
           description: The end date/time of the campaign
-        "campaignProductId":
+        "products":
           type: array
           items:
             $ref: '#/components/schemas/VoucherProductResponseObject'
@@ -987,11 +987,9 @@ components:
           description: The number of vouchers.
         endDate:
           type: string
-          format: date
           description: The external system being used for the issuing of real time vouchers
         voucherExpiryDate:
           type: string
-          format: date
           description: The default validity period in days, relative to the date of issue
     BatchStatusRequest:
       type: object

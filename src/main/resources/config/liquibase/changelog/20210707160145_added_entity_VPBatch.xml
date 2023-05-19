@@ -20,7 +20,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="create_date" type="${datetimeType}">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
             <column name="comment" type="varchar(100)">
                 <constraints nullable="false" />
@@ -41,7 +41,7 @@
                 <constraints nullable="false" />
             </column>
             <column name="delete_user" type="varchar(100)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="delete_date" type="${datetimeType}">
                 <constraints nullable="true" />

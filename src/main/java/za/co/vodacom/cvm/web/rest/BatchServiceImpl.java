@@ -13,6 +13,7 @@ import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,10 +80,9 @@ public class BatchServiceImpl implements BatchApiDelegate {
             newBatchEntry.setRestrictedYN(Constants.RESTRICTED_N);
             newBatchEntry.setCreateUser(batchRequest.getUserName());
             newBatchEntry.setStatus(Constants.STATUS_O);
-            newBatchEntry.setLoadDate(ZonedDateTime.now());
-            newBatchEntry.setCreateDate(ZonedDateTime.now());
-            newBatchEntry.setDeleteUser(batchRequest.getUserName());
-            newBatchEntry.setActivateUser(batchRequest.getBatchName());
+            newBatchEntry.setLoadDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
+            newBatchEntry.setCreateDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
+            newBatchEntry.setActivateUser(batchRequest.getUserName());
 
             VPBatch result = vpBatchService.save(newBatchEntry);
             log.debug("VPBatch result {}", result);

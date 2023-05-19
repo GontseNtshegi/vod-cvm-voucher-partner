@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import za.co.vodacom.cvm.domain.VPVouchers;
+import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
 import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
 import za.co.vodacom.cvm.service.dto.product.Product;
 
@@ -65,8 +66,9 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
             "d.type," +
             "d.description," +
             "v.description ," +
+            "v.startDate, "+
             "v.endDate,  " +
-            "v.expiryDate, "+
+            "v.expiryDate , "+
             "count(d.id))"+
             "from VPVouchers v, VPVoucherDef d, VPCampaignVouchers c, VPBatch b " +
             "where v.productId = d.id " +
@@ -77,7 +79,7 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
             "and b.status ='A' " +
             "and v.issuedDate is null " +
             "and v.endDate > :sysdate " +
-            "group by d.id,d.type,d.description,v.description,v.endDate,v.expiryDate " +
+            "group by d.id,d.type,d.description,v.description,v.startDate,v.endDate,v.expiryDate " +
             "order by 1"
     )
     List<QuantityDetailsDTO> getVoucherQuantity(@Param("id") Long id, @Param("sysdate") ZonedDateTime sysdate);

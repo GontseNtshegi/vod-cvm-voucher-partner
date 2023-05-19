@@ -85,6 +85,7 @@ public class VPVouchers implements Serializable {
     private VPVoucherDef productId;*/
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
         return id;
     }

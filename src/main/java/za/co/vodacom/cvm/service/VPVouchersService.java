@@ -1,12 +1,12 @@
 package za.co.vodacom.cvm.service;
 
-import za.co.vodacom.cvm.domain.VPVouchers;
-import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
-import za.co.vodacom.cvm.service.dto.product.Product;
-
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import za.co.vodacom.cvm.domain.VPVouchers;
+import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
+import za.co.vodacom.cvm.service.dto.product.Product;
 
 /**
  * Service Interface for managing {@link VPVouchers}.

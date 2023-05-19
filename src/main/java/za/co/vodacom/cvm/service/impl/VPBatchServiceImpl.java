@@ -109,7 +109,7 @@ public class VPBatchServiceImpl implements VPBatchService {
 
     @Override
     public Optional<VPBatch> getBatch(Long id) {
-        log.info("Request to find batch in VPBatch  ");
+        log.info("Request to find batch in VPBatch");
         log.debug("Request to find batch in VPBatch with id : {}", id);
         return vPBatchRepository.getBatch(id);
     }

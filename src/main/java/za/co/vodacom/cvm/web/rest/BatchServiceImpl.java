@@ -13,6 +13,7 @@ import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -141,8 +142,8 @@ public class BatchServiceImpl implements BatchApiDelegate {
                 VPBatch vpBatch1 = vpBatch.get();
 
                 vpBatch1.setStatus(Constants.STATUS_A);
-                vpBatch1.setName(batchStatusRequest.getUserName());
-                vpBatch1.setLoadDate(ZonedDateTime.now());
+                vpBatch1.setActivateUser(batchStatusRequest.getUserName());
+                vpBatch1.setLoadDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
 
                 VPBatch result = vpBatchService.save(vpBatch1);
                 batchStatusResponse.setStatus(result.getStatus());
@@ -154,8 +155,8 @@ public class BatchServiceImpl implements BatchApiDelegate {
             } else {
                 VPBatch vpBatch1 = vpBatch.get();
                 vpBatch1.setStatus(Constants.STATUS_D);
-                vpBatch1.setName(batchStatusRequest.getUserName());
-                vpBatch1.setLoadDate(ZonedDateTime.now());
+                vpBatch1.setDeleteUser(batchStatusRequest.getUserName());
+                vpBatch1.setDeleteDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
 
                 VPBatch result = vpBatchService.save(vpBatch1);
 

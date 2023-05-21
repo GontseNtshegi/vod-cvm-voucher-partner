@@ -793,7 +793,7 @@ components:
     BatchListResponseObject:
       type: object
       properties:
-        ID:
+        Id:
           type: integer
           description: Batch Identifier
         batchName:

@@ -18,8 +18,10 @@ import za.co.vodacom.cvm.web.api.model.*;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -146,12 +148,23 @@ public class CampaignServiceImpl implements CampaignApiDelegate {
         return new ResponseEntity<>(quantitiesResponseObjectList, HttpStatus.OK);
     }
 
+    /*
     private static <T> Set<T> findCommonElements(List<T> first, List<T> second) {
         return first.stream().filter(second::contains).collect(Collectors.toSet());
     }
+    */
 
     @Override
     public ResponseEntity<LinkDelinkResponse> linkDelinkProduct(String campaignid, LinkDelinkRequest linkDelinkRequest) {
+
+        if (linkDelinkRequest.getAddProducts().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "addProducts List must not be empty.");
+        }
+
+        if (linkDelinkRequest.getRemoveProducts().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "removeProducts List must not be empty.");
+        }
+
 
         Optional<VPCampaign> vpCampaign = vpCampaignService.findOne(Long.valueOf(campaignid));
 
@@ -163,62 +176,58 @@ public class CampaignServiceImpl implements CampaignApiDelegate {
             List<String> removeL = Arrays.asList(linkDelinkRequest.getRemoveProducts().split(","));
             List<String> removeList = new ArrayList<>(removeL);
 
-            Set<String> common = findCommonElements(addList, removeList);
-            if (!common.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Clashing product IDs");
+            if (addList.containsAll(removeList)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Clashing product IDs.");
             }
+
             int numAdded = 0;
             int numRemoved = 0;
 
-            if (addList.get(0) != "" ) {
-                // Add products
-                Optional<List<VPCampaignVouchers>> addProductList = vpCampaignVouchersService.getVouchersByProductId(addList);
+            // Add products
+            Optional<List<VPCampaignVouchers>> addProductList = vpCampaignVouchersService.getVouchersByProductId(addList);
 
-                if (addProductList.isPresent()) {
-                    for (VPCampaignVouchers vpCampaignVouchers : addProductList.get()) {
-                        log.debug("Add ProductId: {}", vpCampaignVouchers.getProductId());
-                        if (vpCampaignVouchers.getActiveYN().equals(Constants.YES)) {
-                            addList.remove(vpCampaignVouchers.getProductId());
-                        } else {
-                            vpCampaignVouchers.setActiveYN(Constants.YES);
-                            vpCampaignVouchersService.save(vpCampaignVouchers);
-                            addList.remove(vpCampaignVouchers.getProductId());
-                            numAdded++;
-                        }
-                    }
-                }
-                for (String toBeInserted : addList) {
-                    log.debug("Inserting productId: {}", toBeInserted);
-                    vpCampaignVouchersService.save(new VPCampaignVouchers()
-                        .campaignId(Long.valueOf(campaignid))
-                        .productId(toBeInserted)
-                        .createDate(ZonedDateTime.now())
-                        .modifiedDate(ZonedDateTime.now())
-                        .activeYN(Constants.YES));
-                    numAdded++;
-                }
-            }
-
-            if(removeList.get(0) != "") {
-                // Remove products
-                Optional<List<VPCampaignVouchers>> removeProductList = vpCampaignVouchersService.getVouchersByProductId(removeList);
-
-                if (removeProductList.isPresent()) {
-                    for (VPCampaignVouchers vpCampaignVouchers : removeProductList.get()) {
-                        log.debug("Remove ProductId: {}", vpCampaignVouchers.getProductId());
-                        if (vpCampaignVouchers.getActiveYN().equals(Constants.NO)) {
-                            removeList.remove(vpCampaignVouchers.getProductId());
-                        } else {
-                            vpCampaignVouchers.setActiveYN(Constants.NO);
-                            vpCampaignVouchersService.save(vpCampaignVouchers);
-                            numRemoved++;
-                        }
+            if (addProductList.isPresent()) {
+                for (VPCampaignVouchers vpCampaignVouchers : addProductList.get()) {
+                    log.debug("Add ProductId: {}", vpCampaignVouchers.getProductId());
+                    if (vpCampaignVouchers.getActiveYN().equals(Constants.YES)) {
+                        addList.remove(vpCampaignVouchers.getProductId());
+                    } else {
+                        vpCampaignVouchers.setActiveYN(Constants.YES);
+                        vpCampaignVouchersService.save(vpCampaignVouchers);
+                        addList.remove(vpCampaignVouchers.getProductId());
+                        numAdded++;
                     }
                 }
             }
+            for (String toBeInserted : addList) {
+                log.debug("Inserting productId: {}", toBeInserted);
+                vpCampaignVouchersService.save(new VPCampaignVouchers()
+                    .campaignId(Long.valueOf(campaignid))
+                    .productId(toBeInserted)
+                    .createDate(ZonedDateTime.now())
+                    .modifiedDate(ZonedDateTime.now())
+                    .activeYN(Constants.YES));
+                numAdded++;
+            }
+
+            // Remove products
+            Optional<List<VPCampaignVouchers>> removeProductList = vpCampaignVouchersService.getVouchersByProductId(removeList);
+
+            if (removeProductList.isPresent()) {
+                for (VPCampaignVouchers vpCampaignVouchers : removeProductList.get()) {
+                    log.debug("Remove ProductId: {}", vpCampaignVouchers.getProductId());
+                    if (vpCampaignVouchers.getActiveYN().equals(Constants.NO)) {
+                        removeList.remove(vpCampaignVouchers.getProductId());
+                    } else {
+                        vpCampaignVouchers.setActiveYN(Constants.NO);
+                        vpCampaignVouchersService.save(vpCampaignVouchers);
+                        numRemoved++;
+                    }
+                }
+            }
+
             return new ResponseEntity<>(new LinkDelinkResponse().campaignId(campaignid).numAdded(numAdded).numDeleted(numRemoved), HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

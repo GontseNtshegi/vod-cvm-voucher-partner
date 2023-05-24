@@ -821,9 +821,46 @@ components:
           description: The user who activated the batch
 
     BatchDetailsResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/BatchDetailsResponseObject'
+      type: object
+      properties:
+        Id:
+          type: integer
+          description: The unique id of the batch
+        batchName:
+          type: string
+          description: The unique id of the batch
+        batchComment:
+          type: string
+          description: A descriptive comment for the batch
+        createDate:
+          type: string
+          format: date-time
+          description: The date that the batch was created
+        loadDate:
+          type: string
+          format: date-time
+          description: The date when the loading was completed
+        status:
+          type: string
+          description: The status of the batch. Can be one of
+            (O)pen, (A)ctivated, (D)eleted
+        createUser:
+          type: string
+          description: The user who initially created the batch
+        activateUser:
+          type: string
+          description: The user who activated the batch
+        deleteUser:
+          type: string
+          description: The user who deleted the batch, if this was the case
+        deleteDate:
+          type: string
+          format: date-time
+          description: The date when the batch was deleted, if this was the case
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/BatchDetailsResponseObject'
     BatchDetailsResponseObject:
       type: object
       properties:
@@ -847,15 +884,15 @@ components:
           description: quantities of vouchers linked to batch
         startDate:
           type: string
-          format: date
+          format: date-time
           description: start date
         endDate:
           type: string
-          format: date
+          format: date-time
           description: end date
         voucherExpiryDate:
           type: string
-          format: date
+          format: date-time
           description: voucher expiry date
     BatchRequest:
       type: object

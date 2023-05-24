@@ -12,9 +12,8 @@ import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
 import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +30,7 @@ import java.util.Optional;
 public class BatchServiceImpl implements BatchApiDelegate {
 
     public static final Logger log = LoggerFactory.getLogger(BatchServiceImpl.class);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     @Autowired
     VPBatchService vpBatchService;
 
@@ -93,15 +93,27 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
 
     @Override
-    public ResponseEntity<List<BatchDetailsResponseObject>> batchDetails(Integer batchId) {
+    public ResponseEntity<BatchDetailsResponse> batchDetails(Integer batchId) {
 
         Optional<VPBatch> vpBatch = vpBatchService.findOne(batchId.longValue());
-        List<BatchDetailsResponseObject> batchDetailsResponse = new ArrayList<>();
+        List<BatchDetailsResponseObject> batchDetailsResponseObjects = new ArrayList<>();
+        BatchDetailsResponse batchDetailsResponse = new BatchDetailsResponse();
 
         if (!vpBatch.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Batch not found");
         } else {
+            VPBatch vpBatchResponse = vpBatch.get();
             List<BatchDetailsDTO> batchDetailsDTOList = vpBatchService.getVoucherQuantity(batchId, ZonedDateTime.now());
+            batchDetailsResponse.setId(vpBatchResponse.getId().intValue());
+            batchDetailsResponse.setBatchComment(vpBatchResponse.getComment());
+            batchDetailsResponse.setStatus(vpBatchResponse.getStatus());
+            batchDetailsResponse.setBatchName(vpBatchResponse.getName());
+            batchDetailsResponse.setActivateUser(vpBatchResponse.getActivateUser());
+            batchDetailsResponse.setCreateUser(vpBatchResponse.getCreateUser());
+            batchDetailsResponse.setDeleteDate(vpBatchResponse.getDeleteDate() == null ? null : vpBatchResponse.getDeleteDate().toOffsetDateTime());
+            batchDetailsResponse.setCreateDate(vpBatchResponse.getCreateDate() == null ? null : vpBatchResponse.getCreateDate().toOffsetDateTime());
+            batchDetailsResponse.setLoadDate(vpBatchResponse.getLoadDate() == null ? null : vpBatchResponse.getLoadDate().toOffsetDateTime());
+            batchDetailsResponse.setDeleteUser(vpBatchResponse.getDeleteUser());
 
             batchDetailsDTOList.forEach(batchDetailsDTO -> {
                 BatchDetailsResponseObject batchDetailsResponse1 = new BatchDetailsResponseObject();
@@ -112,18 +124,18 @@ public class BatchServiceImpl implements BatchApiDelegate {
                 batchDetailsResponse1.setProductId(batchDetailsDTO.getId());
                 batchDetailsResponse1.setProductDescription(batchDetailsDTO.getDescription());
                 batchDetailsResponse1.setStartDate(batchDetailsDTO.getStartDate() == null ? null :
-                    batchDetailsDTO.getStartDate().toLocalDate());
+                    batchDetailsDTO.getStartDate().toOffsetDateTime());
                 batchDetailsResponse1.setEndDate(batchDetailsDTO.getEndDate() == null ? null :
-                    batchDetailsDTO.getEndDate().toLocalDate());
+                    batchDetailsDTO.getEndDate().toOffsetDateTime());
                 batchDetailsResponse1.setVoucherExpiryDate(batchDetailsDTO.getExpiryDate() == null ? null :
-                    batchDetailsDTO.getExpiryDate().toLocalDate() );
+                    batchDetailsDTO.getExpiryDate().toOffsetDateTime());
 
-                batchDetailsResponse.add(batchDetailsResponse1);
+                batchDetailsResponseObjects.add(batchDetailsResponse1);
 
             });
 
+            batchDetailsResponse.setProducts(batchDetailsResponseObjects);
         }
-
         return new ResponseEntity<>(batchDetailsResponse, HttpStatus.OK);
     }
 

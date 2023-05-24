@@ -22,9 +22,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-
 @Service
-public class CampaignServiceImpl  implements CampaignApiDelegate {
+public class CampaignServiceImpl implements CampaignApiDelegate {
 
     public static final Logger log = LoggerFactory.getLogger(CampaignServiceImpl.class);
 
@@ -41,7 +40,6 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
 
     private boolean found = false;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
 
 
     public CampaignServiceImpl(VPCampaignService vpCampaignService, VPCampaignVouchersService vpCampaignVouchersService, VPVoucherDefService voucherDefService, VPVouchersService vpVouchersService, VPBatchService vpBatchService) {
@@ -68,7 +66,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                 .campaignId(vpcampaign.getId().toString())
                 .campaignName(vpcampaign.getName())
                 .startDate(vpcampaign.getStartDate().minusHours(2).format(formatter))
-                .endDate(vpcampaign.getEndDate() == null? null: vpcampaign.getEndDate().minusHours(2).format(formatter)));
+                .endDate(vpcampaign.getEndDate() == null ? null : vpcampaign.getEndDate().minusHours(2).format(formatter)));
         }
 
         return new ResponseEntity<>(campaignsList, HttpStatus.OK);
@@ -81,41 +79,41 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
 
         //Needs work optimise db queries.
         Optional<VPCampaign> campaign = vpCampaignService.findOne(Long.valueOf(campaignId));
-        log.debug("Searching for campaign with ID:{}",campaignId);
+        log.debug("Searching for campaign with ID:{}", campaignId);
 
         if (!campaign.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Campaign not found.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found.");
         }
-            Optional<VPCampaignVouchers> vpCampaign = vpCampaignVouchersService.findOne(Long.valueOf(campaignId));
-            log.debug("Searching for products in campaign with ID:{}",campaignId);
-            if (vpCampaign.isPresent()) {
-                log.debug(vpCampaign.toString());
-                List<VoucherProductResponseObject> campaignProducts = new ArrayList<>();
+        Optional<VPCampaignVouchers> vpCampaign = vpCampaignVouchersService.findOne(Long.valueOf(campaignId));
+        log.debug("Searching for products in campaign with ID:{}", campaignId);
+        if (vpCampaign.isPresent()) {
+            log.debug(vpCampaign.toString());
+            List<VoucherProductResponseObject> campaignProducts = new ArrayList<>();
 
 
-               // Get products from DB
-                List<CampaignProductDTO> vpCampaignProducts = vpCampaignService.getCampaignProducts(campaignId);
+            // Get products from DB
+            List<CampaignProductDTO> vpCampaignProducts = vpCampaignService.getCampaignProducts(campaignId);
 
-                if(vpCampaignProducts.isEmpty()){
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-                }
-                campaignProductsResponse.setCampaignName(campaign.get().getName());
-                campaignProductsResponse.setCampaignId(campaignId);
-                campaignProductsResponse.setStartDate(campaign.get().getStartDate().minusHours(2).format(formatter));
-                campaignProductsResponse.setEndDate(campaign.get().getEndDate().minusHours(2).format(formatter));
-
-                for(CampaignProductDTO cpProducts : vpCampaignProducts){
-                    VoucherProductResponseObject vpProduct = new VoucherProductResponseObject();
-                    vpProduct.setId(String.valueOf(cpProducts.getId()));
-                    vpProduct.setProductId(cpProducts.getproduct_id());
-                    vpProduct.productName(cpProducts.getDescription());
-                    vpProduct.setActiveYN(cpProducts.getActiveYN());
-                    campaignProducts.add(vpProduct);
-                }
-                campaignProductsResponse.products(campaignProducts);
+            if (vpCampaignProducts.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
+            campaignProductsResponse.setCampaignName(campaign.get().getName());
+            campaignProductsResponse.setCampaignId(campaignId);
+            campaignProductsResponse.setStartDate(campaign.get().getStartDate().minusHours(2).format(formatter));
+            campaignProductsResponse.setEndDate(campaign.get().getEndDate().minusHours(2).format(formatter));
 
-            return new ResponseEntity<>(campaignProductsResponse, HttpStatus.OK);
+            for (CampaignProductDTO cpProducts : vpCampaignProducts) {
+                VoucherProductResponseObject vpProduct = new VoucherProductResponseObject();
+                vpProduct.setId(String.valueOf(cpProducts.getId()));
+                vpProduct.setProductId(cpProducts.getproduct_id());
+                vpProduct.productName(cpProducts.getDescription());
+                vpProduct.setActiveYN(cpProducts.getActiveYN());
+                campaignProducts.add(vpProduct);
+            }
+            campaignProductsResponse.products(campaignProducts);
+        }
+
+        return new ResponseEntity<>(campaignProductsResponse, HttpStatus.OK);
     }
 
 
@@ -123,29 +121,29 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
     public ResponseEntity<List<QuantitiesResponseObject>> getQuantities(String campaignId) {
         Optional<VPCampaign> vpCampaign = vpCampaignService.findOne(Long.valueOf(campaignId));
         List<QuantitiesResponseObject> quantitiesResponseObjectList = new ArrayList<>();
-        log.debug(":{}",vpCampaign);
+        log.debug(":{}", vpCampaign);
 
         //Check if campaign ID exists
         if (!vpCampaign.isPresent()) {
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Campaign not found.");
-        }else {
-                List<QuantityDetailsDTO> quantityDetailsDTOSList = vpVouchersService.getVoucherQuantity(Long.valueOf(campaignId), ZonedDateTime.now());
-                log.debug("List of quantityDTO's",quantityDetailsDTOSList);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Campaign not found.");
+        } else {
+            List<QuantityDetailsDTO> quantityDetailsDTOSList = vpVouchersService.getVoucherQuantity(Long.valueOf(campaignId), ZonedDateTime.now());
+            log.debug("List of quantityDTO's", quantityDetailsDTOSList);
 
-                quantityDetailsDTOSList.forEach(quantityDetailsDTO -> {
-                    QuantitiesResponseObject quantitiesResponseObject = new QuantitiesResponseObject();
-                     quantitiesResponseObject.setProductId(quantityDetailsDTO.getProductId());
-                     quantitiesResponseObject.setProductType(quantityDetailsDTO.getType());
-                     quantitiesResponseObject.setProductDescription(quantityDetailsDTO.getProductDescription());
-                     quantitiesResponseObject.setQuantity(Math.toIntExact(quantityDetailsDTO.getCount()));
-                     quantitiesResponseObject.setVoucherDescription(quantityDetailsDTO.getDescription());
-                     quantitiesResponseObject.setEndDate(quantityDetailsDTO.getEndDate() == null? null: quantityDetailsDTO.getEndDate().minusHours(2).toLocalDate().toString());
-                     quantitiesResponseObject.setVoucherExpiryDate(quantityDetailsDTO.getExpiryDate() == null? null: quantityDetailsDTO.getExpiryDate().minusHours(2).toLocalDate().toString());
-                    quantitiesResponseObjectList.add(quantitiesResponseObject);
-                });
+            quantityDetailsDTOSList.forEach(quantityDetailsDTO -> {
+                QuantitiesResponseObject quantitiesResponseObject = new QuantitiesResponseObject();
+                quantitiesResponseObject.setProductId(quantityDetailsDTO.getProductId());
+                quantitiesResponseObject.setProductType(quantityDetailsDTO.getType());
+                quantitiesResponseObject.setProductDescription(quantityDetailsDTO.getProductDescription());
+                quantitiesResponseObject.setQuantity(Math.toIntExact(quantityDetailsDTO.getCount()));
+                quantitiesResponseObject.setVoucherDescription(quantityDetailsDTO.getDescription());
+                quantitiesResponseObject.setEndDate(quantityDetailsDTO.getEndDate() == null ? null : quantityDetailsDTO.getEndDate().minusHours(2).toLocalDate().toString());
+                quantitiesResponseObject.setVoucherExpiryDate(quantityDetailsDTO.getExpiryDate() == null ? null : quantityDetailsDTO.getExpiryDate().minusHours(2).toLocalDate().toString());
+                quantitiesResponseObjectList.add(quantitiesResponseObject);
+            });
         }
 
-        return new ResponseEntity<>(quantitiesResponseObjectList,HttpStatus.OK);
+        return new ResponseEntity<>(quantitiesResponseObjectList, HttpStatus.OK);
     }
 
     private static <T> Set<T> findCommonElements(List<T> first, List<T> second) {
@@ -157,10 +155,13 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
 
         Optional<VPCampaign> vpCampaign = vpCampaignService.findOne(Long.valueOf(campaignid));
 
+
         if (vpCampaign.isPresent()) {
             //Make the request into 2 lists
-            List<String> addList = Arrays.asList(linkDelinkRequest.getAddProducts().split(","));
-            List<String> removeList = Arrays.asList(linkDelinkRequest.getRemoveProducts().split(","));
+            List<String> addL = Arrays.asList(linkDelinkRequest.getAddProducts().split(","));
+            List<String> addList = new ArrayList<>(addL);
+            List<String> removeL = Arrays.asList(linkDelinkRequest.getRemoveProducts().split(","));
+            List<String> removeList = new ArrayList<>(removeL);
 
             Set<String> common = findCommonElements(addList, removeList);
             if (!common.isEmpty()) {
@@ -169,50 +170,55 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
             int numAdded = 0;
             int numRemoved = 0;
 
-            // Add products
-            Optional<List<VPCampaignVouchers>> addProductList = vpCampaignVouchersService.getVouchersByProductId(addList);
+            if (addList.get(0) != "" ) {
+                // Add products
+                Optional<List<VPCampaignVouchers>> addProductList = vpCampaignVouchersService.getVouchersByProductId(addList);
 
-            if (addProductList.isPresent()) {
-                for (VPCampaignVouchers vpCampaignVouchers : addProductList.get()) {
-                    log.debug("Add ProductId: {}", vpCampaignVouchers.getProductId());
-                    if (vpCampaignVouchers.getActiveYN().equals(Constants.YES)) {
-                        addList.remove(vpCampaignVouchers.getProductId());
-                    } else {
-                        vpCampaignVouchers.setActiveYN(Constants.YES);
-                        vpCampaignVouchersService.save(vpCampaignVouchers);
-                        addList.remove(vpCampaignVouchers.getProductId());
-                        numAdded++;
+                if (addProductList.isPresent()) {
+                    for (VPCampaignVouchers vpCampaignVouchers : addProductList.get()) {
+                        log.debug("Add ProductId: {}", vpCampaignVouchers.getProductId());
+                        if (vpCampaignVouchers.getActiveYN().equals(Constants.YES)) {
+                            addList.remove(vpCampaignVouchers.getProductId());
+                        } else {
+                            vpCampaignVouchers.setActiveYN(Constants.YES);
+                            vpCampaignVouchersService.save(vpCampaignVouchers);
+                            addList.remove(vpCampaignVouchers.getProductId());
+                            numAdded++;
+                        }
                     }
                 }
-            }
-            for (String toBeInserted : addList) {
-                log.debug("Inserting productId: {}", toBeInserted);
-                vpCampaignVouchersService.save(new VPCampaignVouchers()
-                    .campaignId(Long.valueOf(campaignid))
-                    .productId(toBeInserted)
-                    .createDate(ZonedDateTime.now())
-                    .modifiedDate(ZonedDateTime.now())
-                    .activeYN(Constants.YES));
-                numAdded++;
+                for (String toBeInserted : addList) {
+                    log.debug("Inserting productId: {}", toBeInserted);
+                    vpCampaignVouchersService.save(new VPCampaignVouchers()
+                        .campaignId(Long.valueOf(campaignid))
+                        .productId(toBeInserted)
+                        .createDate(ZonedDateTime.now())
+                        .modifiedDate(ZonedDateTime.now())
+                        .activeYN(Constants.YES));
+                    numAdded++;
+                }
             }
 
-            // Remove products
-            Optional<List<VPCampaignVouchers>> removeProductList = vpCampaignVouchersService.getVouchersByProductId(removeList);
+            if(removeList.get(0) != "") {
+                // Remove products
+                Optional<List<VPCampaignVouchers>> removeProductList = vpCampaignVouchersService.getVouchersByProductId(removeList);
 
-            if (removeProductList.isPresent()) {
-                for (VPCampaignVouchers vpCampaignVouchers : removeProductList.get()) {
-                    log.debug("Remove ProductId: {}", vpCampaignVouchers.getProductId());
-                    if (vpCampaignVouchers.getActiveYN().equals(Constants.NO)) {
-                        removeList.remove(vpCampaignVouchers.getProductId());
-                    } else {
-                        vpCampaignVouchers.setActiveYN(Constants.NO);
-                        vpCampaignVouchersService.save(vpCampaignVouchers);
-                        numRemoved++;
+                if (removeProductList.isPresent()) {
+                    for (VPCampaignVouchers vpCampaignVouchers : removeProductList.get()) {
+                        log.debug("Remove ProductId: {}", vpCampaignVouchers.getProductId());
+                        if (vpCampaignVouchers.getActiveYN().equals(Constants.NO)) {
+                            removeList.remove(vpCampaignVouchers.getProductId());
+                        } else {
+                            vpCampaignVouchers.setActiveYN(Constants.NO);
+                            vpCampaignVouchersService.save(vpCampaignVouchers);
+                            numRemoved++;
+                        }
                     }
                 }
             }
             return new ResponseEntity<>(new LinkDelinkResponse().campaignId(campaignid).numAdded(numAdded).numDeleted(numRemoved), HttpStatus.OK);
-        } else {
+        }
+        else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

@@ -177,6 +177,7 @@ public class CampaignServiceImpl  implements CampaignApiDelegate {
                     log.debug("Add ProductId: {}", vpCampaignVouchers.getProductId());
                     if (vpCampaignVouchers.getActiveYN().equals(Constants.YES)) {
                         addList.remove(vpCampaignVouchers.getProductId());
+                        numAdded++;
                     } else {
                         vpCampaignVouchers.setActiveYN(Constants.YES);
                         vpCampaignVouchersService.save(vpCampaignVouchers);

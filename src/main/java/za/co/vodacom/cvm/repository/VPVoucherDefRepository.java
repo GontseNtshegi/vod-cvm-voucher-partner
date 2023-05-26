@@ -1,15 +1,13 @@
 package za.co.vodacom.cvm.repository;
 
-import java.util.List;
-import java.util.Optional;
-import javax.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import za.co.vodacom.cvm.domain.VPVoucherDef;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Spring Data SQL repository for the VPVoucherDef entity.
@@ -23,4 +21,8 @@ public interface VPVoucherDefRepository extends JpaRepository<VPVoucherDef, Stri
 
      @Query(value = "select * from vp_voucher_def  order by product_id", nativeQuery = true)
     Optional<List<VPVoucherDef>> getAll();
+
+    @Query(
+        value="select count(id) from VPVoucherDef where id =:productId")
+    int getVouchersByProductId(@Param("productId") String productID);
 }

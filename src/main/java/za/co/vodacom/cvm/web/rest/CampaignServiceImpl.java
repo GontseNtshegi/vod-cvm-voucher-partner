@@ -148,11 +148,16 @@ public class CampaignServiceImpl implements CampaignApiDelegate {
         return new ResponseEntity<>(quantitiesResponseObjectList, HttpStatus.OK);
     }
 
-    /*
-    private static <T> Set<T> findCommonElements(List<T> first, List<T> second) {
-        return first.stream().filter(second::contains).collect(Collectors.toSet());
+    private boolean checkAllProductsExist(List<String> addList) {
+        for (String productId : addList) {
+            int count = voucherDefService.getVouchersByProductId(productId);
+            if (count == 0) {
+                return false; // productId does not exist
+            }
+        }
+        return true; // All productIds exist
     }
-    */
+
 
     @Override
     public ResponseEntity<LinkDelinkResponse> linkDelinkProduct(String campaignid, LinkDelinkRequest linkDelinkRequest) {
@@ -176,62 +181,71 @@ public class CampaignServiceImpl implements CampaignApiDelegate {
             List<String> removeL = Arrays.asList(linkDelinkRequest.getRemoveProducts().split(","));
             List<String> removeList = new ArrayList<>(removeL);
 
-            if (addList.containsAll(removeList)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Clashing product IDs.");
-            }
+            boolean allItemsExist = checkAllProductsExist(addList);
 
-            int numAdded = 0;
-            int numRemoved = 0;
+            if (!allItemsExist) {
+                // throw an exception, log an error
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, " Invalid product in addProducts.");
+            } else {
+                if (addList.containsAll(removeList)) {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Clashing product IDs.");
+                }
 
-            // Add products
-            Optional<List<VPCampaignVouchers>> addProductList = vpCampaignVouchersService.getVouchersByProductId(addList);
+                int numAdded = 0;
+                int numRemoved = 0;
 
-            if (addProductList.isPresent()) {
-                for (VPCampaignVouchers vpCampaignVouchers : addProductList.get()) {
-                    log.debug("Add ProductId: {}", vpCampaignVouchers.getProductId());
-                    if (vpCampaignVouchers.getActiveYN().equals(Constants.YES)) {
-                        addList.remove(vpCampaignVouchers.getProductId());
-                        numAdded++;
+                List<VPCampaignVouchers> addProductList = vpCampaignVouchersService.getVouchersByCampaign(Long.valueOf(campaignid)); //change to list
+
+                if (addProductList.isEmpty()) { //checking if there are such products
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                }
+
+                for (String productID : addList) { // Looping through each product to be added to the db
+
+                    Optional<VPCampaignVouchers> voucher = vpCampaignVouchersService.findVoucherByProductIdandCampaignId(Long.valueOf(campaignid), productID);
+                    if (voucher.isPresent()) {
+                        VPCampaignVouchers cpVoucher = voucher.get();
+                        if (cpVoucher.getActiveYN().equals(Constants.NO)) {
+                            cpVoucher.setActiveYN(Constants.YES);
+                            cpVoucher.setModifiedDate(ZonedDateTime.now());
+                            vpCampaignVouchersService.save(cpVoucher);
+                            numAdded++;
+                        }
                     } else {
-                        vpCampaignVouchers.setActiveYN(Constants.YES);
-                        vpCampaignVouchersService.save(vpCampaignVouchers);
-                        addList.remove(vpCampaignVouchers.getProductId());
-                        numAdded++;
+                        vpCampaignVouchersService.save(new VPCampaignVouchers() //Product is not in db add it to db.
+                            .campaignId(Long.valueOf(campaignid))
+                            .productId(productID)
+                            .createDate(ZonedDateTime.now())
+                            .modifiedDate(ZonedDateTime.now())
+                            .activeYN(Constants.YES));
+                             numAdded++;
                     }
                 }
-            }
-            for (String toBeInserted : addList) {
-                log.debug("Inserting productId: {}", toBeInserted);
-                vpCampaignVouchersService.save(new VPCampaignVouchers()
-                    .campaignId(Long.valueOf(campaignid))
-                    .productId(toBeInserted)
-                    .createDate(ZonedDateTime.now())
-                    .modifiedDate(ZonedDateTime.now())
-                    .activeYN(Constants.YES));
-                numAdded++;
-            }
 
-            // Remove products
-            Optional<List<VPCampaignVouchers>> removeProductList = vpCampaignVouchersService.getVouchersByProductId(removeList);
-
-            if (removeProductList.isPresent()) {
-                for (VPCampaignVouchers vpCampaignVouchers : removeProductList.get()) {
-                    log.debug("Remove ProductId: {}", vpCampaignVouchers.getProductId());
-                    if (vpCampaignVouchers.getActiveYN().equals(Constants.NO)) {
-                        removeList.remove(vpCampaignVouchers.getProductId());
-                    } else {
-                        vpCampaignVouchers.setActiveYN(Constants.NO);
-                        vpCampaignVouchersService.save(vpCampaignVouchers);
-                        numRemoved++;
+                List<VPCampaignVouchers> removeProductsList = vpCampaignVouchersService.getVouchersByCampaign(Long.valueOf(campaignid)); //Updated products list
+                if (removeProductsList.isEmpty()) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                }
+                for (String productId : removeList) {
+                    Optional<VPCampaignVouchers> voucher = vpCampaignVouchersService.findVoucherByProductIdandCampaignId(Long.valueOf(campaignid), productId);
+                    if (voucher.isPresent()) {
+                        if (voucher.get().getActiveYN().equals(Constants.YES)) {
+                            voucher.get().setActiveYN(Constants.NO);
+                            voucher.get().setModifiedDate(ZonedDateTime.now());
+                            vpCampaignVouchersService.save(voucher.get());
+                            numRemoved++;
+                        }
                     }
                 }
+                return new ResponseEntity<>(new LinkDelinkResponse().campaignId(campaignid).numAdded(numAdded).numDeleted(numRemoved), HttpStatus.OK);
             }
-
-            return new ResponseEntity<>(new LinkDelinkResponse().campaignId(campaignid).numAdded(numAdded).numDeleted(numRemoved), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid CampaignID.");
+
     }
+
 }
+
+
 
 

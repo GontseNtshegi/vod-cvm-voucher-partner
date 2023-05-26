@@ -7,23 +7,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.zalando.problem.Status;
+import za.co.vodacom.cvm.config.Constants;
+import za.co.vodacom.cvm.domain.VPBatch;
+import za.co.vodacom.cvm.exception.BatchException;
 import za.co.vodacom.cvm.service.VPBatchService;
 import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
 import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 
-import java.time.*;
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.zalando.problem.Status;
-import za.co.vodacom.cvm.config.Constants;
-import za.co.vodacom.cvm.domain.VPBatch;
-import za.co.vodacom.cvm.exception.BatchException;
-
-import javax.transaction.Transactional;
-import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -80,9 +79,9 @@ public class BatchServiceImpl implements BatchApiDelegate {
             newBatchEntry.setRestrictedYN(Constants.RESTRICTED_N);
             newBatchEntry.setCreateUser(batchRequest.getUserName());
             newBatchEntry.setStatus(Constants.STATUS_O);
-            newBatchEntry.setLoadDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
+            newBatchEntry.setLoadDate(null);
             newBatchEntry.setCreateDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
-            newBatchEntry.setActivateUser(batchRequest.getUserName());
+            newBatchEntry.setActivateUser(null);
 
             VPBatch result = vpBatchService.save(newBatchEntry);
             log.debug("VPBatch result {}", result);

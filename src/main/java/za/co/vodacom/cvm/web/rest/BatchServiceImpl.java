@@ -217,12 +217,18 @@ public class BatchServiceImpl implements BatchApiDelegate {
         BatchUploadResponse batchUploadResponse = new BatchUploadResponse();
 
         Optional<VPBatch> vpBatch = vpBatchService.getBatch(Long.valueOf(batchId));
+        log.debug("Using get  batch with ID :{}",batchId);
 
         if(vpBatch.isPresent()) {
+            log.debug("Fetched batch :{}",vpBatch);
+
             Optional<VPFileLoad> vpFileLoad = vpFileLoadService.findByBatchIdAndAndFileName(batchId,fileName);
+            log.debug("findByBatchId : {} and Filename called: {}",vpBatch,fileName);
             if(vpFileLoad.isPresent()){
+                log.debug("File name already exists throwing exception :{}",vpFileLoad);
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Filename already used");
             }else{
+
                 VPFileLoad vpFileLoad1 = new VPFileLoad();
 
                 vpFileLoad1.setBatchId(batchId);
@@ -235,15 +241,16 @@ public class BatchServiceImpl implements BatchApiDelegate {
                 vpFileLoadService.save(vpFileLoad1);
 
                 log.info("VPFileload : {} ", vpFileLoad1);
-                log.debug("VPFileload : {} " , vpFileLoad1);
+                log.debug(" Saved file VPFileload : {} " , vpFileLoad1);
 
                 //Create temp file name
                 String tempName = "upload" + System.currentTimeMillis() + ".csv";
                 try {
                     Path tempFile = Files.createTempFile(tempName, "");
                     data.transferTo(tempFile);
+                    log.debug(" Creating temp file name:{} for file:{}",tempName,tempFile);
 
-                JobParameters Parameters = new JobParametersBuilder()
+                    JobParameters Parameters = new JobParametersBuilder()
                     .addString("fullPathFileName", tempFile.toString())
                     .addLong("StartAt", System.currentTimeMillis()).toJobParameters();
 
@@ -258,6 +265,8 @@ public class BatchServiceImpl implements BatchApiDelegate {
                 vpFileLoad1.setNumFailed(vpVoucherDTO.getNumFailed());
                 vpFileLoad1.setNumLoaded(vpVoucherDTO.getNumLoaded());
                 vpFileLoadService.partialUpdate(vpFileLoad1);
+
+                log.debug("Updated batch :{}",vpFileLoad1);
 
                 batchUploadResponse.setNumFailed(BigDecimal.valueOf(vpVoucherDTO.getNumFailed()));
                 batchUploadResponse.setNumLoaded(BigDecimal.valueOf(vpVoucherDTO.getNumLoaded()));

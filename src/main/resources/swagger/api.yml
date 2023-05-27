@@ -377,14 +377,14 @@ paths:
         content:
           multipart/form-data:
             schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
+              $ref: '#/components/schemas/BatchUploadRequest'
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchUploadResponse'
         '204':
           description: No content
         '400':
@@ -1040,6 +1040,25 @@ components:
         status:
           type: string
           description: New updated response
+    BatchUploadRequest:
+      type: object
+      properties:
+        fileName:
+          type: string
+          description: Name of incoming csv file
+        data:
+          type: string
+          format: binary
+          description: Incoming csv file
+    BatchUploadResponse:
+      type: object
+      properties:
+        numLoaded:
+          type: number
+          description: number of successfully loaded rows
+        numFailed:
+          type: number
+          description: number of failed rows
 
 
     Problem:

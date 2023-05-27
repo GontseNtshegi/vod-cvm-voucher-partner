@@ -2,22 +2,38 @@ package za.co.vodacom.cvm.web.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.zalando.problem.Status;
 import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPBatch;
+import za.co.vodacom.cvm.domain.VPFileLoad;
 import za.co.vodacom.cvm.exception.BatchException;
 import za.co.vodacom.cvm.service.VPBatchService;
+import za.co.vodacom.cvm.service.VPFileLoadService;
+import za.co.vodacom.cvm.service.VPVouchersService;
 import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
+import za.co.vodacom.cvm.service.dto.voucher.VPVoucherDTO;
 import za.co.vodacom.cvm.web.api.BatchApiDelegate;
 import za.co.vodacom.cvm.web.api.model.*;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,8 +49,21 @@ public class BatchServiceImpl implements BatchApiDelegate {
     @Autowired
     VPBatchService vpBatchService;
 
-    BatchServiceImpl(VPBatchService vpBatchService) {
+    @Autowired
+    VPFileLoadService vpFileLoadService;
+    @Autowired
+    private JobLauncher jobLauncher;
+    @Autowired
+    VPVoucherDTO vpVoucherDTO ;
+    @Autowired
+    private Job job;
+
+    VPVouchersService vpVouchersService;
+
+    BatchServiceImpl(VPBatchService vpBatchService,VPFileLoadService vpFileLoadService, VPVouchersService vpVouchersService) {
         this.vpBatchService = vpBatchService;
+        this.vpFileLoadService = vpFileLoadService;
+        this.vpVouchersService = vpVouchersService;
     }
 
     @Override
@@ -178,6 +207,68 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
         return new ResponseEntity<>(batchStatusResponse, HttpStatus.OK);
 
+    }
+
+    @Override
+    public ResponseEntity<BatchUploadResponse> batchUpload(Integer batchId,
+                                                           String fileName,
+                                                           MultipartFile data) {
+
+        BatchUploadResponse batchUploadResponse = new BatchUploadResponse();
+
+        Optional<VPBatch> vpBatch = vpBatchService.getBatch(Long.valueOf(batchId));
+
+        if(vpBatch.isPresent()) {
+            Optional<VPFileLoad> vpFileLoad = vpFileLoadService.findByBatchIdAndAndFileName(batchId,fileName);
+            if(vpFileLoad.isPresent()){
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Filename already used");
+            }else{
+                VPFileLoad vpFileLoad1 = new VPFileLoad();
+
+                vpFileLoad1.setBatchId(batchId);
+                vpFileLoad1.setFileName(fileName);
+                vpFileLoad1.setCompletedDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
+                vpFileLoad1.setCreateDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
+                vpFileLoad1.setNumLoaded(0);
+                vpFileLoad1.setNumFailed(0);
+
+                vpFileLoadService.save(vpFileLoad1);
+
+                log.info("VPFileload : {} ", vpFileLoad1);
+                log.debug("VPFileload : {} " , vpFileLoad1);
+
+                //Create temp file name
+                String tempName = "upload" + System.currentTimeMillis() + ".csv";
+                try {
+                    Path tempFile = Files.createTempFile(tempName, "");
+                    data.transferTo(tempFile);
+
+                JobParameters Parameters = new JobParametersBuilder()
+                    .addString("fullPathFileName", tempFile.toString())
+                    .addLong("StartAt", System.currentTimeMillis()).toJobParameters();
+
+                    jobLauncher.run(job, Parameters);
+                } catch (IOException | JobExecutionAlreadyRunningException | JobRestartException
+                         | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
+
+                    e.printStackTrace();
+                }
+
+                vpFileLoad1.setBatchId(batchId);
+                vpFileLoad1.setNumFailed(vpVoucherDTO.getNumFailed());
+                vpFileLoad1.setNumLoaded(vpVoucherDTO.getNumLoaded());
+                vpFileLoadService.partialUpdate(vpFileLoad1);
+
+                batchUploadResponse.setNumFailed(BigDecimal.valueOf(vpVoucherDTO.getNumFailed()));
+                batchUploadResponse.setNumLoaded(BigDecimal.valueOf(vpVoucherDTO.getNumLoaded()));
+
+            }
+
+        }else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid batch ID");
+        }
+
+        return new ResponseEntity<>(batchUploadResponse,HttpStatus.OK);
     }
 
 }

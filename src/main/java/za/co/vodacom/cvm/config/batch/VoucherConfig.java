@@ -118,7 +118,7 @@ public class VoucherConfig {
             .processor(processor())
             .writer(itemWriter)
             .faultTolerant()
-            .skipLimit(10)
+            .skipLimit(100000)
             .skip(FlatFileParseException.class)
             .listener(stepExecutionListener())
             .build();

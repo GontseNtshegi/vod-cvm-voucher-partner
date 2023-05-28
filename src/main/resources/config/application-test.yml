@@ -81,6 +81,10 @@ spring:
   batch:
     job:
       enabled: false
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 # ===================================================================
 # To enable TLS in production, generate a certificate using:

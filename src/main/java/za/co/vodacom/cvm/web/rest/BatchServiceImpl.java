@@ -84,7 +84,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
             batchListResponseObject.setBatchName(vpBatch.getName());
             batchListResponseObject.setStatus(vpBatch.getStatus());
             batchListResponseObject.setActivateUser(vpBatch.getActivateUser());
-            batchListResponseObject.setLoadDate(vpBatch.getLoadDate().toOffsetDateTime());
+            batchListResponseObject.setLoadDate(batchListResponseObject.getLoadDate() == null ? null : batchListResponseObject.getLoadDate());
             batchListResponseObject.setCreateUser(vpBatch.getCreateUser());
             batchListResponseObjects.add(batchListResponseObject);
         }));

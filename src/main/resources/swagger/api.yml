@@ -767,9 +767,6 @@ components:
         encryptedYN:
           type: string
           description: Whether the voucher code should be encrypted in the database. Should always be Y
-        extSyncSys:
-          type: string
-          description: Whether the stock levels in VP_VOUCHERS should be synced at certain intervals with another system such as Magento
     VoucherValidationResponse:
       type: object
       properties:
@@ -796,7 +793,7 @@ components:
     BatchListResponseObject:
       type: object
       properties:
-        ID:
+        Id:
           type: integer
           description: Batch Identifier
         batchName:
@@ -824,9 +821,46 @@ components:
           description: The user who activated the batch
 
     BatchDetailsResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/BatchDetailsResponseObject'
+      type: object
+      properties:
+        Id:
+          type: integer
+          description: The unique id of the batch
+        batchName:
+          type: string
+          description: The unique id of the batch
+        batchComment:
+          type: string
+          description: A descriptive comment for the batch
+        createDate:
+          type: string
+          format: date-time
+          description: The date that the batch was created
+        loadDate:
+          type: string
+          format: date-time
+          description: The date when the loading was completed
+        status:
+          type: string
+          description: The status of the batch. Can be one of
+            (O)pen, (A)ctivated, (D)eleted
+        createUser:
+          type: string
+          description: The user who initially created the batch
+        activateUser:
+          type: string
+          description: The user who activated the batch
+        deleteUser:
+          type: string
+          description: The user who deleted the batch, if this was the case
+        deleteDate:
+          type: string
+          format: date-time
+          description: The date when the batch was deleted, if this was the case
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/BatchDetailsResponseObject'
     BatchDetailsResponseObject:
       type: object
       properties:
@@ -850,15 +884,15 @@ components:
           description: quantities of vouchers linked to batch
         startDate:
           type: string
-          format: date
+          format: date-time
           description: start date
         endDate:
           type: string
-          format: date
+          format: date-time
           description: end date
         voucherExpiryDate:
           type: string
-          format: date
+          format: date-time
           description: voucher expiry date
     BatchRequest:
       type: object
@@ -918,7 +952,7 @@ components:
           type: string
           example: '2021-03-03 16:40:35.796'
           description: The end date/time of the campaign
-        "campaignProductId":
+        "products":
           type: array
           items:
             $ref: '#/components/schemas/VoucherProductResponseObject'
@@ -987,11 +1021,9 @@ components:
           description: The number of vouchers.
         endDate:
           type: string
-          format: date
           description: The external system being used for the issuing of real time vouchers
         voucherExpiryDate:
           type: string
-          format: date
           description: The default validity period in days, relative to the date of issue
     BatchStatusRequest:
       type: object

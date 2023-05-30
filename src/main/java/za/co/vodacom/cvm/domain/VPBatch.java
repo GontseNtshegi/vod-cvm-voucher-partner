@@ -1,12 +1,13 @@
 package za.co.vodacom.cvm.domain;
 
-import java.io.Serializable;
-import java.time.ZonedDateTime;
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.time.ZonedDateTime;
 
 /**
  * A VPBatch.
@@ -57,14 +58,13 @@ public class VPBatch implements Serializable {
     @Column(name = "create_user", length = 100, nullable = false)
     private String createUser;
 
-    @NotNull
+
     @Size(max = 100)
     @Column(name = "activate_user", length = 100, nullable = false)
     private String activateUser;
 
-    @NotNull
     @Size(max = 100)
-    @Column(name = "delete_user", length = 100, nullable = false)
+    @Column(name = "delete_user", length = 100)
     private String deleteUser;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

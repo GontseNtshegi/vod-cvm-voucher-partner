@@ -1,7 +1,5 @@
 package za.co.vodacom.cvm.service.impl;
 
-import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -9,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPCampaignVouchers;
 import za.co.vodacom.cvm.repository.VPCampaignVouchersRepository;
 import za.co.vodacom.cvm.service.VPCampaignVouchersService;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link VPCampaignVouchers}.
@@ -92,11 +93,22 @@ public class VPCampaignVouchersServiceImpl implements VPCampaignVouchersService 
         return vPCampaignVouchersRepository.findByProductIdAndCampaignIdAndActiveYN(productId, campaignId, activeYN);
     }
 
-    public Optional<List<VPCampaignVouchers>> getVouchersByProductId(List<String> campaignId) {
-        log.debug("Request to find vouchers related to a campaign using productId.");
-        return vPCampaignVouchersRepository.getVouchersByProductId(campaignId);
+    @Override
+    public List<VPCampaignVouchers> getVouchersByCampaign(Long campaignId) {
+        log.debug("Request to find all products that are linked to campaign : {}",campaignId);
+        log.info("Request to find all products that are linked to a campaign.");
+        return vPCampaignVouchersRepository.findProductsByCampaignId(campaignId);
     }
 
-}
+    @Override
+    public Optional<VPCampaignVouchers> findVoucherByProductIdandCampaignId(Long campaignid,String productid){
+       // log.info("Request to get product by campaingId and productId.");
+        log.debug("Request to get product by campaingId : {} and productId.{}",campaignid, productid);
+
+        return vPCampaignVouchersRepository.findVoucherByProductIdandCampaignId(campaignid,productid);
+    }
+
+    }
+
 
 

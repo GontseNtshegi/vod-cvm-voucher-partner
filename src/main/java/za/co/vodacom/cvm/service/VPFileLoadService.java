@@ -1,10 +1,9 @@
 package za.co.vodacom.cvm.service;
 
+import za.co.vodacom.cvm.domain.VPFileLoad;
+
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.data.repository.query.Param;
-import za.co.vodacom.cvm.domain.VPFileLoad;
 
 /**
  * Service Interface for managing {@link VPFileLoad}.

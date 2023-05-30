@@ -1,16 +1,15 @@
 package za.co.vodacom.cvm.service.impl;
 
-import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import za.co.vodacom.cvm.domain.VPBatch;
 import za.co.vodacom.cvm.domain.VPFileLoad;
 import za.co.vodacom.cvm.repository.VPFileLoadRepository;
 import za.co.vodacom.cvm.service.VPFileLoadService;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link VPFileLoad}.

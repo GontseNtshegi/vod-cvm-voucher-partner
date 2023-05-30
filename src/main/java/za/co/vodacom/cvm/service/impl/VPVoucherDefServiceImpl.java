@@ -1,7 +1,5 @@
 package za.co.vodacom.cvm.service.impl;
 
-import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -9,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPVoucherDef;
 import za.co.vodacom.cvm.repository.VPVoucherDefRepository;
 import za.co.vodacom.cvm.service.VPVoucherDefService;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link VPVoucherDef}.
@@ -119,5 +120,12 @@ public class VPVoucherDefServiceImpl implements VPVoucherDefService {
         log.info("Request to getAll VPVoucherDef");
         log.debug("Request to getAll VPVoucherDef :");
         return vPVoucherDefRepository.getAll();
+    }
+
+    @Override
+    public int getVouchersByProductId(String productID) {
+        log.debug("Request to get Product count by productID in VPCampaignVouchers. : {}",productID);
+        log.info("Request to get Product count by productID in VPCampaignVouchers.");
+        return vPVoucherDefRepository.getVouchersByProductId(productID);
     }
 }

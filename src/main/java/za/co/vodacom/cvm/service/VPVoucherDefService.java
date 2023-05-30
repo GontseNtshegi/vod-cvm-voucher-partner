@@ -1,8 +1,9 @@
 package za.co.vodacom.cvm.service;
 
+import za.co.vodacom.cvm.domain.VPVoucherDef;
+
 import java.util.List;
 import java.util.Optional;
-import za.co.vodacom.cvm.domain.VPVoucherDef;
 
 /**
  * Service Interface for managing {@link VPVoucherDef}.
@@ -58,4 +59,7 @@ public interface VPVoucherDefService {
      * @return
      */
     Optional<List<VPVoucherDef>> getAll();
+
+    int getVouchersByProductId(String productID);
+
 }

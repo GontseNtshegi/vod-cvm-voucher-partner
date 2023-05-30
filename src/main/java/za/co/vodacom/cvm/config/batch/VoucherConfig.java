@@ -22,9 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.FileSystemResource;
-import za.co.vodacom.cvm.domain.VPFileLoad;
 import za.co.vodacom.cvm.domain.VPVouchers;
-import za.co.vodacom.cvm.repository.VPFileLoadRepository;
 import za.co.vodacom.cvm.repository.VPVouchersRepository;
 import za.co.vodacom.cvm.service.dto.voucher.VPVoucherDTO;
 
@@ -43,11 +41,16 @@ public class VoucherConfig {
     public VPVouchersRepository vpVouchersRepository;
 
     @Bean
-    public VoucherFieldSetMapper voucherFieldSetMapper(){
-        return new VoucherFieldSetMapper();
+    public VoucherFieldSetMapper voucherFieldSetMapper(VPVoucherDTO vpVoucherDTO){
+        return new VoucherFieldSetMapper(vpVoucherDTO);
     }
 
     public static final Logger log = LoggerFactory.getLogger(VoucherConfig.class);
+
+    @Bean
+    public VPVoucherDTO responseDTO() {
+        return new VPVoucherDTO();
+    }
     @Bean
     @StepScope
     public FlatFileItemReader reader(@Value("#{jobParameters[fullPathFileName]}") String pathToFile){
@@ -59,7 +62,7 @@ public class VoucherConfig {
             .names("quantity","product_id","description","voucher_code",
                 "collection_point","start_date","end_date",
                 "expiry_date")
-            .fieldSetMapper(voucherFieldSetMapper()).linesToSkip(1)
+            .fieldSetMapper(voucherFieldSetMapper(responseDTO())).linesToSkip(1)
             .build();
     }
 
@@ -90,10 +93,7 @@ public class VoucherConfig {
         };
     }
 
-    @Bean
-    public VPVoucherDTO responseDTO() {
-        return new VPVoucherDTO();
-    }
+
     @Bean
     public JobExecutionListener jobExecutionListener() {
         return new JobExecutionListenerSupport() {
@@ -115,12 +115,12 @@ public class VoucherConfig {
     @Bean
     public Step step(ItemReader<VPVouchers> itemReader , ItemWriter<VPVouchers> itemWriter) throws Exception {
         return this.stepBuilderFactory.get("step")
-            .<VPVouchers,VPVouchers>chunk(10)
+            .<VPVouchers,VPVouchers>chunk(1000)
             .reader(itemReader)
             .processor(processor())
             .writer(itemWriter)
             .faultTolerant()
-            .skipLimit(10)
+            .skipLimit(1000)
             .skip(FlatFileParseException.class)
             .listener(stepExecutionListener())
             .build();

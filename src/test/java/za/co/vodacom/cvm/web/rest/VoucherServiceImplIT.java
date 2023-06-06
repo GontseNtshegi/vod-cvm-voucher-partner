@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static za.co.vodacom.cvm.web.rest.TestUtil.sameInstant;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -135,10 +136,10 @@ public class VoucherServiceImplIT {
 
     public static VPCampaign createCampaign() {
         VPCampaign vpCampaign = new VPCampaign()
-            .endDate(OffsetDateTime.now().toZonedDateTime().plusDays(7L))
+            .endDate(LocalDateTime.from(OffsetDateTime.now().toZonedDateTime().plusDays(7L)))
             .id(21L)
             .name("MegaShake")
-            .startDate(OffsetDateTime.now().toZonedDateTime());
+            .startDate(LocalDateTime.from(OffsetDateTime.now().toZonedDateTime()));
 
         return vpCampaign;
     }

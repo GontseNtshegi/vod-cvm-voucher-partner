@@ -81,7 +81,10 @@ spring:
   batch:
     job:
       enabled: false
-
+  servlet:
+    multipart:
+     max-file-size: 512MB
+     max-request-size: 512B
 # ===================================================================
 # To enable TLS in production, generate a certificate using:
 # keytool -genkey -alias voucherpartner -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650

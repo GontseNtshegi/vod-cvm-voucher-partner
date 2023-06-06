@@ -72,7 +72,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
         Optional<List<VPBatch>> listOptional ;
 
         if(period!=null && period > 0) {
-          listOptional = vpBatchService.getAllListWithInterval(period);
+            listOptional = vpBatchService.getAllListWithInterval(period);
         } else {
             listOptional = vpBatchService.getAll();
         }
@@ -240,6 +240,8 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
                 vpFileLoadService.save(vpFileLoad1);
 
+                vpVoucherDTO.setBatchId(batchId);
+
                 log.info("VPFileload : {} ", vpFileLoad1);
                 log.debug(" Saved file VPFileload : {} " , vpFileLoad1);
 
@@ -251,8 +253,8 @@ public class BatchServiceImpl implements BatchApiDelegate {
                     log.debug(" Creating temp file name:{} for file:{}",tempName,tempFile);
 
                     JobParameters Parameters = new JobParametersBuilder()
-                    .addString("fullPathFileName", tempFile.toString())
-                    .addLong("StartAt", System.currentTimeMillis()).toJobParameters();
+                        .addString("fullPathFileName", tempFile.toString())
+                        .addLong("StartAt", System.currentTimeMillis()).toJobParameters();
 
                     jobLauncher.run(job, Parameters);
                 } catch (IOException | JobExecutionAlreadyRunningException | JobRestartException

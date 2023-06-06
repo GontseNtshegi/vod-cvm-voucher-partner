@@ -42,12 +42,16 @@ public class VoucherConfig {
     public VPVouchersRepository vpVouchersRepository;
 
     @Bean
-    public VoucherFieldSetMapper voucherFieldSetMapper() {
-        return new VoucherFieldSetMapper();
+    public VoucherFieldSetMapper voucherFieldSetMapper(VPVoucherDTO vpVoucherDTO){
+        return new VoucherFieldSetMapper(vpVoucherDTO);
     }
 
     public static final Logger log = LoggerFactory.getLogger(VoucherConfig.class);
 
+    @Bean
+    public VPVoucherDTO responseDTO() {
+        return new VPVoucherDTO();
+    }
     @Bean
     @StepScope
     public FlatFileItemReader reader(@Value("#{jobParameters[fullPathFileName]}") String pathToFile) {
@@ -59,7 +63,7 @@ public class VoucherConfig {
             .names("quantity", "product_id", "description", "voucher_code",
                 "collection_point", "start_date", "end_date",
                 "expiry_date")
-            .fieldSetMapper(voucherFieldSetMapper()).linesToSkip(1)
+            .fieldSetMapper(voucherFieldSetMapper(responseDTO())).linesToSkip(1)
             .build();
     }
 
@@ -91,10 +95,6 @@ public class VoucherConfig {
         };
     }
 
-    @Bean
-    public VPVoucherDTO responseDTO() {
-        return new VPVoucherDTO();
-    }
 
     @Bean
     public JobExecutionListener jobExecutionListener() {
@@ -118,13 +118,12 @@ public class VoucherConfig {
     @Bean
     public Step step(ItemReader<VPVouchers> itemReader, ItemWriter<VPVouchers> itemWriter) throws Exception {
         return this.stepBuilderFactory.get("step")
-            .<VPVouchers, VPVouchers>chunk(10)
+            .<VPVouchers,VPVouchers>chunk(1000)
             .reader(itemReader)
             .processor(processor())
             .writer(itemWriter)
             .faultTolerant()
-            .listener(skipListener())
-            .skipLimit(10000)
+            .skipLimit(1000)
             .skip(FlatFileParseException.class)
             .build();
     }

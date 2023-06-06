@@ -42,16 +42,13 @@ public class VoucherConfig {
     public VPVouchersRepository vpVouchersRepository;
 
     @Bean
-    public VoucherFieldSetMapper voucherFieldSetMapper(VPVoucherDTO vpVoucherDTO){
-        return new VoucherFieldSetMapper(vpVoucherDTO);
+    public VoucherFieldSetMapper voucherFieldSetMapper(){
+        return new VoucherFieldSetMapper();
     }
 
     public static final Logger log = LoggerFactory.getLogger(VoucherConfig.class);
 
-    @Bean
-    public VPVoucherDTO responseDTO() {
-        return new VPVoucherDTO();
-    }
+
     @Bean
     @StepScope
     public FlatFileItemReader reader(@Value("#{jobParameters[fullPathFileName]}") String pathToFile) {
@@ -63,7 +60,7 @@ public class VoucherConfig {
             .names("quantity", "product_id", "description", "voucher_code",
                 "collection_point", "start_date", "end_date",
                 "expiry_date")
-            .fieldSetMapper(voucherFieldSetMapper(responseDTO())).linesToSkip(1)
+            .fieldSetMapper(voucherFieldSetMapper()).linesToSkip(1)
             .build();
     }
 
@@ -94,6 +91,11 @@ public class VoucherConfig {
             }
         };
     }
+    @Bean
+    public VPVoucherDTO responseDTO() {
+        return new VPVoucherDTO();
+    }
+
 
 
     @Bean
@@ -123,8 +125,10 @@ public class VoucherConfig {
             .processor(processor())
             .writer(itemWriter)
             .faultTolerant()
-            .skipLimit(1000)
+            .skipLimit(10000)
             .skip(FlatFileParseException.class)
+            .listener(stepExecutionListener())
+            .listener(skipListener())
             .build();
     }
 

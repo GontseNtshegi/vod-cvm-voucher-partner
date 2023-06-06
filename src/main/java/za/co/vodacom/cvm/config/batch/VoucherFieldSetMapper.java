@@ -16,21 +16,11 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class VoucherFieldSetMapper implements FieldSetMapper<VPVouchers> {
-    private final VPVoucherDTO vpVoucherDTO;
-
-    public VoucherFieldSetMapper(VPVoucherDTO vpVoucherDTO) {
-        this.vpVoucherDTO = vpVoucherDTO;
-    }
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
 
     public static final Logger log = LoggerFactory.getLogger(VoucherFieldSetMapper.class);
-
-    @Bean
-    public VPVoucherDTO responseDTO() {
-        return new VPVoucherDTO();
-    }
 
     @Override
     public VPVouchers mapFieldSet(FieldSet fieldSet) throws BindException {
@@ -42,7 +32,6 @@ public class VoucherFieldSetMapper implements FieldSetMapper<VPVouchers> {
             vpVouchers.setProductId(fieldSet.readString("product_id"));
             vpVouchers.setDescription(fieldSet.readString("description"));
             vpVouchers.setVoucherCode(fieldSet.readString("voucher_code"));
-            vpVouchers.setBatchId(vpVoucherDTO.getBatchId());
             vpVouchers.setCollectionPoint(fieldSet.readString("collection_point"));
             vpVouchers.setStartDate(ZonedDateTime.parse(fieldSet.readString("start_date"), DATE_TIME_FORMATTER.withZone(ZoneOffset.UTC)));
             vpVouchers.setEndDate(ZonedDateTime.parse(fieldSet.readString("end_date"), DATE_TIME_FORMATTER.withZone(ZoneOffset.UTC)));

@@ -10,7 +10,7 @@ public class StepSkipListener implements SkipListener<VPVouchers,Number> {
     Logger log = LoggerFactory.getLogger(StepSkipListener.class);
     @Override
     public void onSkipInRead(Throwable throwable) {
-        log.debug("Error occured on read : {}", throwable.getMessage());
+        log.debug("Error occured on  read with error {}",throwable.getMessage());
     }
 
     @Override

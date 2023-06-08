@@ -8,8 +8,6 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.listener.JobExecutionListenerSupport;
-import org.springframework.batch.core.listener.StepExecutionListenerSupport;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.data.RepositoryItemWriter;
@@ -22,10 +20,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.FileSystemResource;
+import za.co.vodacom.cvm.config.listener.JobExecutionListener;
 import za.co.vodacom.cvm.config.listener.StepSkipListener;
 import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.repository.VPVouchersRepository;
 import za.co.vodacom.cvm.service.dto.voucher.VPVoucherDTO;
+import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
 
 import java.io.File;
 
@@ -47,7 +47,6 @@ public class VoucherConfig {
     }
 
     public static final Logger log = LoggerFactory.getLogger(VoucherConfig.class);
-
 
     @Bean
     @StepScope
@@ -76,21 +75,21 @@ public class VoucherConfig {
         return new VoucherProcessor();
     }
 
-    @Bean
-    public StepExecutionListener stepExecutionListener() {
-        return new StepExecutionListenerSupport() {
-            @Override
-            public ExitStatus afterStep(StepExecution stepExecution) {
-                int writeCount = stepExecution.getWriteCount();
-                int failed = stepExecution.getSkipCount();
-
-                stepExecution.getJobExecution().getExecutionContext().putInt("processedCount", writeCount);
-                stepExecution.getJobExecution().getExecutionContext().putInt("failedCount", failed);
-
-                return super.afterStep(stepExecution);
-            }
-        };
-    }
+//    @Bean
+//    public StepExecutionListener stepExecutionListener() {
+//        return new StepExecutionListenerSupport() {
+//            @Override
+//            public ExitStatus afterStep(StepExecution stepExecution) {
+//                int writeCount = stepExecution.getWriteCount();
+//                int failed = stepExecution.getSkipCount();
+//
+//                stepExecution.getJobExecution().getExecutionContext().putInt("processedCount", writeCount);
+//                stepExecution.getJobExecution().getExecutionContext().putInt("failedCount", failed);
+//
+//                return super.afterStep(stepExecution);
+//            }
+//        };
+//    }
     @Bean
     public VPVoucherDTO responseDTO() {
         return new VPVoucherDTO();
@@ -98,24 +97,24 @@ public class VoucherConfig {
 
 
 
-    @Bean
-    public JobExecutionListener jobExecutionListener() {
-        return new JobExecutionListenerSupport() {
-            @Override
-            public void afterJob(JobExecution jobExecution) {
-                int processedCount = jobExecution.getExecutionContext().getInt("processedCount");
-                int failedCount = jobExecution.getExecutionContext().getInt("failedCount");
-
-                VPVoucherDTO responseDTO = responseDTO();
-
-                responseDTO.setNumLoaded(processedCount);
-                responseDTO.setNumFailed(failedCount);
-
-                log.debug("VPVoucherDTO {} ", responseDTO);
-
-            }
-        };
-    }
+//    @Bean
+//    public JobExecutionListener jobExecutionListener() {
+//        return new JobExecutionListenerSupport() {
+//            @Override
+//            public void afterJob(JobExecution jobExecution) {
+//                int processedCount = jobExecution.getExecutionContext().getInt("processedCount");
+//                int failedCount = jobExecution.getExecutionContext().getInt("failedCount");
+//
+//                VPVoucherDTO responseDTO = responseDTO();
+//
+//                responseDTO.setNumLoaded(processedCount);
+//                responseDTO.setNumFailed(failedCount);
+//
+//                log.debug("VPVoucherDTO {} ", responseDTO);
+//
+//            }
+//        };
+//    }
 
     @Bean
     public Step step(ItemReader<VPVouchers> itemReader, ItemWriter<VPVouchers> itemWriter) throws Exception {
@@ -123,12 +122,12 @@ public class VoucherConfig {
             .<VPVouchers,VPVouchers>chunk(1000)
             .reader(itemReader)
             .processor(processor())
-            .writer(itemWriter)
             .faultTolerant()
+            .listener(skipListener())
             .skipLimit(10000)
             .skip(FlatFileParseException.class)
-            .listener(stepExecutionListener())
-            .listener(skipListener())
+            .skip(BadRequestAlertException.class)
+            .writer(itemWriter)
             .build();
     }
 
@@ -137,7 +136,7 @@ public class VoucherConfig {
         return this.jobBuilderFactory.get("VPFile-Job")
             .incrementer(new RunIdIncrementer())
             .start(step)
-            .listener(jobExecutionListener())
+            .listener( new JobExecutionListener())
             .build();
 
     }

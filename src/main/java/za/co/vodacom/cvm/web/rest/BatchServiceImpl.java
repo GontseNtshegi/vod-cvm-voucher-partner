@@ -234,6 +234,15 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
                 VPFileLoad vpFileLoad1 = new VPFileLoad();
 
+                vpFileLoad1.setBatchId(batchId);
+                vpFileLoad1.setFileName(fileName);
+                vpFileLoad1.setCompletedDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
+                vpFileLoad1.setCreateDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
+                vpFileLoad1.setNumLoaded(0);
+                vpFileLoad1.setNumFailed(0);
+
+                savedFileLoad = vpFileLoadService.save(vpFileLoad1);
+
                 //Create temp file name
                 String tempName = "upload" + System.currentTimeMillis() + ".csv";
                 try {
@@ -244,15 +253,6 @@ public class BatchServiceImpl implements BatchApiDelegate {
                     JobParameters Parameters = new JobParametersBuilder()
                         .addString("fullPathFileName", tempFile.toString())
                         .addLong("StartAt", System.currentTimeMillis()).toJobParameters();
-
-                    vpFileLoad1.setBatchId(batchId);
-                    vpFileLoad1.setFileName(fileName);
-                    vpFileLoad1.setCompletedDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
-                    vpFileLoad1.setCreateDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
-                    vpFileLoad1.setNumLoaded(0);
-                    vpFileLoad1.setNumFailed(0);
-
-                    savedFileLoad = vpFileLoadService.save(vpFileLoad1);
 
                     log.debug(" Saved file VPFileload : {} ", savedFileLoad);
 
@@ -265,8 +265,6 @@ public class BatchServiceImpl implements BatchApiDelegate {
                 Optional<StepExecution> stepExecutionOptional = jobExecution.getStepExecutions().stream().findFirst();
                 log.debug("Contents of job execution:{}", jobExecution.getStepExecutions().stream().findFirst());
                 StepExecution stepExecutionDetails = stepExecutionOptional.get();
-
-//                savedFileLoad.setBatchId(batchId);
 
                 savedFileLoad.setNumFailed(stepExecutionDetails.getSkipCount());
                 savedFileLoad.setNumLoaded(stepExecutionDetails.getWriteCount());
@@ -286,9 +284,10 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
         return new ResponseEntity<>(batchUploadResponse, HttpStatus.OK);
     }
+
     public Long fieldId() {//must be populated with the seq from the row inserted into VP_FILE_LOAD
 
-        return savedFileLoad.getId() ;
+        return savedFileLoad.getId();
     }
 
     public Integer batchIdValue() {//The incoming batchId

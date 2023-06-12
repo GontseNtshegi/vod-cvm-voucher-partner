@@ -20,7 +20,7 @@ logging:
     org.hibernate.SQL: DEBUG
     za.co.vodacom.cvm: DEBUG
     com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver: WARN
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    #org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 
 eureka:

@@ -15,11 +15,13 @@
 
 logging:
   level:
-    ROOT: INFO
-    tech.jhipster: INFO
+    ROOT: DEBUG
+    tech.jhipster: DEBUG
     org.hibernate.SQL: DEBUG
     za.co.vodacom.cvm: DEBUG
     com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver: WARN
+    #org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
 
 eureka:
   instance:
@@ -86,9 +88,8 @@ spring:
       enabled: false
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
-
+      max-file-size: 512MB
+      max-request-size: 512MB
 server:
   port: 8087
 

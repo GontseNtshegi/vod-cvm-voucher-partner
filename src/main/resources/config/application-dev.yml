@@ -84,9 +84,9 @@ spring:
     job:
       enabled: false
   servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+   multipart:
+      max-file-size: 512MB
+      max-request-size: 512MB
 
 server:
   port: 8087

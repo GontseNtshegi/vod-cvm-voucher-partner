@@ -2,15 +2,13 @@ package za.co.vodacom.cvm.web.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -42,6 +40,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RefreshScope
 public class BatchServiceImpl implements BatchApiDelegate {
 
     public static final Logger log = LoggerFactory.getLogger(BatchServiceImpl.class);
@@ -54,13 +53,15 @@ public class BatchServiceImpl implements BatchApiDelegate {
     @Autowired
     private JobLauncher jobLauncher;
     @Autowired
-    VPVoucherDTO vpVoucherDTO ;
+    VPVoucherDTO vpVoucherDTO;
     @Autowired
     private Job job;
 
+    VPFileLoad savedFileLoad;
+
     VPVouchersService vpVouchersService;
 
-    BatchServiceImpl(VPBatchService vpBatchService,VPFileLoadService vpFileLoadService, VPVouchersService vpVouchersService) {
+    BatchServiceImpl(VPBatchService vpBatchService, VPFileLoadService vpFileLoadService, VPVouchersService vpVouchersService) {
         this.vpBatchService = vpBatchService;
         this.vpFileLoadService = vpFileLoadService;
         this.vpVouchersService = vpVouchersService;
@@ -69,9 +70,9 @@ public class BatchServiceImpl implements BatchApiDelegate {
     @Override
     public ResponseEntity<List<BatchListResponseObject>> batchList(Integer period) {
         List<BatchListResponseObject> batchListResponseObjects = new ArrayList<>();
-        Optional<List<VPBatch>> listOptional ;
+        Optional<List<VPBatch>> listOptional;
 
-        if(period!=null && period > 0) {
+        if (period != null && period > 0) {
             listOptional = vpBatchService.getAllListWithInterval(period);
         } else {
             listOptional = vpBatchService.getAll();
@@ -84,7 +85,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
             batchListResponseObject.setBatchName(vpBatch.getName());
             batchListResponseObject.setStatus(vpBatch.getStatus());
             batchListResponseObject.setActivateUser(vpBatch.getActivateUser());
-            batchListResponseObject.setLoadDate(vpBatch.getLoadDate().toOffsetDateTime());
+            batchListResponseObject.setLoadDate(batchListResponseObject.getLoadDate() == null ? null : batchListResponseObject.getLoadDate());
             batchListResponseObject.setCreateUser(vpBatch.getCreateUser());
             batchListResponseObjects.add(batchListResponseObject);
         }));
@@ -214,20 +215,22 @@ public class BatchServiceImpl implements BatchApiDelegate {
                                                            String fileName,
                                                            MultipartFile data) {
 
+
         BatchUploadResponse batchUploadResponse = new BatchUploadResponse();
+        JobExecution jobExecution = null;
 
         Optional<VPBatch> vpBatch = vpBatchService.getBatch(Long.valueOf(batchId));
-        log.debug("Using get  batch with ID :{}",batchId);
+        log.debug("Using get batch with ID :{}", batchId);
 
-        if(vpBatch.isPresent()) {
-            log.debug("Fetched batch :{}",vpBatch);
+        if (vpBatch.isPresent()) {
+            log.debug("Fetched batch :{}", vpBatch);
 
-            Optional<VPFileLoad> vpFileLoad = vpFileLoadService.findByBatchIdAndAndFileName(batchId,fileName);
-            log.debug("findByBatchId : {} and Filename called: {}",vpBatch,fileName);
-            if(vpFileLoad.isPresent()){
-                log.debug("File name already exists throwing exception :{}",vpFileLoad);
+            Optional<VPFileLoad> vpFileLoad = vpFileLoadService.findByBatchIdAndAndFileName(batchId, fileName);
+            log.debug("findByBatchId : {} and Filename called: {}", vpBatch, fileName);
+            if (vpFileLoad.isPresent()) {
+                log.debug("File name already exists throwing exception :{}", vpFileLoad);
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Filename already used");
-            }else{
+            } else {
 
                 VPFileLoad vpFileLoad1 = new VPFileLoad();
 
@@ -238,48 +241,58 @@ public class BatchServiceImpl implements BatchApiDelegate {
                 vpFileLoad1.setNumLoaded(0);
                 vpFileLoad1.setNumFailed(0);
 
-                vpFileLoadService.save(vpFileLoad1);
-
-                vpVoucherDTO.setBatchId(batchId);
-
-                log.info("VPFileload : {} ", vpFileLoad1);
-                log.debug(" Saved file VPFileload : {} " , vpFileLoad1);
+                savedFileLoad = vpFileLoadService.save(vpFileLoad1);
 
                 //Create temp file name
                 String tempName = "upload" + System.currentTimeMillis() + ".csv";
                 try {
                     Path tempFile = Files.createTempFile(tempName, "");
                     data.transferTo(tempFile);
-                    log.debug(" Creating temp file name:{} for file:{}",tempName,tempFile);
+                    log.debug(" Creating temp file name:{} for file:{}", tempName, tempFile);
 
                     JobParameters Parameters = new JobParametersBuilder()
                         .addString("fullPathFileName", tempFile.toString())
                         .addLong("StartAt", System.currentTimeMillis()).toJobParameters();
 
-                    jobLauncher.run(job, Parameters);
+                    log.debug(" Saved file VPFileload : {} ", savedFileLoad);
+
+                    jobExecution = jobLauncher.run(job, Parameters);
                 } catch (IOException | JobExecutionAlreadyRunningException | JobRestartException
                          | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
 
                     e.printStackTrace();
                 }
+                Optional<StepExecution> stepExecutionOptional = jobExecution.getStepExecutions().stream().findFirst();
+                log.debug("Contents of job execution:{}", jobExecution.getStepExecutions().stream().findFirst());
+                StepExecution stepExecutionDetails = stepExecutionOptional.get();
 
-                vpFileLoad1.setBatchId(batchId);
-                vpFileLoad1.setNumFailed(vpVoucherDTO.getNumFailed());
-                vpFileLoad1.setNumLoaded(vpVoucherDTO.getNumLoaded());
-                vpFileLoadService.partialUpdate(vpFileLoad1);
+                savedFileLoad.setNumFailed(stepExecutionDetails.getSkipCount());
+                savedFileLoad.setNumLoaded(stepExecutionDetails.getWriteCount());
 
-                log.debug("Updated batch :{}",vpFileLoad1);
+                vpFileLoadService.save(savedFileLoad);
 
-                batchUploadResponse.setNumFailed(BigDecimal.valueOf(vpVoucherDTO.getNumFailed()));
-                batchUploadResponse.setNumLoaded(BigDecimal.valueOf(vpVoucherDTO.getNumLoaded()));
+                log.debug("Updated batch : {}", savedFileLoad);
+
+                batchUploadResponse.setNumFailed(BigDecimal.valueOf(stepExecutionDetails.getSkipCount()));
+                batchUploadResponse.setNumLoaded(BigDecimal.valueOf(stepExecutionDetails.getWriteCount()));
 
             }
 
-        }else {
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid batch ID");
         }
 
-        return new ResponseEntity<>(batchUploadResponse,HttpStatus.OK);
+        return new ResponseEntity<>(batchUploadResponse, HttpStatus.OK);
+    }
+
+    public Long fieldId() {//must be populated with the seq from the row inserted into VP_FILE_LOAD
+
+        return savedFileLoad.getId();
+    }
+
+    public Integer batchIdValue() {//The incoming batchId
+
+        return savedFileLoad.getBatchId();
     }
 
 }

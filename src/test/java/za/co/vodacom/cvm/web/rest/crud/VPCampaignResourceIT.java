@@ -6,10 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static za.co.vodacom.cvm.web.rest.TestUtil.sameInstant;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -69,7 +66,7 @@ class VPCampaignResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static VPCampaign createEntity(EntityManager em) {
-        VPCampaign vPCampaign = new VPCampaign().name(DEFAULT_NAME).startDate(DEFAULT_START_DATE).endDate(DEFAULT_END_DATE);
+        VPCampaign vPCampaign = new VPCampaign().name(DEFAULT_NAME).startDate(LocalDateTime.from(DEFAULT_START_DATE)).endDate(LocalDateTime.from(DEFAULT_END_DATE));
         return vPCampaign;
     }
 
@@ -80,7 +77,7 @@ class VPCampaignResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static VPCampaign createUpdatedEntity(EntityManager em) {
-        VPCampaign vPCampaign = new VPCampaign().name(UPDATED_NAME).startDate(UPDATED_START_DATE).endDate(UPDATED_END_DATE);
+        VPCampaign vPCampaign = new VPCampaign().name(UPDATED_NAME).startDate(UPDATED_START_DATE.toLocalDateTime()).endDate(LocalDateTime.from(UPDATED_END_DATE));
         return vPCampaign;
     }
 
@@ -229,7 +226,7 @@ class VPCampaignResourceIT {
         VPCampaign updatedVPCampaign = vPCampaignRepository.findById(vPCampaign.getId()).get();
         // Disconnect from session so that the updates on updatedVPCampaign are not directly saved in db
         em.detach(updatedVPCampaign);
-        updatedVPCampaign.name(UPDATED_NAME).startDate(UPDATED_START_DATE).endDate(UPDATED_END_DATE);
+        updatedVPCampaign.name(UPDATED_NAME).startDate(LocalDateTime.from(UPDATED_START_DATE)).endDate(LocalDateTime.from(UPDATED_END_DATE));
 
         restVPCampaignMockMvc
             .perform(
@@ -316,7 +313,7 @@ class VPCampaignResourceIT {
         VPCampaign partialUpdatedVPCampaign = new VPCampaign();
         partialUpdatedVPCampaign.setId(vPCampaign.getId());
 
-        partialUpdatedVPCampaign.endDate(UPDATED_END_DATE);
+        partialUpdatedVPCampaign.endDate(UPDATED_END_DATE.toLocalDateTime());
 
         restVPCampaignMockMvc
             .perform(
@@ -347,7 +344,7 @@ class VPCampaignResourceIT {
         VPCampaign partialUpdatedVPCampaign = new VPCampaign();
         partialUpdatedVPCampaign.setId(vPCampaign.getId());
 
-        partialUpdatedVPCampaign.name(UPDATED_NAME).startDate(UPDATED_START_DATE).endDate(UPDATED_END_DATE);
+        partialUpdatedVPCampaign.name(UPDATED_NAME).startDate(UPDATED_START_DATE.toLocalDateTime()).endDate(LocalDateTime.from(UPDATED_END_DATE));
 
         restVPCampaignMockMvc
             .perform(

@@ -134,6 +134,10 @@ public class VPVouchers implements Serializable {
         return this;
     }
 
+    public String getProductId() {
+        return productId;
+    }
+
     public void setProductId(String productId) {
         this.productId = productId;
     }
@@ -320,7 +324,7 @@ public class VPVouchers implements Serializable {
             "id=" + getId() +
             ", batchId=" + getBatchId() +
             ", fileId=" + getFileId() +
-            //", productId='" + getProductId() + "'" +
+            ", productId='" + getProductId() + "'" +
             ", voucherCode='" + getVoucherCode() + "'" +
             ", description='" + getDescription() + "'" +
             ", createDate='" + getCreateDate() + "'" +

@@ -148,9 +148,14 @@ application:
     apiPassword: ENC(ZUiYvAm0vRQMpBU1dmQY+3Cl28UYMPs6eD168NvjIEK8q/jcxKfKaQsDubVxZke5)
   giftCards:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
-    name: wigroup-giftcards
-    apiId: vodacomqa_giftcard
-    apiPassword: ENC(W8OsgnIPFfmlNv+UVwVE8dmYXZu28sj0tyydKFNkqfhGtWvi64J3JYw1BUv+fnbq)
+    defaults:
+      name: wigroup-giftcards
+      apiId: vodacomqa_giftcard
+      apiPassword: ENC(W8OsgnIPFfmlNv+UVwVE8dmYXZu28sj0tyydKFNkqfhGtWvi64J3JYw1BUv+fnbq)
+    campaign10:
+      name: wigroup-giftcards-10
+      apiId: vodacomqa_giftcard
+      apiPassword: ENC(W8OsgnIPFfmlNv+UVwVE8dmYXZu28sj0tyydKFNkqfhGtWvi64J3JYw1BUv+fnbq)
   encryption:
     key: WSKLTDC7RXD22B81 # ENC(1BnXwEkQg3zRqEupl31YnftHGtybJ53wem3rj07lW7cc1B+Omul0IgOguvwZ5cdGB/NC9EFRjxrTQ8gsSi47xA==)
   proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080

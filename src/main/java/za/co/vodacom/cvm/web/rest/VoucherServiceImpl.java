@@ -13,7 +13,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
 import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
-import za.co.vodacom.cvm.client.wigroup.api.GiftcardsApiClient;
+import za.co.vodacom.cvm.client.wigroup.api.GiftcardsCampaign10ApiClient;
+import za.co.vodacom.cvm.client.wigroup.api.GiftcardsDefaultApiClient;
 import za.co.vodacom.cvm.client.wigroup.model.*;
 import za.co.vodacom.cvm.config.ApplicationProperties;
 import za.co.vodacom.cvm.config.Constants;
@@ -68,7 +69,10 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     CouponsApiClient couponsApiClient;
 
     @Autowired
-    GiftcardsApiClient giftcardsApiClient;
+    GiftcardsCampaign10ApiClient giftcardsCampaign10ApiClient;
+
+    @Autowired
+    GiftcardsDefaultApiClient giftcardsDefaultApiClient;
 
     @Autowired
     Tracer tracer;
@@ -276,10 +280,17 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                     //call wi group
                                     ResponseEntity<GiftCardsResponse> giftCardsResponseResponseEntity = null;
                                     try {
-                                        giftCardsResponseResponseEntity = giftcardsApiClient.updateVoucherToReserved(
-                                            true,
-                                            giftCardsRequest
-                                        );
+                                        if (vpCampaign.get().getId().equals((long) 10)) {
+                                            giftCardsResponseResponseEntity = giftcardsCampaign10ApiClient.updateVoucherToReserved(
+                                                true,
+                                                giftCardsRequest
+                                            );
+                                        } else {
+                                            giftCardsResponseResponseEntity = giftcardsDefaultApiClient.updateVoucherToReserved(
+                                                true,
+                                                giftCardsRequest
+                                            );
+                                        }
                                     } catch (FeignException ex) {
                                         log.error("Feign client exception message - {}", ex.getMessage());
                                         log.error("Feign client exception contentUTF8 - {}", ex.contentUTF8());
@@ -483,8 +494,14 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
         //if VP_Campaign is succesfully validated
         else {
             //call wi group
-            ResponseEntity<GiftCardsBalanceResponse> GiftCardsBalanceResponseEntity = giftcardsApiClient.viewGiftcard(voucherid.longValue());
-             GiftCardsBalanceResponse GiftCardsBalanceResponse = GiftCardsBalanceResponseEntity.getBody();
+            GiftCardsBalanceResponse GiftCardsBalanceResponse = new GiftCardsBalanceResponse();
+            if (vpCampaign.get().getId().equals((long) 10)) {
+                ResponseEntity<GiftCardsBalanceResponse> GiftCardsBalanceResponseEntity = giftcardsCampaign10ApiClient.viewGiftcard(voucherid.longValue());
+                GiftCardsBalanceResponse = GiftCardsBalanceResponseEntity.getBody();
+            } else {
+                ResponseEntity<GiftCardsBalanceResponse> GiftCardsBalanceResponseEntity = giftcardsDefaultApiClient.viewGiftcard(voucherid.longValue());
+                GiftCardsBalanceResponse = GiftCardsBalanceResponseEntity.getBody();
+            }
 
              //logging response
             log.debug("Gift Card Response is: {}", GiftCardsBalanceResponse);
@@ -522,8 +539,12 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
         if (vpCampaign.isPresent()) {
 
             //call wi group
-            ResponseEntity<GiftCardsRedeemResponse> giftCardsRedeemResponseResponseEntity = giftcardsApiClient.redeemGiftcard(voucherId
-            );
+            ResponseEntity<GiftCardsRedeemResponse> giftCardsRedeemResponseResponseEntity;
+            if (vpCampaign.get().getId().equals((long) 10)) {
+                giftCardsRedeemResponseResponseEntity = giftcardsCampaign10ApiClient.redeemGiftcard(voucherId);
+            } else {
+                giftCardsRedeemResponseResponseEntity = giftcardsDefaultApiClient.redeemGiftcard(voucherId);
+            }
             //success
             GiftCardsRedeemResponse giftCardsRedeemResponse = giftCardsRedeemResponseResponseEntity.getBody();
             log.info("Gift Card Response is: {}", giftCardsRedeemResponse);

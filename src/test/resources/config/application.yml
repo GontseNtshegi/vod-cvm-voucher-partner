@@ -127,9 +127,14 @@ application:
     apiPassword: sddsf
   giftCards:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
-    name: wigroup-giftcards
-    apiId: vodacomqa_giftcard
-    apiPassword: test
+    defaults:
+      name: wigroup-giftcards
+      apiId: vodacomqa_giftcard
+      apiPassword: test
+    campaign10:
+      name: wigroup-giftcards-10
+      apiId: vodacomqa_giftcard
+      apiPassword: test
   encryption:
     key: 7a6f6f70666f6f74
   proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080

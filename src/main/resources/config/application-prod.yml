@@ -164,9 +164,14 @@ application:
     apiPassword: Z15YmHxNoisiX
   giftCards:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
-    name: wigroup-giftcards
-    apiId: VodaSummerShake
-    apiPassword: ENC(29dlGTps9Mvv/+fWBj/DQUyZe6ibS8Fc/jlmyJn0jxZRxN2kkVG7M8I45tQt+CcX)
+    defaults:
+      name: wigroup-giftcards
+      apiId: VodaSummerShake
+      apiPassword: ENC(29dlGTps9Mvv/+fWBj/DQUyZe6ibS8Fc/jlmyJn0jxZRxN2kkVG7M8I45tQt+CcX)
+    campaign10:
+      name: wigroup-giftcards-10
+      apiId: VodaSummerShake
+      apiPassword: ENC(29dlGTps9Mvv/+fWBj/DQUyZe6ibS8Fc/jlmyJn0jxZRxN2kkVG7M8I45tQt+CcX)
   encryption:
     key: WSKLTDC7RXD22B81
 jasypt:

@@ -54,7 +54,7 @@ spring:
     #&verifyServerCertificate=true&useSSL=true&requireSSL=true
     ##&verifyServerCertificate=true&useSSL=true&requireSSL=true&clientCertificateKey=file:/optclientkeyStore.jks&clientCertificateKeyStorePassword=mypass&trustCertificateKeyStoreUrl=file:/opt/truststore.jks&trustCertificateKeyStorePassword=mypass
     #username: superuser
-    #password: ENC(2uDUJ5brB0fv8llNu+flAaG1pq0qg6U1SCBhvf1w+onpDFeedPjZ9tMVtPdMRmJPmAsaSV5S/gJ0Tdy6uMhxoQ==)
+    #password: VoucherManagement1
     url: jdbc:mysql://cvm-voucher-nonprod.cluster-cztfqcf6zvwm.af-south-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: voucher-user-nonprod
     password: 2oOmdNx0c6 #'{cipher}d474c8eccbec28aabacd8b283067446847073b19f602e1c5724b54673bf1f067'
@@ -147,17 +147,17 @@ application:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     name: wigroup-coupons
     apiId: vodacomqa_voucher
-    apiPassword: ENC(ZUiYvAm0vRQMpBU1dmQY+3Cl28UYMPs6eD168NvjIEK8q/jcxKfKaQsDubVxZke5)
+    apiPassword: test
   giftCards:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     defaults:
       name: wigroup-giftcards
       apiId: vodacomqa_giftcard
-      apiPassword: ENC(W8OsgnIPFfmlNv+UVwVE8dmYXZu28sj0tyydKFNkqfhGtWvi64J3JYw1BUv+fnbq)
+      apiPassword: test
     campaign10:
       name: wigroup-giftcards-10
       apiId: vodaAPI_1
-      apiPassword: ENC(W8OsgnIPFfmlNv+UVwVE8dmYXZu28sj0tyydKFNkqfhGtWvi64J3JYw1BUv+fnbq)
+      apiPassword: testtest
   encryption:
     key: WSKLTDC7RXD22B81
   #proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080

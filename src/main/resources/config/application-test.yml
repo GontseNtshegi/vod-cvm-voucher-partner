@@ -54,7 +54,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://loyalty.cluster-cc1yxzokhc4w.eu-west-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: superuser
-    password: ENC(AWLMQYuWBhMTte4NFtOqOFmrtz/h03+9ZFfJyJpkQfx9ZwU3WYvg7Jv5EIl30GUq4ezFf01+uswR0tXmFmQsyQ==)
+    password: VoucherManagement1Test
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -164,12 +164,17 @@ application:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     name: wigroup-coupons
     apiId: vodacomqa_voucher
-    apiPassword: ENC(hXtf4TV12Puvss/fpEwEBi44RPIaZA4AXwcFXEcl+chbHy+TBa8okaMV6pXQ/9ay)
+    apiPassword: test
   giftCards:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
-    name: wigroup-giftcards
-    apiId: vodacomqa_giftcard
-    apiPassword: ENC(aMYdtF3FcPlnY7DbO8+kexkKGMm8LP5VSiXVtGkziMZXq0Zf9wpGYytjczaZiGBd)
+    defaults:
+      name: wigroup-giftcards
+      apiId: vodacomqa_giftcard
+      apiPassword: test
+    campaign10:
+      name: wigroup-giftcards-10
+      apiId: vodaAPI_1
+      apiPassword: testtest
   encryption:
     key: WSKLTDC7RXD22B81
   proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080

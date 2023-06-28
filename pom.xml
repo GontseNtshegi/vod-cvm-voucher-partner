@@ -14,7 +14,7 @@
     <repositories>
       <repository>
         <id>maven-group</id>
-        <url>https://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/maven-group/</url>
+        <url>http://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/maven-group/</url>
       </repository>
         <!-- jhipster-needle-maven-repository -->
     </repositories>
@@ -23,7 +23,7 @@
         <!-- jhipster-needle-maven-plugin-repository -->
         <pluginRepository>
             <id>maven-group</id>
-            <url>https://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/maven-group/</url>
+            <url>http://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/maven-group/</url>
         </pluginRepository>
     </pluginRepositories>
 

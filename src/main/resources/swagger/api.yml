@@ -375,7 +375,7 @@ paths:
             type: integer
       requestBody:
         content:
-          multipart/form-data:
+          application/json:
             schema:
               $ref: '#/components/schemas/BatchUploadRequest'
       responses:
@@ -1048,8 +1048,10 @@ components:
           description: Name of incoming csv file
         data:
           type: string
-          format: binary
           description: Incoming csv file
+        contentType:
+          type: string
+          enum: [.csv]
     BatchUploadResponse:
       type: object
       properties:

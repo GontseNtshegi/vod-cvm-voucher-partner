@@ -2,7 +2,7 @@
 version: '3.8'
 services:
   voucherpartner-mysql:
-    image: mysql:8.0.23
+    image: mysql:8.0.27
     # volumes:
     #   - ~/volumes/jhipster/voucherpartner/mysql/:/var/lib/mysql/
     environment:

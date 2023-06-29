@@ -29,12 +29,14 @@ import za.co.vodacom.cvm.web.api.model.*;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -211,8 +213,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
     @Override
     public ResponseEntity<BatchUploadResponse> batchUpload(Integer batchId,
-                                                           String fileName,
-                                                           MultipartFile data) {
+                                                            BatchUploadRequest batchUploadRequest) {
 
 
         BatchUploadResponse batchUploadResponse = new BatchUploadResponse();
@@ -224,8 +225,8 @@ public class BatchServiceImpl implements BatchApiDelegate {
         if (vpBatch.isPresent()) {
             log.debug("Fetched batch :{}", vpBatch);
 
-            Optional<VPFileLoad> vpFileLoad = vpFileLoadService.findByBatchIdAndAndFileName(batchId, fileName);
-            log.debug("findByBatchId : {} and Filename called: {}", vpBatch, fileName);
+            Optional<VPFileLoad> vpFileLoad = vpFileLoadService.findByBatchIdAndAndFileName(batchId, batchUploadRequest.getFileName());
+            log.debug("findByBatchId : {} and Filename called: {} " , vpBatch, batchUploadRequest.getData());
             if (vpFileLoad.isPresent()) {
                 log.debug("File name already exists throwing exception :{}", vpFileLoad);
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Filename already used");
@@ -234,7 +235,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
                 VPFileLoad vpFileLoad1 = new VPFileLoad();
 
                 vpFileLoad1.setBatchId(batchId);
-                vpFileLoad1.setFileName(fileName);
+                vpFileLoad1.setFileName(batchUploadRequest.getFileName());
                 vpFileLoad1.setCompletedDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
                 vpFileLoad1.setCreateDate(ZonedDateTime.now().withZoneSameLocal(ZoneId.of("UCT")));
                 vpFileLoad1.setNumLoaded(0);
@@ -242,11 +243,14 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
                 savedFileLoad = vpFileLoadService.save(vpFileLoad1);
 
+                byte[] decodedData = Base64.getDecoder().decode(batchUploadRequest.getData().getBytes(StandardCharsets.UTF_8));
+                log.debug(" decodedData {} ", decodedData);
+
                 //Create temp file name
-                String tempName = "upload" + System.currentTimeMillis() + ".csv";
+                String tempName = "upload" + System.currentTimeMillis() + batchUploadRequest.getContentType();
                 try {
                     Path tempFile = Files.createTempFile(tempName, "");
-                    data.transferTo(tempFile);
+                    Files.write(tempFile, decodedData);
                     log.debug(" Creating temp file name:{} for file:{}", tempName, tempFile);
 
                     JobParameters Parameters = new JobParametersBuilder()

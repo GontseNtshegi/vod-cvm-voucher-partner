@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tech.jhipster.config.JHipsterConstants;
 
 @Configuration
-@EnableJpaRepositories("za.co.vodacom.cvm.repository")
+@EnableJpaRepositories({ "za.co.vodacom.cvm.repository" })
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 @EnableTransactionManagement
 public class DatabaseConfiguration {}

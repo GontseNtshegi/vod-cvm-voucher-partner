@@ -51,9 +51,17 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     void updateReturnedVoucher(@Param("id") Long id);
 
     @Query(
-        value = "select new za.co.vodacom.cvm.service.dto.product.Product(count(*), min(endDate)) from VPVouchers where productId=:productId and startDate< sysdate() and endDate>sysdate() and issuedDate is null"
+        value = "select new za.co.vodacom.cvm.service.dto.product.Product(count(*), min(v.endDate)) from VPVouchers v, VPBatch b" +
+            " where v.productId=:productId " +
+            "and v.startDate< v.sysdate() " +
+            "and v.endDate> v.sysdate() " +
+            "and v.issuedDate is null " +
+            "and v.batchId = b.id " +
+            "and b.status ='A'" +
+            "and rownum < 2"
     )
     Optional<Product> getValidVoucherForProduct(@Param("productId") String productId);
+
 
     @Query(
         value = "select new za.co.vodacom.cvm.service.dto.product.Product(quantity, endDate) from VPVouchers where productId=:productId and startDate< sysdate() and endDate>sysdate()"

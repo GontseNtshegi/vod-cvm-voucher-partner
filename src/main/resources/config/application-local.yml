@@ -19,13 +19,10 @@ logging:
     tech.jhipster: DEBUG
     org.hibernate.SQL: DEBUG
     za.co.vodacom.cvm: DEBUG
-    com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver: WARN
-    #org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
 
 eureka:
   instance:
-    prefer-ip-address: false
+    prefer-ip-address: true
   client:
     service-url:
       defaultZone: http://admin:${jhipster.registry.password}@localhost:8761/eureka/
@@ -43,10 +40,10 @@ spring:
   cloud:
     config:
       uri: http://admin:${jhipster.registry.password}@localhost:8761/config
-       #name of the config server's property source (file.yml) that we want to use
+      # name of the config server's property source (file.yml) that we want to use
       name: voucherpartner
-      profile: local
-      label: local # toggle to switch to a different version of the configuration as stored in git
+      profile: dev
+      label: main # toggle to switch to a different version of the configuration as stored in git
       # it can be set to any label, branch or commit of the configuration source Git repository
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
@@ -57,7 +54,7 @@ spring:
     #password: VoucherManagement1
     url: jdbc:mysql://cvm-voucher-nonprod.cluster-cztfqcf6zvwm.af-south-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: voucher-user-nonprod
-    password: 2oOmdNx0c6 #'{cipher}d474c8eccbec28aabacd8b283067446847073b19f602e1c5724b54673bf1f067'
+    password: '2oOmdNx0c6'
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -69,7 +66,7 @@ spring:
   jpa:
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
-    contexts: dev #, faker
+    contexts: dev, faker
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
@@ -90,6 +87,7 @@ spring:
     multipart:
       max-file-size: 512MB
       max-request-size: 512MB
+
 server:
   port: 8087
 
@@ -104,8 +102,8 @@ jhipster:
     hazelcast: # Hazelcast distributed cache
       time-to-live-seconds: 3600
       backup-count: 1
-  #registry:
-  #  password: password
+  registry:
+    password: admin
   # CORS is disabled by default on microservices, as you should access them through a gateway.
   # If you want to enable it, please uncomment the configuration below.
   # cors:
@@ -159,11 +157,11 @@ application:
       apiId: vodaAPI_1
       apiPassword: testtest
   encryption:
-    key: WSKLTDC7RXD22B81
-  #proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080
-  #proxyPort: 8080
-  #proxyUser: vcacmang%40vodacom
-  #proxyPassword: '{cipher}e2936b5bcc92f185b69a9ab43f678fbf74299201d801337a20ed4c26bca3cc22'
+    key: WSKLTDC7RXD22B81 # ENC(1BnXwEkQg3zRqEupl31YnftHGtybJ53wem3rj07lW7cc1B+Omul0IgOguvwZ5cdGB/NC9EFRjxrTQ8gsSi47xA==)
+  proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080
+  proxyPort: 8080
+  proxyUser: vcacmang%40vodacom
+  proxyPassword: V0d4f0n3%402020
 jasypt:
   encryptor:
     password: CVMicroservices

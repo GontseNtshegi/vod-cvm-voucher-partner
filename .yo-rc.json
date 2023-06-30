@@ -4,7 +4,7 @@
     "otherModules": [],
     "applicationType": "microservice",
     "baseName": "voucherpartner",
-    "jhipsterVersion": "7.0.1",
+    "jhipsterVersion": "7.4.1",
     "skipClient": true,
     "skipUserManagement": true,
     "skipServer": false,
@@ -38,6 +38,8 @@
     "jwtSecretKey": "ZmMyZWFjY2E5ZmE0Zjc4YmZmNjUwNjkzNzI0YjY5NTE5NjBjOGE2ZDlhOTIwZDAyM2FiMGE3YzMwOWJhYTk5ZjQzYjNmZmJiMjJlZTUzZTNhMGIyNzFkMzZlNmNjYWQyM2E0NTk2NzQ0OTcwYTBjZDFmNTc5YmY0MTY2MDI5OWM=",
     "languages": ["en", "fr"],
     "entities": ["VPCampaign", "VPVoucherDef", "VPUsers", "VPBatch", "VPCampaignVouchers", "VPFileLoad", "VPVouchers"],
-    "lastLiquibaseTimestamp": 1625673708000
+    "lastLiquibaseTimestamp": 1625673708000,
+    "withAdminUi": false,
+    "enableGradleEnterprise": false
   }
 }

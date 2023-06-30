@@ -1,11 +1,5 @@
 package za.co.vodacom.cvm;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
-import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,16 +7,19 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.core.env.Environment;
-import org.springframework.retry.annotation.EnableRetry;
 import tech.jhipster.config.DefaultProfileUtil;
 import tech.jhipster.config.JHipsterConstants;
 import za.co.vodacom.cvm.config.ApplicationProperties;
 
+import javax.annotation.PostConstruct;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
+
 @SpringBootApplication
-@EnableHystrix
-@EnableRetry
 @EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
 public class VoucherpartnerApp {
 
@@ -101,7 +98,7 @@ public class VoucherpartnerApp {
             hostAddress,
             serverPort,
             contextPath,
-            env.getActiveProfiles()
+            env.getActiveProfiles().length == 0 ? env.getDefaultProfiles() : env.getActiveProfiles()
         );
 
         String configServerStatus = env.getProperty("configserver.status");

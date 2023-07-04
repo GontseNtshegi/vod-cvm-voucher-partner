@@ -294,7 +294,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         }
                                     } catch (FeignException ex) {
                                         log.error("Feign client exception message - {}", ex.getMessage());
-                                        throw new ResponseStatusException(HttpStatus.valueOf(ex.status()), ex.contentUTF8());
+                                        throw new ResponseStatusException(HttpStatus.valueOf(ex.status()), ex.getMessage());
 
                                     }
                                     //success

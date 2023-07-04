@@ -19,7 +19,8 @@ logging:
     tech.jhipster: DEBUG
     org.hibernate.SQL: DEBUG
     za.co.vodacom.cvm: DEBUG
-
+    org.apache.http: DEBUG
+    httpclient.wire: TRACE
 eureka:
   instance:
     prefer-ip-address: true

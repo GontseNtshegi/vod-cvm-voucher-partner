@@ -11,6 +11,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import org.zalando.problem.Status;
 import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
 import za.co.vodacom.cvm.client.wigroup.api.GiftcardsCampaign10ApiClient;
@@ -293,11 +294,8 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         }
                                     } catch (FeignException ex) {
                                         log.error("Feign client exception message - {}", ex.getMessage());
-                                        log.error("Feign client exception contentUTF8 - {}", ex.contentUTF8());
-                                        throw new WiGroupException(
-                                            ex.contentUTF8(),
-                                            Status.UNPROCESSABLE_ENTITY
-                                        );
+                                        throw new ResponseStatusException(HttpStatus.valueOf(ex.status()), ex.contentUTF8());
+
                                     }
                                     //success
                                     GiftCardsResponse giftCardsResponse = giftCardsResponseResponseEntity.getBody();

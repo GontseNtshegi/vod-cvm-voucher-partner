@@ -38,8 +38,8 @@ public class FeignConfiguration {
     @Bean
     public Client client() throws NoSuchAlgorithmException, KeyManagementException {
         return new Client.Default(
-            new NaiveSSLSocketFactory("za-vsp-int.wigroup.co/cvs-issuer/rest", "za-vsp-int.wigroup.co/cvs-issuer/rest"),
-            new NaiveHostnameVerifier("za-vsp-int.wigroup.co/cvs-issuer/rest", "za-vsp-int.wigroup.co/cvs-issuer/rest")
+            new NaiveSSLSocketFactory("za-vsp-int.wigroup.co", "za-vsp-int.wigroup.co"),
+            new NaiveHostnameVerifier("za-vsp-int.wigroup.co", "za-vsp-int.wigroup.co")
         );
     }
 }

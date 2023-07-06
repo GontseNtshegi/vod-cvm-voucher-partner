@@ -31,7 +31,7 @@ public class FeignConfiguration {
      */
     @Bean
     feign.Logger.Level feignLoggerLevel() {
-        return feign.Logger.Level.BASIC;
+        return feign.Logger.Level.FULL;
     }
 
     @Bean
@@ -72,12 +72,10 @@ class NaiveSSLSocketFactory extends SSLSocketFactory {
         alwaysAllowSslContext = SSLContext.getInstance("TLS");
         TrustManager tm = new X509TrustManager() {
             @Override
-            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-            }
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
 
             @Override
-            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-            }
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
 
             @Override
             public X509Certificate[] getAcceptedIssuers() {
@@ -85,7 +83,7 @@ class NaiveSSLSocketFactory extends SSLSocketFactory {
             }
         };
 
-        alwaysAllowSslContext.init(null, new TrustManager[]{tm}, null);
+        alwaysAllowSslContext.init(null, new TrustManager[] { tm }, null);
     }
 
     @Override

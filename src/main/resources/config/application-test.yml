@@ -54,7 +54,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://cvm-voucher-nonprod.cluster-cztfqcf6zvwm.af-south-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: voucher-user-nonprod
-    password: '{cipher}3d3726b0365f128fbd060a630aa1c3f288e9273970a27fd4154dc829c1e38a9b'
+    password: 2oOmdNx0c6
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -165,23 +165,23 @@ application:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     name: wigroup-coupons
     apiId: vodacomqa_voucher
-    apiPassword: '{cipher}527c5f38593b50725a4dfd2c07a4cb7cb12e2cd49423e249ee98b981929bf3af'
+    apiPassword: test
   giftCards:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     defaults:
       name: wigroup-giftcards
       apiId: vodacomqa_giftcard
-      apiPassword: '{cipher}527c5f38593b50725a4dfd2c07a4cb7cb12e2cd49423e249ee98b981929bf3af'
+      apiPassword: test
     campaign10:
       name: wigroup-giftcards-10
       apiId: vodaAPI_1
-      apiPassword: '{cipher}239c161d7d2ba53d49461c7e0910bfb3c900d00b5ca97bfb875724522b467375'
+      apiPassword: testtest
   encryption:
-    key: '{cipher}4d0c719f10eca390183ebff6c27aeb5dc77bfb8a03bf76148db4deb71efbd00e2945997ec6234d7a61310db19b6f1145'
+    key: WSKLTDC7RXD22B81
   proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080
   proxyPort: 8080
   proxyUser: vcacmang%40vodacom
-  proxyPassword: '{cipher}6804ab593d53922104febaa2b6f01c8b54f614dfc3442936e0c22ca6df213369'
+  proxyPassword: V0d4f0n3%402020
 jasypt:
   encryptor:
-    password: '{cipher}01c15c90da26a38bcd22da99caddbb6c5566ce4f7eedecd59e9814801ab9662a'
+    password: CVMicroservices

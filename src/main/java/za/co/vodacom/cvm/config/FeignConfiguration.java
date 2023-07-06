@@ -1,6 +1,5 @@
 package za.co.vodacom.cvm.config;
 
-import feign.Logger;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +16,6 @@ public class FeignConfiguration {
      */
     @Bean
     feign.Logger.Level feignLoggerLevel() {
-        return Logger.Level.FULL;
+        return feign.Logger.Level.BASIC;
     }
 }

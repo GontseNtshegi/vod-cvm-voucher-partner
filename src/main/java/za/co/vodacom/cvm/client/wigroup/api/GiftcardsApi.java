@@ -5,6 +5,9 @@
  */
 package za.co.vodacom.cvm.client.wigroup.api;
 
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
+import sun.security.validator.ValidatorException;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsBalanceResponse;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsRedeemResponse;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsRequest;
@@ -69,6 +72,7 @@ public interface GiftcardsApi {
      *         or Method Not Allowed (status code 405)
      *         or Internal Server Error (status code 500)
      */
+    @Retryable(value = ValidatorException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
     @ApiOperation(value = "Customer voucher reservation", nickname = "updateVoucherToReserved", notes = "Reserve a voucher for a customer.", response = GiftCardsResponse.class, tags={ "giftcards", })
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Sucessful operation", response = GiftCardsResponse.class),

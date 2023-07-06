@@ -14,12 +14,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
+import org.springframework.retry.annotation.EnableRetry;
 import tech.jhipster.config.DefaultProfileUtil;
 import tech.jhipster.config.JHipsterConstants;
 import za.co.vodacom.cvm.config.ApplicationProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
+@EnableRetry
 public class VoucherpartnerApp {
 
     private static final Logger log = LoggerFactory.getLogger(VoucherpartnerApp.class);

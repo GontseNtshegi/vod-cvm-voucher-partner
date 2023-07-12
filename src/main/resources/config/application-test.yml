@@ -15,9 +15,9 @@
 
 logging:
   level:
-    ROOT: INFO
-    tech.jhipster: INFO
-    za.co.vodacom.cvm: INFO
+    ROOT: DEBUG
+    tech.jhipster: DEBUG
+    za.co.vodacom.cvm: DEBUG
 
 eureka:
   instance:

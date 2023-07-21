@@ -34,4 +34,4 @@ CMD java \
          -Dappdynamics.bciengine.limit.package.qualifiers=7 \
          -Dappdynamics.force.default.ssl.certificate.validation=false \
          -Xms1024m -Xmx2048m \
-        -jar -Djavax.net.ssl.trustStore=$JAVA_HOME/jre/lib/security/cacerts /opt/appdynamics/cp-voucher-partner.jar
+        -jar -Djavax.net.debug=all -Djavax.net.ssl.trustStore=$JAVA_HOME/jre/lib/security/cacerts /opt/appdynamics/cp-voucher-partner.jar

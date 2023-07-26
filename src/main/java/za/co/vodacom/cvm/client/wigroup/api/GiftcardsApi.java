@@ -5,25 +5,23 @@
  */
 package za.co.vodacom.cvm.client.wigroup.api;
 
+import io.swagger.annotations.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import sun.security.validator.ValidatorException;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsBalanceResponse;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsRedeemResponse;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsRequest;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsResponse;
-import io.swagger.annotations.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.multipart.MultipartFile;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import javax.validation.constraints.NotNull;
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-03-07T11:18:06.608682700+02:00[Africa/Harare]")
 @Validated
 @Api(value = "Giftcards", description = "the Giftcards API")
@@ -69,6 +67,7 @@ public interface GiftcardsApi {
      *         or Method Not Allowed (status code 405)
      *         or Internal Server Error (status code 500)
      */
+    @Retryable(value = ValidatorException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
     @ApiOperation(value = "Customer voucher reservation", nickname = "updateVoucherToReserved", notes = "Reserve a voucher for a customer.", response = GiftCardsResponse.class, tags={ "giftcards", })
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Sucessful operation", response = GiftCardsResponse.class),

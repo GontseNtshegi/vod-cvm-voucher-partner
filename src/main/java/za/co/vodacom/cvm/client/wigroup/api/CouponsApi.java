@@ -78,6 +78,7 @@ public interface CouponsApi {
      *         or Method Not Allowed (status code 405)
      *         or Internal Server Error (status code 500)
      */
+    @Retryable(value = ValidatorException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
     @ApiOperation(
         value = "Return a voucher which was issued",
         nickname = "updateVoucherToReturned",
@@ -114,6 +115,7 @@ public interface CouponsApi {
      *         or Method Not Allowed (status code 405)
      *         or Internal Server Error (status code 500)
      */
+    @Retryable(value = ValidatorException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
     @ApiOperation(
         value = "Check whether the given voucher based product has stock.",
         nickname = "updateVoucherToValid",

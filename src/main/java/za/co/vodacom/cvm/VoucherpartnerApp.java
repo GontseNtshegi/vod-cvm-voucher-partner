@@ -13,7 +13,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.core.env.Environment;
 import org.springframework.retry.annotation.EnableRetry;
 import tech.jhipster.config.DefaultProfileUtil;
@@ -21,7 +20,6 @@ import tech.jhipster.config.JHipsterConstants;
 import za.co.vodacom.cvm.config.ApplicationProperties;
 
 @SpringBootApplication
-@EnableHystrix
 @EnableRetry
 @EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
 public class VoucherpartnerApp {
@@ -101,7 +99,7 @@ public class VoucherpartnerApp {
             hostAddress,
             serverPort,
             contextPath,
-            env.getActiveProfiles()
+            env.getActiveProfiles().length == 0 ? env.getDefaultProfiles() : env.getActiveProfiles()
         );
 
         String configServerStatus = env.getProperty("configserver.status");

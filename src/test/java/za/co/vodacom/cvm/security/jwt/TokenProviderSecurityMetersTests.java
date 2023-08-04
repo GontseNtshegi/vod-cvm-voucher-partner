@@ -1,5 +1,7 @@
 package za.co.vodacom.cvm.security.jwt;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -7,6 +9,10 @@ import io.jsonwebtoken.security.Keys;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import java.security.Key;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,13 +23,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import tech.jhipster.config.JHipsterProperties;
 import za.co.vodacom.cvm.management.SecurityMetersService;
 import za.co.vodacom.cvm.security.AuthoritiesConstants;
-
-import java.security.Key;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class TokenProviderSecurityMetersTests {
 

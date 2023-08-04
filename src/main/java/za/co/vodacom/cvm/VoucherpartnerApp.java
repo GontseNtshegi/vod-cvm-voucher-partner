@@ -1,5 +1,11 @@
 package za.co.vodacom.cvm;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
+import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,16 +19,9 @@ import tech.jhipster.config.DefaultProfileUtil;
 import tech.jhipster.config.JHipsterConstants;
 import za.co.vodacom.cvm.config.ApplicationProperties;
 
-import javax.annotation.PostConstruct;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
-
 @SpringBootApplication
-@EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
 @EnableRetry
+@EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
 public class VoucherpartnerApp {
 
     private static final Logger log = LoggerFactory.getLogger(VoucherpartnerApp.class);

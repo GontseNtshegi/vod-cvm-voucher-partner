@@ -17,7 +17,8 @@ entity VPVoucherDef {
     ValidityPeriod Integer required,
     CacheQuantity Integer required,
     EncryptedYN String maxlength(1) required,
-    ModifiedDate ZonedDateTime
+    ModifiedDate ZonedDateTime,
+    CollectionPoint String maxlength(100) required
 }
 
 entity VPUsers {
@@ -54,17 +55,17 @@ entity VPFileLoad {
 
 entity VPVouchers {
   BatchId Integer required,
-  FileId Integer, 
+  FileId Integer,
   ProductId String maxlength(30) required,
   VoucherCode String maxlength(60) required,
   Description String maxlength(100) required,
   CreateDate ZonedDateTime required,
   StartDate ZonedDateTime required,
   EndDate ZonedDateTime required,
-  ExpiryDate ZonedDateTime, 
+  ExpiryDate ZonedDateTime,
   CollectionPoint String maxlength(100) required,
   IssuedDate ZonedDateTime,
-  ReversedDate ZonedDateTime required, 
+  ReversedDate ZonedDateTime required,
   SourceTrxid String maxlength(60),
   Quantity Integer required
 }

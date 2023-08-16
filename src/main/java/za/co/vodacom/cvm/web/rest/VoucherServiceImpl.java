@@ -138,7 +138,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                     VPVouchers voucher = getAndIssueVoucher(voucherAllocationRequest.getProductId(), voucherAllocationRequest.getTrxId());
 
                                     //set response
-                                    voucherAllocationResponse.setCollectPoint(voucher.getCollectionPoint() != null || !voucher.getCollectionPoint().isEmpty() ? voucher.getCollectionPoint(): vpVoucherDef.getCollectionPoint());
+                                    voucherAllocationResponse.setCollectPoint(voucher.getCollectionPoint() != null && !voucher.getCollectionPoint().isEmpty() ? voucher.getCollectionPoint(): vpVoucherDef.getCollectionPoint());
                                     voucherAllocationResponse.setExpiryDate(voucher.getExpiryDate() != null
                                         ? voucher
                                         .getExpiryDate()
@@ -187,7 +187,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         String voucherCode = vpVoucher.getVoucherCode();
 
                                         //set response
-                                        voucherAllocationResponse.setCollectPoint(vpVoucher.getCollectionPoint() != null || !vpVoucher.getCollectionPoint().isEmpty() ? vpVoucher.getCollectionPoint(): vpVoucherDef.getCollectionPoint());
+                                        voucherAllocationResponse.setCollectPoint(vpVoucher.getCollectionPoint() != null && !vpVoucher.getCollectionPoint().isEmpty() ? vpVoucher.getCollectionPoint(): vpVoucherDef.getCollectionPoint());
                                         voucherAllocationResponse.setExpiryDate(expiryDate);
                                         voucherAllocationResponse.setTrxId(voucherAllocationRequest.getTrxId());
                                         voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());

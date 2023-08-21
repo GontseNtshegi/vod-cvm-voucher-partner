@@ -85,6 +85,11 @@ public class VPVoucherDef implements Serializable {
     @JsonIgnoreProperties(value = { "productId" }, allowSetters = true)
     private Set<VPVouchers> productIds = new HashSet<>();
 
+    @NotNull
+    @Size(max = 100)
+    @Column(name = "collectionPoint", length = 100, nullable = false)
+    private String collectionPoint;
+
     /*@OneToMany(mappedBy = "productId")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "campaignId", "productId" }, allowSetters = true)
@@ -260,8 +265,26 @@ public class VPVoucherDef implements Serializable {
         this.modifiedDate = modifiedDate;
     }
 
+    public String getCollectionPoint() {
+        return collectionPoint;
+    }
+
+    public void setCollectionPoint(String collectionPoint) {
+        this.collectionPoint = collectionPoint;
+    }
+
     /*public Set<VPVouchers> getProductIds() {
         return this.productIds;
+    }
+
+    public void setProductIds(Set<VPVouchers> vPVouchers) {
+        if (this.productIds != null) {
+            this.productIds.forEach(i -> i.setProductId(null));
+        }
+        if (vPVouchers != null) {
+            vPVouchers.forEach(i -> i.setProductId(this));
+        }
+        this.productIds = vPVouchers;
     }
 
     public VPVoucherDef productIds(Set<VPVouchers> vPVouchers) {
@@ -358,6 +381,7 @@ public class VPVoucherDef implements Serializable {
             ", cacheQuantity=" + getCacheQuantity() +
             ", encryptedYN='" + getEncryptedYN() + "'" +
             ", modifiedDate='" + getModifiedDate() + "'" +
+            ", collectionPoint='" + getCollectionPoint() + "'" +
             "}";
     }
 }

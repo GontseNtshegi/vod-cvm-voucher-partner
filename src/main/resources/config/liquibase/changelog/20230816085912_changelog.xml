@@ -1,0 +1,48 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="fudumelel (generated)" id="1692176362656-12">
+        <addUniqueConstraint columnNames="id" constraintName="UC_VP_USERSID_COL" tableName="vp_users"/>
+    </changeSet>
+    <changeSet author="fudumelel (generated)" id="1692176362656-13">
+        <dropForeignKeyConstraint baseTableName="vp_campaign_vouchers" constraintName="fk_vp_campaign_vouchers__campaign_id"/>
+    </changeSet>
+    <changeSet author="fudumelel (generated)" id="1692176362656-14">
+        <dropForeignKeyConstraint baseTableName="vp_campaign_vouchers" constraintName="fk_vp_campaign_vouchers__product_id"/>
+    </changeSet>
+    <changeSet author="fudumelel (generated)" id="1692176362656-15">
+        <dropForeignKeyConstraint baseTableName="vp_vouchers" constraintName="fk_vp_vouchers__product_id"/>
+    </changeSet>
+    <changeSet author="fudumelel (generated)" id="1692176362656-1">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="create_date" tableName="vp_batch" validate="true"/>
+    </changeSet>
+    <changeSet author="fudumelel (generated)" id="1692176362656-2">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="create_date" tableName="vp_campaign_vouchers" validate="true"/>
+    </changeSet>
+    <changeSet author="fudumelel (generated)" id="1692176362656-3">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="create_date" tableName="vp_file_load" validate="true"/>
+    </changeSet>
+    <changeSet author="fudumelel (generated)" id="1692176362656-4">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="create_date" tableName="vp_users" validate="true"/>
+    </changeSet>
+    <changeSet author="fudumelel (generated)" id="1692176362656-5">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="create_date" tableName="vp_vouchers" validate="true"/>
+    </changeSet>
+    <changeSet author="fudumelel (generated)" id="1692176362656-6">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="end_date" tableName="vp_campaign" validate="true"/>
+    </changeSet>
+    <changeSet author="fudumelel (generated)" id="1692176362656-7">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="end_date" tableName="vp_vouchers" validate="true"/>
+    </changeSet>
+    <changeSet author="fudumelel (generated)" id="1692176362656-8">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="modified_date" tableName="vp_campaign_vouchers" validate="true"/>
+    </changeSet>
+    <changeSet author="fudumelel (generated)" id="1692176362656-9">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="modified_date" tableName="vp_users" validate="true"/>
+    </changeSet>
+    <changeSet author="fudumelel (generated)" id="1692176362656-10">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="reversed_date" tableName="vp_vouchers" validate="true"/>
+    </changeSet>
+    <changeSet author="fudumelel (generated)" id="1692176362656-11">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="start_date" tableName="vp_vouchers" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

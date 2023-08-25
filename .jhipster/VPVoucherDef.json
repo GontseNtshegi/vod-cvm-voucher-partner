@@ -68,6 +68,12 @@
     {
       "fieldName": "modifiedDate",
       "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "collectionPoint",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength", "required"],
+      "fieldValidateRulesMaxlength": "100"
     }
   ],
   "relationships": [

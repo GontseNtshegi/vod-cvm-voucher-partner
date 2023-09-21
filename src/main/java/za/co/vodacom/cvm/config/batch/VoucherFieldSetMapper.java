@@ -52,9 +52,9 @@ public class VoucherFieldSetMapper implements FieldSetMapper<VPVouchers> {
             vpVouchers.setDescription(fieldSet.readString("description"));
             vpVouchers.setVoucherCode(fieldSet.readString("voucher_code"));
             vpVouchers.setCollectionPoint(fieldSet.readString("collection_point"));
-            vpVouchers.setStartDate(LocalDate.parse(fieldSet.readString("start_date")).atStartOfDay(ZoneId.systemDefault()));
+            vpVouchers.setStartDate(LocalDate.parse(fieldSet.readString("start_date")).atStartOfDay(ZoneId.systemDefault()).plusHours(2));
             vpVouchers.setEndDate(LocalDate.parse(fieldSet.readString("end_date")).atStartOfDay(ZoneId.systemDefault()));
-            vpVouchers.setExpiryDate(LocalDate.parse(fieldSet.readString("expiry_date")).atStartOfDay(ZoneId.systemDefault()));
+            vpVouchers.setExpiryDate(LocalDate.parse(fieldSet.readString("expiry_date")).atStartOfDay(ZoneId.systemDefault()).plusHours(2));
 
             Optional<VPVoucherDef> vpVoucherDef = vpVoucherDefService.findById(vpVouchers.getProductId());
 

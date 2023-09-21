@@ -17,7 +17,8 @@ entity VPVoucherDef {
     ValidityPeriod Integer required,
     CacheQuantity Integer required,
     EncryptedYN String maxlength(1) required,
-    ModifiedDate ZonedDateTime
+    ModifiedDate ZonedDateTime,
+    CollectionPoint String maxlength(100) required
 }
 
 entity VPUsers {

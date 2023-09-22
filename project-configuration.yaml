@@ -1,0 +1,10 @@
+#######################################################################################################
+#
+# This file acts as project configuration where a developer can configure some of the configurations
+# required to automate the build and deployment process.To know more click on below link
+# <Document Link>
+#
+#######################################################################################################
+
+build:
+  build-type: CVM_MS

@@ -54,7 +54,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://cvm-voucher.cluster-ceu0h3kuwvxu.af-south-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: voucher-user-prod
-    password: '{cipher}3be46d45cf1b386156769d87113198f89249e0f45123f4b29aa3a3d2e9cc82693617b850de68534cc29a7efe1550b924'
+    password: AWxn$8.a,A`hnWxn
     hikari:
       poolName: Hikari
       auto-commit: false

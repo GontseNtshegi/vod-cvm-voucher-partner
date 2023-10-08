@@ -79,8 +79,7 @@ class VPBatchResourceIT {
             .createDate(DEFAULT_CREATE_DATE)
             .loadDate(DEFAULT_LOAD_DATE)
             .comment(DEFAULT_COMMENT)
-            .restrictedYN(DEFAULT_RESTRICTED_YN)
-            .userId(DEFAULT_USER_ID);
+            .restrictedYN(DEFAULT_RESTRICTED_YN);
         return vPBatch;
     }
 
@@ -95,8 +94,7 @@ class VPBatchResourceIT {
             .createDate(UPDATED_CREATE_DATE)
             .loadDate(UPDATED_LOAD_DATE)
             .comment(UPDATED_COMMENT)
-            .restrictedYN(UPDATED_RESTRICTED_YN)
-            .userId(UPDATED_USER_ID);
+            .restrictedYN(UPDATED_RESTRICTED_YN);
         return vPBatch;
     }
 
@@ -122,7 +120,6 @@ class VPBatchResourceIT {
         assertThat(testVPBatch.getLoadDate()).isEqualTo(DEFAULT_LOAD_DATE);
         assertThat(testVPBatch.getComment()).isEqualTo(DEFAULT_COMMENT);
         assertThat(testVPBatch.getRestrictedYN()).isEqualTo(DEFAULT_RESTRICTED_YN);
-        assertThat(testVPBatch.getUserId()).isEqualTo(DEFAULT_USER_ID);
     }
 
     //@Test
@@ -198,8 +195,6 @@ class VPBatchResourceIT {
     @Transactional
     void checkUserIdIsRequired() throws Exception {
         int databaseSizeBeforeTest = vPBatchRepository.findAll().size();
-        // set the field null
-        vPBatch.setUserId(null);
 
         // Create the VPBatch, which fails.
 
@@ -272,8 +267,7 @@ class VPBatchResourceIT {
             .createDate(UPDATED_CREATE_DATE)
             .loadDate(UPDATED_LOAD_DATE)
             .comment(UPDATED_COMMENT)
-            .restrictedYN(UPDATED_RESTRICTED_YN)
-            .userId(UPDATED_USER_ID);
+            .restrictedYN(UPDATED_RESTRICTED_YN);
 
         restVPBatchMockMvc
             .perform(
@@ -291,7 +285,6 @@ class VPBatchResourceIT {
         assertThat(testVPBatch.getLoadDate()).isEqualTo(UPDATED_LOAD_DATE);
         assertThat(testVPBatch.getComment()).isEqualTo(UPDATED_COMMENT);
         assertThat(testVPBatch.getRestrictedYN()).isEqualTo(UPDATED_RESTRICTED_YN);
-        assertThat(testVPBatch.getUserId()).isEqualTo(UPDATED_USER_ID);
     }
 
     //@Test
@@ -362,7 +355,7 @@ class VPBatchResourceIT {
         VPBatch partialUpdatedVPBatch = new VPBatch();
         partialUpdatedVPBatch.setId(vPBatch.getId());
 
-        partialUpdatedVPBatch.loadDate(UPDATED_LOAD_DATE).userId(UPDATED_USER_ID);
+        partialUpdatedVPBatch.loadDate(UPDATED_LOAD_DATE);
 
         restVPBatchMockMvc
             .perform(
@@ -380,7 +373,6 @@ class VPBatchResourceIT {
         assertThat(testVPBatch.getLoadDate()).isEqualTo(UPDATED_LOAD_DATE);
         assertThat(testVPBatch.getComment()).isEqualTo(DEFAULT_COMMENT);
         assertThat(testVPBatch.getRestrictedYN()).isEqualTo(DEFAULT_RESTRICTED_YN);
-        assertThat(testVPBatch.getUserId()).isEqualTo(UPDATED_USER_ID);
     }
 
     //@Test
@@ -399,8 +391,7 @@ class VPBatchResourceIT {
             .createDate(UPDATED_CREATE_DATE)
             .loadDate(UPDATED_LOAD_DATE)
             .comment(UPDATED_COMMENT)
-            .restrictedYN(UPDATED_RESTRICTED_YN)
-            .userId(UPDATED_USER_ID);
+            .restrictedYN(UPDATED_RESTRICTED_YN);
 
         restVPBatchMockMvc
             .perform(
@@ -418,7 +409,6 @@ class VPBatchResourceIT {
         assertThat(testVPBatch.getLoadDate()).isEqualTo(UPDATED_LOAD_DATE);
         assertThat(testVPBatch.getComment()).isEqualTo(UPDATED_COMMENT);
         assertThat(testVPBatch.getRestrictedYN()).isEqualTo(UPDATED_RESTRICTED_YN);
-        assertThat(testVPBatch.getUserId()).isEqualTo(UPDATED_USER_ID);
     }
 
     //@Test

@@ -10,6 +10,11 @@
         Added the entity VPVoucherDef.
     -->
     <changeSet id="20210707160143-1" author="jhipster">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="vp_voucher_def"/>
+            </not>
+        </preConditions>
         <createTable tableName="vp_voucher_def">
             <!--<column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>

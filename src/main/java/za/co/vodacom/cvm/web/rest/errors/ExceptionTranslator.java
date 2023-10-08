@@ -32,6 +32,7 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.web.util.HeaderUtil;
 import za.co.vodacom.cvm.exception.AllocationException;
+import za.co.vodacom.cvm.exception.BatchException;
 import za.co.vodacom.cvm.exception.WiGroupException;
 
 /**
@@ -97,13 +98,12 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
         List<FieldErrorVM> fieldErrors = result
             .getFieldErrors()
             .stream()
-            .map(
-                f ->
-                    new FieldErrorVM(
-                        f.getObjectName().replaceFirst("DTO$", ""),
-                        f.getField(),
-                        StringUtils.isNotBlank(f.getDefaultMessage()) ? f.getDefaultMessage() : f.getCode()
-                    )
+            .map(f ->
+                new FieldErrorVM(
+                    f.getObjectName().replaceFirst("DTO$", ""),
+                    f.getField(),
+                    StringUtils.isNotBlank(f.getDefaultMessage()) ? f.getDefaultMessage() : f.getCode()
+                )
             )
             .collect(Collectors.toList());
 
@@ -196,6 +196,11 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
 
     @ExceptionHandler
     public ResponseEntity<Problem> handleWiGroupException(WiGroupException ex, NativeWebRequest request) {
+        return create(ex, request, HeaderUtil.createFailureAlert(applicationName, false, "", ex.getMessage(), ex.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Problem> handleBatchException(BatchException ex, NativeWebRequest request) {
         return create(ex, request, HeaderUtil.createFailureAlert(applicationName, false, "", ex.getMessage(), ex.getMessage()));
     }
 }

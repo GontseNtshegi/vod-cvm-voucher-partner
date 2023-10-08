@@ -22,7 +22,7 @@ paths:
               $ref: '#/components/schemas/VoucherAllocationRequest'
       responses:
         '200':
-          description: Sucessful operation
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -117,6 +117,30 @@ paths:
           description: Method Not Allowed
         '500':
           description: Internal Server Error
+  /product/list:
+    get:
+      tags:
+        - product
+      summary: Retrieves a list of all the voucher based products
+      operationId: getProductList
+      description: Retrieves a list of all the voucher based products
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
   /voucher/redemption/{voucherId}:
     post:
       tags:
@@ -182,7 +206,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Sucessful operation
+          description: Successful operation
           content:
             application/json:
               schema:
@@ -197,6 +221,333 @@ paths:
           description: Method Not Allowed
         '500':
           description: Internal Server Error
+  /voucher/validation/{couponId}/{productId}:
+    get:
+      tags:
+        - voucher
+      summary: Checks validity of WiGroup vouchers being requested for refund
+      operationId: voucherValidation
+      description: Checks validity of WiGroup vouchers being requested for refund
+      parameters:
+        - name: couponId
+          in: path
+          required: true
+          description: WiGroup Coupon Id
+          schema:
+            type: integer
+        - name: productId
+          in: path
+          required: true
+          description: Product Identifier
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoucherValidationResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
+
+  /batch/list/{period}:
+    get:
+      tags:
+        - batch
+      summary: Retrieves list of batches
+      operationId: batchList
+      description: Returns a list of batches
+      parameters:
+        - name: period
+          in: path
+          required: true
+          description: The period in number of days in the past to which the query should be limited
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchListResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
+  /batch/status/{batchId}:
+    put:
+      tags:
+        - batch
+      summary: Close a batch or mark it as deleted.
+      operationId: batchStatus
+      description: Close a batch or mark it as deleted.
+      parameters:
+        - name: batchId
+          in: path
+          required: true
+          description: batch Identifier
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchStatusRequest'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchStatusResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
+  /batch/details/{batchId}:
+    get:
+      tags:
+        - batch
+      summary: Returns the details of a specific batch
+      operationId: batchDetails
+      description: Returns the details of a specific batch
+      parameters:
+        - name: batchId
+          in: path
+          required: true
+          description: Batch identifier
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchDetailsResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
+  /batch/upload/{batchId}:
+    put:
+      tags:
+        - batch
+      summary: Uploads a file containing voucher codes and links these to a batch
+      operationId: batchUpload
+      description: Uploads a file containing voucher codes and links these to a batch
+      parameters:
+        - name: batchId
+          in: path
+          required: true
+          description: Batch identifier
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUploadRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchUploadResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
+  /batch:
+    post:
+      tags:
+        - batch
+      summary: Creates a batch for the uploading of files
+      operationId: batch
+      description: Creates a batch for the uploading of files
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
+  /campaign/list:
+    get:
+      tags:
+        - campaign
+      summary: Retrieves a list of all the campaigns
+      operationId: getCampaignList
+      description: Retrieves a list of all the campaigns
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignListResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
+  /campaign/products/{campaignId}:
+    get:
+      tags:
+        - campaign
+      summary: Retrieve the voucher products linked to a campaign.
+      operationId: getCampaignProducts
+      description: Retrieve the voucher products linked to a campaign.
+      parameters:
+        - name: campaignId
+          in: path
+          required: true
+          description: Campaign Identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignProductsResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
+  /campaign/products/{campaignid}:
+    put:
+      tags:
+        - campaign
+      summary: Link / Delink voucher products from a campaign.
+      operationId: linkDelinkProduct
+      description: Link / Delink voucher products from a campaign.
+      parameters:
+        - name: campaignid
+          in: path
+          required: true
+          description: Campaign Identifier
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkDelinkRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkDelinkResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
+  /campaign/vouchers/quantities/{campaignId}:
+    get:
+      tags:
+        - campaign
+      summary: Retrieve the list of voucher quantities available.
+      operationId: getQuantities
+      description: Retrieve the list of voucher quantities available.
+      parameters:
+        - name: campaignId
+          in: path
+          required: true
+          description: Campaign Identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuantitesResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
+
+
 components:
   schemas:
     VoucherAllocationRequest:
@@ -377,6 +728,341 @@ components:
         expiryDate:
           type: string
           description: the date the giftcard expires "2015-05-25T23:59:59+0200"
+    ProductListResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/ProductListResponseObject'
+
+    ProductListResponseObject:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: Product Identifier
+        description:
+          type: string
+          description: Description
+        type:
+          type: string
+          description: Type
+          #enum: [Voucher,GenericVoucher,OnlineVoucher,OnlineGiftcard]
+        category:
+          type: string
+          description: Category
+        vendor:
+          type: string
+          description: Vendor
+        extId:
+          type: string
+          description: The id/SKU of this product on the external system. Eg the campaign Id on Wigroup
+        extSystem:
+          type: string
+          description: The external system being used for the issuing of real time vouchers
+        validityPeriod:
+          type: string
+          description: The default validity period in days, relative to the date of issue
+        cacheQuantity:
+          type: string
+          description: The number of vouchers to load into cache when the cache is depleted.
+        encryptedYN:
+          type: string
+          description: Whether the voucher code should be encrypted in the database. Should always be Y
+    VoucherValidationResponse:
+      type: object
+      properties:
+        couponId:
+          type: number
+          description: The unique coupon id/seq
+        description:
+          type: string
+          description: Description
+        voucherAmount:
+          type: number
+          description: Voucher Amount
+        status:
+          type: string
+          description: Status
+        createDate:
+          type: string
+        msisdn:
+          type: string
+    BatchListResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/BatchListResponseObject'
+    BatchListResponseObject:
+      type: object
+      properties:
+        Id:
+          type: integer
+          description: Batch Identifier
+        batchName:
+          type: string
+          description: The unique name of the batch
+        batchComment:
+          type: string
+          description: A descriptive comment for the batch
+        createDate:
+          description: Batch creation date
+          type: string
+          format: date-time
+        loadDate:
+          description: The date when the loading was completed
+          type: string
+          format: date-time
+        status:
+          type: string
+          description: The status of the batch. Can be one of:(O)pen, (A)ctivated, (D)eleted
+        createUser:
+          type: string
+          description: The user who initially created the batch
+        activateUser:
+          type: string
+          description: The user who activated the batch
+
+    BatchDetailsResponse:
+      type: object
+      properties:
+        Id:
+          type: integer
+          description: The unique id of the batch
+        batchName:
+          type: string
+          description: The unique id of the batch
+        batchComment:
+          type: string
+          description: A descriptive comment for the batch
+        createDate:
+          type: string
+          format: date-time
+          description: The date that the batch was created
+        loadDate:
+          type: string
+          format: date-time
+          description: The date when the loading was completed
+        status:
+          type: string
+          description: The status of the batch. Can be one of
+            (O)pen, (A)ctivated, (D)eleted
+        createUser:
+          type: string
+          description: The user who initially created the batch
+        activateUser:
+          type: string
+          description: The user who activated the batch
+        deleteUser:
+          type: string
+          description: The user who deleted the batch, if this was the case
+        deleteDate:
+          type: string
+          format: date-time
+          description: The date when the batch was deleted, if this was the case
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/BatchDetailsResponseObject'
+    BatchDetailsResponseObject:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: product id
+        productType:
+          type: string
+          description: quantities of vouchers linked to batch
+        productDescription:
+          type: string
+          description: description for a specific prduct
+        voucherDescription:
+          type: string
+          description: description for a voucher
+        fileName:
+          type: string
+          description: name of the given file
+        quantity:
+          type: integer
+          description: quantities of vouchers linked to batch
+        startDate:
+          type: string
+          format: date-time
+          description: start date
+        endDate:
+          type: string
+          format: date-time
+          description: end date
+        voucherExpiryDate:
+          type: string
+          format: date-time
+          description: voucher expiry date
+    BatchRequest:
+      type: object
+      properties:
+        userName:
+          type: string
+          description: User name of the person creating the batch
+        batchName:
+          type: string
+          description: Batch name
+        batchComment:
+          type: string
+          description: Batch description
+    BatchResponse:
+      type: object
+      properties:
+        batchId:
+          type: number
+          description: The unique coupon id/seq
+
+    CampaignListResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/CampaignListResponseObject'
+    CampaignListResponseObject:
+      type: object
+      properties:
+        campaignId:
+          type: string
+          description: Campaign Identifier
+        campaignName:
+          type: string
+          description: The unique name of the campaign
+        startDate:
+          type: string
+          example: '2021-03-03 16:40:35.796'
+          description: The start date/time of the campaign
+        endDate:
+          type: string
+          example: '2021-03-03 16:40:35.796'
+          description: The end date/time of the campaign
+
+    CampaignProductsResponse:
+      type: object
+      properties:
+        campaignId:
+          type: string
+          description: Campaign Identifier
+        campaignName:
+          type: string
+          description: The unique name of the campaign
+        startDate:
+          type: string
+          example: '2021-03-03 16:40:35.796'
+          description: The start date/time of the campaign
+        endDate:
+          type: string
+          example: '2021-03-03 16:40:35.796'
+          description: The end date/time of the campaign
+        "products":
+          type: array
+          items:
+            $ref: '#/components/schemas/VoucherProductResponseObject'
+    VoucherProductResponseObject:
+      type: object
+      properties:
+        Id:
+          type: string
+          description: Unique identifier for the row
+        productId:
+          type: string
+          description: The ID of the product linked to this campaign
+        productName:
+          type: string
+          description: The name of the product linked to this campaign
+        activeYN:
+          type: string
+          description: Whether the product is enabled for this campaign
+
+    LinkDelinkRequest:
+      type: object
+      properties:
+        addProducts:
+          description: A comma separated list of voucher products to add to this campaign
+          type: string
+        removeProducts:
+          description: A comma separated list of voucher products to remove from this campaign
+          type: string
+      required:
+        - productId
+    LinkDelinkResponse:
+      type: object
+      properties:
+        campaignId:
+          type: string
+          description: The unique campaign id
+        numAdded:
+          type: integer
+          format: int32
+          description: The number if products linked
+        numDeleted:
+          type: integer
+          format: int32
+          description: The number if products delinked
+    QuantitesResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/QuantitiesResponseObject'
+    QuantitiesResponseObject:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: Product Identifier
+        productType:
+          type: string
+          description: Type
+        productDescription:
+          type: string
+          description: Description
+        voucherDescription:
+          type: string
+          description: Category
+        quantity:
+          type: integer
+          description: The number of vouchers.
+        endDate:
+          type: string
+          description: The external system being used for the issuing of real time vouchers
+        voucherExpiryDate:
+          type: string
+          description: The default validity period in days, relative to the date of issue
+    BatchStatusRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Incoming status of a batch
+        userName:
+          type: string
+          description: Vodacom username
+    BatchStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: New updated response
+    BatchUploadRequest:
+      type: object
+      properties:
+        fileName:
+          type: string
+          description: Name of incoming csv file
+        data:
+          type: string
+          description: Incoming csv file
+        contentType:
+          type: string
+          enum: [.csv]
+    BatchUploadResponse:
+      type: object
+      properties:
+        numLoaded:
+          type: number
+          description: number of successfully loaded rows
+        numFailed:
+          type: number
+          description: number of failed rows
+
+
     Problem:
       type: object
       properties:

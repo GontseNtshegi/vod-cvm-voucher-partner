@@ -14,7 +14,7 @@ RUN \
    && update-ca-certificates
 ADD http://nexus-cvm-microservices-prod.app.prod.tc.ocp.vodacom.corp/repository/appdynamics/opt/apdynamics/AppServerAgentt.zip /opt/appdynamics/
 COPY cp-voucher-partner.jar  /opt/appdynamics/cp-voucher-partner.jar
-RUN chmod -R o+x /opt/appdynamics/
+RUN chmod 777 -R /opt/appdynamics/
 RUN apk add --no-cache curl
 WORKDIR /opt/appdynamics/
 RUN unzip AppServerAgentt.zip
@@ -35,4 +35,3 @@ CMD java \
          -Dappdynamics.force.default.ssl.certificate.validation=false \
          -Xms1024m -Xmx2048m \
         -jar -Djavax.net.ssl.trustStore=$JAVA_HOME/jre/lib/security/cacerts /opt/appdynamics/cp-voucher-partner.jar
-USER 1000

@@ -1,11 +1,13 @@
 package za.co.vodacom.cvm.domain;
 
-import java.io.Serializable;
-import java.time.ZonedDateTime;
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.time.ZonedDateTime;
 
 /**
  * A VPBatch.
@@ -38,9 +40,32 @@ public class VPBatch implements Serializable {
     @Column(name = "restricted_yn", length = 1, nullable = false)
     private String restrictedYN;
 
+    @Column(name = "delete_date")
+    private ZonedDateTime deleteDate;
+
     @NotNull
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    @Size(max = 1)
+    @Column(name = "status", length = 1, nullable = false)
+    private String status;
+
+    @NotNull
+    @Size(max = 50)
+    @Column(name = "name", length = 50, nullable = false)
+    private String name;
+
+    @NotNull
+    @Size(max = 100)
+    @Column(name = "create_user", length = 100, nullable = false)
+    private String createUser;
+
+
+    @Size(max = 100)
+    @Column(name = "activate_user", length = 100, nullable = false)
+    private String activateUser;
+
+    @Size(max = 100)
+    @Column(name = "delete_user", length = 100)
+    private String deleteUser;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -108,18 +133,6 @@ public class VPBatch implements Serializable {
         this.restrictedYN = restrictedYN;
     }
 
-    public Integer getUserId() {
-        return this.userId;
-    }
-
-    public VPBatch userId(Integer userId) {
-        this.userId = userId;
-        return this;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -140,16 +153,68 @@ public class VPBatch implements Serializable {
         return getClass().hashCode();
     }
 
-    // prettier-ignore
+    public ZonedDateTime getDeleteDate() {
+        return deleteDate;
+    }
+
+    public void setDeleteDate(ZonedDateTime deleteDate) {
+        this.deleteDate = deleteDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    public String getActivateUser() {
+        return activateUser;
+    }
+
+    public void setActivateUser(String activateUser) {
+        this.activateUser = activateUser;
+    }
+
+    public String getDeleteUser() {
+        return deleteUser;
+    }
+
+    public void setDeleteUser(String deleteUser) {
+        this.deleteUser = deleteUser;
+    }
+
     @Override
     public String toString() {
         return "VPBatch{" +
-            "id=" + getId() +
-            ", createDate='" + getCreateDate() + "'" +
-            ", loadDate='" + getLoadDate() + "'" +
-            ", comment='" + getComment() + "'" +
-            ", restrictedYN='" + getRestrictedYN() + "'" +
-            ", userId=" + getUserId() +
-            "}";
+            "id=" + id +
+            ", createDate=" + createDate +
+            ", loadDate=" + loadDate +
+            ", comment='" + comment + '\'' +
+            ", restrictedYN='" + restrictedYN + '\'' +
+            ", deleteDate=" + deleteDate +
+            ", status='" + status + '\'' +
+            ", name='" + name + '\'' +
+            ", createUser='" + createUser + '\'' +
+            ", activateUser='" + activateUser + '\'' +
+            ", deleteUser='" + deleteUser + '\'' +
+            '}';
     }
 }

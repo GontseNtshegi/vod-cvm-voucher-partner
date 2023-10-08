@@ -1,8 +1,10 @@
 package za.co.vodacom.cvm.service;
 
+import za.co.vodacom.cvm.domain.VPCampaign;
+import za.co.vodacom.cvm.service.dto.campaign.CampaignProductDTO;
+
 import java.util.List;
 import java.util.Optional;
-import za.co.vodacom.cvm.domain.VPCampaign;
 
 /**
  * Service Interface for managing {@link VPCampaign}.
@@ -52,4 +54,6 @@ public interface VPCampaignService {
      * @return
      */
     Optional<VPCampaign> findByName(String name);
+
+    List<CampaignProductDTO> getCampaignProducts(String campaignId);
 }

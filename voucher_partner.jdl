@@ -34,6 +34,12 @@ entity VPBatch {
     Comment String maxlength(100) required,
     RestrictedYN String maxlength(1) required,
     UserId Integer required
+    Name String maxlength(50),
+    CreateUser String maxlength(100),
+    Status String maxlength(1),
+    ActivateUser String maxlength(100),
+    DeleteUser String maxlength(100),
+    DeleteDate ZonedDateTime,
 }
 
 entity VPCampaignVouchers {

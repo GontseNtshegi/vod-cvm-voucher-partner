@@ -162,17 +162,26 @@ application:
     internal: '^270[4-8][0-9][0-9][0-9]000[0-9]*'
     external: '^27[4-8][0-9]*'
   coupons:
-    url: https://za-vsp.wigroup.co/cvs-issuer/rest
+    url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     name: wigroup-coupons
-    apiId: VodaSummerShake
+    apiId: ????
     apiPassword: ????
   giftCards:
-    url: https://za-vsp.wigroup.co/cvs-issuer/rest/giftcards
-    name: wigroup-giftcards
-    apiId: ADVANCEME
-    apiPassword: ???
+    url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
+    defaults:
+      name: wigroup-giftcards
+      apiId: ????
+      apiPassword: ????
+    campaign10:
+      name: wigroup-giftcards-10
+      apiId: ????
+      apiPassword: ????
   encryption:
     key: WSKLTDC7RXD22B81
+  proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080
+  proxyPort: 8080
+  proxyUser: vcacmang%40vodacom
+  proxyPassword: V0d4f0n3%402020
 jasypt:
   encryptor:
     password: CVMicroservices

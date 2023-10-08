@@ -8,8 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import za.co.vodacom.cvm.domain.VPVouchers;
+import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
 import za.co.vodacom.cvm.service.dto.product.Product;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,12 +51,43 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     void updateReturnedVoucher(@Param("id") Long id);
 
     @Query(
-        value = "select new za.co.vodacom.cvm.service.dto.product.Product(count(*), min(endDate)) from VPVouchers where productId=:productId and startDate< sysdate() and endDate>sysdate() and issuedDate is null"
+        value = "select new za.co.vodacom.cvm.service.dto.product.Product(count(*), min(v.endDate)) from VPVouchers v, VPBatch b" +
+            " where v.productId=:productId " +
+            "and v.startDate< v.sysdate() " +
+            "and v.endDate> v.sysdate() " +
+            "and v.issuedDate is null " +
+            "and v.batchId = b.id " +
+            "and b.status ='A'" +
+            "and rownum < 2"
     )
     Optional<Product> getValidVoucherForProduct(@Param("productId") String productId);
+
 
     @Query(
         value = "select new za.co.vodacom.cvm.service.dto.product.Product(quantity, endDate) from VPVouchers where productId=:productId and startDate< sysdate() and endDate>sysdate()"
     )
     Optional<Product> getValidVoucherForProductGenericVoucher(@Param("productId") String productId);
+
+    @Query(
+        value = "select new za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO(d.id, " +
+            "d.type," +
+            "d.description," +
+            "v.description ," +
+            "v.endDate,  " +
+            "v.expiryDate, "+
+            "count(d.id))"+
+            "from VPVouchers v, VPVoucherDef d, VPCampaignVouchers c, VPBatch b " +
+            "where v.productId = d.id " +
+            "and v.batchId = b.id " +
+            "and v.productId = c.productId " +
+            "and c.campaignId = :id " +
+            "and c.activeYN ='Y' " +
+            "and b.status ='A' " +
+            "and v.issuedDate is null " +
+            "and v.endDate > :sysdate " +
+            "group by d.id,d.type,d.description,v.description,v.endDate,v.expiryDate " +
+            "order by 1"
+    )
+    List<QuantityDetailsDTO> getVoucherQuantity(@Param("id") Long id, @Param("sysdate") ZonedDateTime sysdate);
+
 }

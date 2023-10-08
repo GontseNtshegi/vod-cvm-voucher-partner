@@ -1,8 +1,9 @@
 package za.co.vodacom.cvm.service;
 
+import za.co.vodacom.cvm.domain.VPFileLoad;
+
 import java.util.List;
 import java.util.Optional;
-import za.co.vodacom.cvm.domain.VPFileLoad;
 
 /**
  * Service Interface for managing {@link VPFileLoad}.
@@ -45,4 +46,6 @@ public interface VPFileLoadService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    Optional<VPFileLoad> findByBatchIdAndAndFileName(Integer batchId, String fileName);
 }

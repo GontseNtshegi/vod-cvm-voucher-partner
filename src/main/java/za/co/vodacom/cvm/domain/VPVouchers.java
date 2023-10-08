@@ -85,6 +85,7 @@ public class VPVouchers implements Serializable {
     private VPVoucherDef productId;*/
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
         return id;
     }
@@ -131,6 +132,10 @@ public class VPVouchers implements Serializable {
     public VPVouchers productId(String productId) {
         this.productId = productId;
         return this;
+    }
+
+    public String getProductId() {
+        return productId;
     }
 
     public void setProductId(String productId) {
@@ -319,7 +324,7 @@ public class VPVouchers implements Serializable {
             "id=" + getId() +
             ", batchId=" + getBatchId() +
             ", fileId=" + getFileId() +
-            //", productId='" + getProductId() + "'" +
+            ", productId='" + getProductId() + "'" +
             ", voucherCode='" + getVoucherCode() + "'" +
             ", description='" + getDescription() + "'" +
             ", createDate='" + getCreateDate() + "'" +

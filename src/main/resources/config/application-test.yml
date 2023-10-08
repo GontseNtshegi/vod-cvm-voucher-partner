@@ -15,13 +15,13 @@
 
 logging:
   level:
-    ROOT: INFO
-    tech.jhipster: INFO
-    za.co.vodacom.cvm: INFO
+    ROOT: DEBUG
+    tech.jhipster: DEBUG
+    za.co.vodacom.cvm: DEBUG
 
 eureka:
   instance:
-    prefer-ip-address: true
+    prefer-ip-address: false
   client:
     service-url:
       defaultZone: http://admin:${jhipster.registry.password}@localhost:8761/eureka/
@@ -30,7 +30,7 @@ management:
   metrics:
     export:
       prometheus:
-        enabled: false
+        enabled: true
 
 spring:
   devtools:
@@ -47,14 +47,14 @@ spring:
       uri: http://admin:${jhipster.registry.password}@localhost:8761/config
       # name of the config server's property source (file.yml) that we want to use
       name: voucherpartner
-      profile: prod
-      label: main # toggle to switch to a different version of the configuration as stored in git
+      profile: test
+      label: test # toggle to switch to a different version of the configuration as stored in git
       # it can be set to any label, branch or commit of the configuration source Git repository
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://loyalty.cluster-cc1yxzokhc4w.eu-west-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
-    username: superuser
-    password: ENC(AWLMQYuWBhMTte4NFtOqOFmrtz/h03+9ZFfJyJpkQfx9ZwU3WYvg7Jv5EIl30GUq4ezFf01+uswR0tXmFmQsyQ==)
+    url: jdbc:mysql://cvm-voucher-nonprod.cluster-cztfqcf6zvwm.af-south-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: voucher-user-nonprod
+    password: 2oOmdNx0c6
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -78,6 +78,13 @@ spring:
     locator:
       discovery:
         enabled: true
+  batch:
+    job:
+      enabled: false
+  servlet:
+    multipart:
+      max-file-size: 512MB
+      max-request-size: 512MB
 
 # ===================================================================
 # To enable TLS in production, generate a certificate using:
@@ -99,11 +106,11 @@ spring:
 #     ciphers: TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 ,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 ,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 ,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,TLS_DHE_RSA_WITH_AES_256_CBC_SHA,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA,TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA,TLS_RSA_WITH_CAMELLIA_256_CBC_SHA,TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA,TLS_RSA_WITH_CAMELLIA_128_CBC_SHA
 # ===================================================================
 server:
-  port: 8087
+  port: 8080
   shutdown: graceful # see https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-graceful-shutdown
   compression:
     enabled: true
-    mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
+    mime-types: text/html,text/xml,text/plain,text/css,application/javascript,application/json,image/svg+xml
     min-response-size: 1024
 
 # ===================================================================
@@ -158,12 +165,17 @@ application:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     name: wigroup-coupons
     apiId: vodacomqa_voucher
-    apiPassword: ENC(hXtf4TV12Puvss/fpEwEBi44RPIaZA4AXwcFXEcl+chbHy+TBa8okaMV6pXQ/9ay)
+    apiPassword: test
   giftCards:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
-    name: wigroup-giftcards
-    apiId: vodacomqa_giftcard
-    apiPassword: ENC(aMYdtF3FcPlnY7DbO8+kexkKGMm8LP5VSiXVtGkziMZXq0Zf9wpGYytjczaZiGBd)
+    defaults:
+      name: wigroup-giftcards
+      apiId: vodacomqa_giftcard
+      apiPassword: test
+    campaign10:
+      name: wigroup-giftcards-10
+      apiId: vodaAPI_1
+      apiPassword: testtest
   encryption:
     key: WSKLTDC7RXD22B81
   proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080

@@ -1,7 +1,9 @@
 package za.co.vodacom.cvm.service.impl;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPBatch;
 import za.co.vodacom.cvm.repository.VPBatchRepository;
 import za.co.vodacom.cvm.service.VPBatchService;
+import za.co.vodacom.cvm.service.dto.batch.BatchDetailsDTO;
 
 /**
  * Service Implementation for managing {@link VPBatch}.
@@ -27,12 +30,14 @@ public class VPBatchServiceImpl implements VPBatchService {
 
     @Override
     public VPBatch save(VPBatch vPBatch) {
+        log.info("Request to save VPBatch");
         log.debug("Request to save VPBatch : {}", vPBatch);
         return vPBatchRepository.save(vPBatch);
     }
 
     @Override
     public Optional<VPBatch> partialUpdate(VPBatch vPBatch) {
+        log.info("Request to partially update VPBatch");
         log.debug("Request to partially update VPBatch : {}", vPBatch);
 
         return vPBatchRepository
@@ -51,9 +56,6 @@ public class VPBatchServiceImpl implements VPBatchService {
                     if (vPBatch.getRestrictedYN() != null) {
                         existingVPBatch.setRestrictedYN(vPBatch.getRestrictedYN());
                     }
-                    if (vPBatch.getUserId() != null) {
-                        existingVPBatch.setUserId(vPBatch.getUserId());
-                    }
 
                     return existingVPBatch;
                 }
@@ -64,6 +66,7 @@ public class VPBatchServiceImpl implements VPBatchService {
     @Override
     @Transactional(readOnly = true)
     public List<VPBatch> findAll() {
+        log.info("Request to get all VPBatches");
         log.debug("Request to get all VPBatches");
         return vPBatchRepository.findAll();
     }
@@ -71,6 +74,7 @@ public class VPBatchServiceImpl implements VPBatchService {
     @Override
     @Transactional(readOnly = true)
     public Optional<VPBatch> findOne(Long id) {
+        log.info("Request to get VPBatch");
         log.debug("Request to get VPBatch : {}", id);
         return vPBatchRepository.findById(id);
     }
@@ -80,4 +84,45 @@ public class VPBatchServiceImpl implements VPBatchService {
         log.debug("Request to delete VPBatch : {}", id);
         vPBatchRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<List<VPBatch>> getAll() {
+        log.info("Request to getAll VPBatch");
+        log.debug("Request to getAll VPBatch :");
+        return vPBatchRepository.getAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BatchDetailsDTO> getVoucherQuantity(Integer id, ZonedDateTime sysdate) {
+        log.info("Request to get Voucher Quantity");
+        log.debug("Request get Voucher Quantity: {}", id);
+        return vPBatchRepository.getVoucherQuantity(id, sysdate);
+    }
+
+    @Override
+    public Optional<VPBatch> findByName(String name) {
+        log.info("Request to find by name in VPBatch ");
+        log.debug("Request to find by name in VPBatch : {}", name);
+        return vPBatchRepository.findByName(name);
+    }
+
+    @Override
+    public Optional<VPBatch> getBatch(Long id) {
+        log.info("Request to find batch in VPBatch  ");
+        log.debug("Request to find batch in VPBatch with id : {}", id);
+        return vPBatchRepository.getBatch(id);
+    }
+
+    @Override
+    public Optional<VPBatch> getBatchWithStatus(Long id) {
+        log.info("Request to find batch in VPBatch");
+        log.debug("Request to find batch in VPBatch with id : {}", id);
+        return vPBatchRepository.getBatchWithStatus(id);
+    }
+    @Override
+    public Optional<List<VPBatch>> getAllListWithInterval(Integer period){
+        return vPBatchRepository.getAllListWithInterval(period);
+    }
+
 }

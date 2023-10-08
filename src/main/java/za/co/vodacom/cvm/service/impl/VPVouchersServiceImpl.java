@@ -1,5 +1,6 @@
 package za.co.vodacom.cvm.service.impl;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.repository.VPVouchersRepository;
 import za.co.vodacom.cvm.service.VPVouchersService;
+import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
 import za.co.vodacom.cvm.service.dto.product.Product;
 
 /**
@@ -36,6 +38,7 @@ public class VPVouchersServiceImpl implements VPVouchersService {
 
     @Override
     public Optional<VPVouchers> partialUpdate(VPVouchers vPVouchers) {
+        log.info("Request to partially update VPVouchers");
         log.debug("Request to partially update VPVouchers : {}", vPVouchers);
 
         return vPVouchersRepository
@@ -92,6 +95,7 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     @Override
     @Transactional(readOnly = true)
     public List<VPVouchers> findAll() {
+        log.info("Request to get all VPVouchers");
         log.debug("Request to get all VPVouchers");
         return vPVouchersRepository.findAll();
     }
@@ -99,12 +103,14 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     @Override
     @Transactional(readOnly = true)
     public Optional<VPVouchers> findOne(Long id) {
+        log.info("Request to get VPVouchers");
         log.debug("Request to get VPVouchers : {}", id);
         return vPVouchersRepository.findById(id);
     }
 
     @Override
     public void delete(Long id) {
+        log.info("Request to delete VPVouchers");
         log.debug("Request to delete VPVouchers : {}", id);
         vPVouchersRepository.deleteById(id);
     }
@@ -112,6 +118,7 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     @Override
     // @Transactional
     public Optional<VPVouchers> getValidVoucher(String productId) {
+        log.info("Request to get Valid VPVouchers");
         log.debug("Request to get Valid VPVouchers : {}", productId);
         return vPVouchersRepository.getValidVoucher(productId);
     }
@@ -119,12 +126,14 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     @Override
     // @Transactional
     public List<VPVouchers> getValidVoucherWithLock(String productId) {
+        log.info("Request to get Valid VPVouchers");
         log.debug("Request to get Valid VPVouchers : {}", productId);
         return vPVouchersRepository.getValidVoucherWithLock(productId, (Pageable) PageRequest.of(0,1));
     }
 
     @Override
     public void issueVoucher(String incomingTrxId, Long id) {
+        log.info("Request to issue VPVouchers");
         log.debug("Request to issue VPVouchers : {}, {}", incomingTrxId, id);
         vPVouchersRepository.issueVoucher(incomingTrxId, id);
     }
@@ -149,4 +158,11 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     public Optional<Product> getValidVoucherForProductGenericVoucher(String productId) {
         return vPVouchersRepository.getValidVoucherForProductGenericVoucher(productId);
     }
+
+    @Override
+    public List<QuantityDetailsDTO> getVoucherQuantity(Long campaignId, ZonedDateTime extDate) {
+        log.debug("Request to get campaign vouchers quantities.");
+        return vPVouchersRepository.getVoucherQuantity(campaignId,extDate);
+    }
+
 }

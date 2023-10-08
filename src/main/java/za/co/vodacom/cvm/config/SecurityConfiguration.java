@@ -2,6 +2,7 @@ package za.co.vodacom.cvm.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +16,7 @@ import tech.jhipster.config.JHipsterProperties;
 import za.co.vodacom.cvm.security.*;
 import za.co.vodacom.cvm.security.jwt.*;
 
+@Profile("!local")
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @Import(SecurityProblemSupport.class)

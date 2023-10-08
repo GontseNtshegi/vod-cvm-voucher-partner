@@ -27,12 +27,14 @@ public class VPUsersServiceImpl implements VPUsersService {
 
     @Override
     public VPUsers save(VPUsers vPUsers) {
+        log.info("Request to save VPUsers ");
         log.debug("Request to save VPUsers : {}", vPUsers);
         return vPUsersRepository.save(vPUsers);
     }
 
     @Override
     public Optional<VPUsers> partialUpdate(VPUsers vPUsers) {
+        log.info("Request to partially update VPUsers");
         log.debug("Request to partially update VPUsers : {}", vPUsers);
 
         return vPUsersRepository
@@ -61,6 +63,7 @@ public class VPUsersServiceImpl implements VPUsersService {
     @Override
     @Transactional(readOnly = true)
     public List<VPUsers> findAll() {
+        log.info("Request to get all VPUsers");
         log.debug("Request to get all VPUsers");
         return vPUsersRepository.findAll();
     }
@@ -68,12 +71,14 @@ public class VPUsersServiceImpl implements VPUsersService {
     @Override
     @Transactional(readOnly = true)
     public Optional<VPUsers> findOne(Long id) {
+        log.info("Request to get VPUsers");
         log.debug("Request to get VPUsers : {}", id);
         return vPUsersRepository.findById(id);
     }
 
     @Override
     public void delete(Long id) {
+        log.info("Request to delete VPUsers");
         log.debug("Request to delete VPUsers : {}", id);
         vPUsersRepository.deleteById(id);
     }

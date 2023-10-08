@@ -1,6 +1,7 @@
 package za.co.vodacom.cvm.web.rest;
 
 import brave.Tracer;
+import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,11 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import org.zalando.problem.Status;
 import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
-import za.co.vodacom.cvm.client.wigroup.api.GiftcardsApiClient;
+import za.co.vodacom.cvm.client.wigroup.api.GiftcardsCampaign10ApiClient;
+import za.co.vodacom.cvm.client.wigroup.api.GiftcardsDefaultApiClient;
 import za.co.vodacom.cvm.client.wigroup.model.*;
 import za.co.vodacom.cvm.config.ApplicationProperties;
 import za.co.vodacom.cvm.config.Constants;
@@ -34,6 +37,7 @@ import za.co.vodacom.cvm.web.api.model.*;
 import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
 
 import javax.persistence.LockTimeoutException;
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -66,7 +70,10 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     CouponsApiClient couponsApiClient;
 
     @Autowired
-    GiftcardsApiClient giftcardsApiClient;
+    GiftcardsCampaign10ApiClient giftcardsCampaign10ApiClient;
+
+    @Autowired
+    GiftcardsDefaultApiClient giftcardsDefaultApiClient;
 
     @Autowired
     Tracer tracer;
@@ -272,10 +279,24 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
                                     log.info(giftCardsRequest.toString());
                                     //call wi group
-                                    ResponseEntity<GiftCardsResponse> giftCardsResponseResponseEntity = giftcardsApiClient.updateVoucherToReserved(
-                                        true,
-                                        giftCardsRequest
-                                    );
+                                    ResponseEntity<GiftCardsResponse> giftCardsResponseResponseEntity = null;
+                                    try {
+                                        if (vpCampaign.get().getId().equals((long) 10)) {
+                                            giftCardsResponseResponseEntity = giftcardsCampaign10ApiClient.updateVoucherToReserved(
+                                                true,
+                                                giftCardsRequest
+                                            );
+                                        } else {
+                                            giftCardsResponseResponseEntity = giftcardsDefaultApiClient.updateVoucherToReserved(
+                                                true,
+                                                giftCardsRequest
+                                            );
+                                        }
+                                    } catch (FeignException ex) {
+                                        log.error("Feign client exception message - {}", ex.getMessage());
+                                        throw new ResponseStatusException(HttpStatus.valueOf(ex.status()), ex.getMessage());
+
+                                    }
                                     //success
                                     GiftCardsResponse giftCardsResponse = giftCardsResponseResponseEntity.getBody();
                                     log.info("Gift Card Response is: {}", giftCardsResponse);
@@ -471,8 +492,14 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
         //if VP_Campaign is succesfully validated
         else {
             //call wi group
-            ResponseEntity<GiftCardsBalanceResponse> GiftCardsBalanceResponseEntity = giftcardsApiClient.viewGiftcard(voucherid.longValue());
-             GiftCardsBalanceResponse GiftCardsBalanceResponse = GiftCardsBalanceResponseEntity.getBody();
+            GiftCardsBalanceResponse GiftCardsBalanceResponse = new GiftCardsBalanceResponse();
+            if (vpCampaign.get().getId().equals((long) 10)) {
+                ResponseEntity<GiftCardsBalanceResponse> GiftCardsBalanceResponseEntity = giftcardsCampaign10ApiClient.viewGiftcard(voucherid.longValue());
+                GiftCardsBalanceResponse = GiftCardsBalanceResponseEntity.getBody();
+            } else {
+                ResponseEntity<GiftCardsBalanceResponse> GiftCardsBalanceResponseEntity = giftcardsDefaultApiClient.viewGiftcard(voucherid.longValue());
+                GiftCardsBalanceResponse = GiftCardsBalanceResponseEntity.getBody();
+            }
 
              //logging response
             log.debug("Gift Card Response is: {}", GiftCardsBalanceResponse);
@@ -510,8 +537,12 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
         if (vpCampaign.isPresent()) {
 
             //call wi group
-            ResponseEntity<GiftCardsRedeemResponse> giftCardsRedeemResponseResponseEntity = giftcardsApiClient.redeemGiftcard(voucherId
-            );
+            ResponseEntity<GiftCardsRedeemResponse> giftCardsRedeemResponseResponseEntity;
+            if (vpCampaign.get().getId().equals((long) 10)) {
+                giftCardsRedeemResponseResponseEntity = giftcardsCampaign10ApiClient.redeemGiftcard(voucherId);
+            } else {
+                giftCardsRedeemResponseResponseEntity = giftcardsDefaultApiClient.redeemGiftcard(voucherId);
+            }
             //success
             GiftCardsRedeemResponse giftCardsRedeemResponse = giftCardsRedeemResponseResponseEntity.getBody();
             log.info("Gift Card Response is: {}", giftCardsRedeemResponse);
@@ -535,6 +566,43 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
             throw new AllocationException("Invalid Campaign", Status.NOT_FOUND);
         }
         return new ResponseEntity<>(redemptionResponse, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<VoucherValidationResponse> voucherValidation(Integer couponId,
+                                                                        String productId) {
+       VoucherValidationResponse voucherValidationResponse = new VoucherValidationResponse();
+
+       Optional<VPVoucherDef> optionalVPVoucherDef = vpVoucherDefService.findById(productId);
+       if(optionalVPVoucherDef.isPresent()){
+           ResponseEntity<CouponsGetResponse> couponsGetResponseResponseEntity = couponsApiClient.getVoucher(couponId.longValue());
+           if(couponsGetResponseResponseEntity.getStatusCode().is2xxSuccessful()){
+               CouponsGetResponse couponsGetResponse = couponsGetResponseResponseEntity.getBody();
+
+               if (
+                   couponsGetResponse.getResponseCode().equals(Constants.RESPONSE_CODE) ||
+                       couponsGetResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
+               ) {
+                   voucherValidationResponse.setVoucherAmount(couponsGetResponse.getCoupon().getVoucherAmount());
+                   voucherValidationResponse.setMsisdn(couponsGetResponse.getCoupon().getMobileNumber());
+                   voucherValidationResponse.setDescription(couponsGetResponse.getCoupon().getDescription());
+                   voucherValidationResponse.setCouponId(BigDecimal.valueOf(couponsGetResponse.getCoupon().getId()));
+                   voucherValidationResponse.setStatus(couponsGetResponse.getCoupon().getStateId().getValue());
+                   voucherValidationResponse.setCreateDate(couponsGetResponse.getCoupon().getCreateDate());
+               }
+               else
+                   throw new AllocationException("Coupon Validation Failed at WiGroup", Status.NOT_FOUND);
+
+
+           }
+       }
+       else
+           throw new AllocationException("Invalid Product ID", Status.NOT_FOUND);
+
+
+
+        return new ResponseEntity<>(voucherValidationResponse, HttpStatus.OK);
+
     }
 
 }

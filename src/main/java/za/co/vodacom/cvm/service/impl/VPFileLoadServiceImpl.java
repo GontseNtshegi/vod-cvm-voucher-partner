@@ -1,7 +1,5 @@
 package za.co.vodacom.cvm.service.impl;
 
-import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -9,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.domain.VPFileLoad;
 import za.co.vodacom.cvm.repository.VPFileLoadRepository;
 import za.co.vodacom.cvm.service.VPFileLoadService;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link VPFileLoad}.
@@ -27,12 +28,14 @@ public class VPFileLoadServiceImpl implements VPFileLoadService {
 
     @Override
     public VPFileLoad save(VPFileLoad vPFileLoad) {
+        log.info("Request to save VPFileLoad");
         log.debug("Request to save VPFileLoad : {}", vPFileLoad);
         return vPFileLoadRepository.save(vPFileLoad);
     }
 
     @Override
     public Optional<VPFileLoad> partialUpdate(VPFileLoad vPFileLoad) {
+        log.info("Request to partially update VPFileLoad");
         log.debug("Request to partially update VPFileLoad : {}", vPFileLoad);
 
         return vPFileLoadRepository
@@ -67,6 +70,7 @@ public class VPFileLoadServiceImpl implements VPFileLoadService {
     @Override
     @Transactional(readOnly = true)
     public List<VPFileLoad> findAll() {
+        log.info("Request to get all VPFileLoads");
         log.debug("Request to get all VPFileLoads");
         return vPFileLoadRepository.findAll();
     }
@@ -74,13 +78,21 @@ public class VPFileLoadServiceImpl implements VPFileLoadService {
     @Override
     @Transactional(readOnly = true)
     public Optional<VPFileLoad> findOne(Long id) {
+        log.info("Request to get VPFileLoad");
         log.debug("Request to get VPFileLoad : {}", id);
         return vPFileLoadRepository.findById(id);
     }
 
     @Override
     public void delete(Long id) {
+        log.info("Request to delete VPFileLoad");
         log.debug("Request to delete VPFileLoad : {}", id);
         vPFileLoadRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<VPFileLoad> findByBatchIdAndAndFileName(Integer batchId, String fileName) {
+        return vPFileLoadRepository.findByBatchIdAndAndFileName(batchId, fileName);
+    }
+
 }

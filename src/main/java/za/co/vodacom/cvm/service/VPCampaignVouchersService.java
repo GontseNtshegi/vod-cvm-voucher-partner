@@ -1,8 +1,10 @@
 package za.co.vodacom.cvm.service;
 
+import org.springframework.data.repository.query.Param;
+import za.co.vodacom.cvm.domain.VPCampaignVouchers;
+
 import java.util.List;
 import java.util.Optional;
-import za.co.vodacom.cvm.domain.VPCampaignVouchers;
 
 /**
  * Service Interface for managing {@link VPCampaignVouchers}.
@@ -52,4 +54,10 @@ public interface VPCampaignVouchersService {
      * @return
      */
     Optional<VPCampaignVouchers> findByProductIdAndCampaignIdAndActiveYN(String productId, Long campaignId, String activeYN);
+
+    List<VPCampaignVouchers> getVouchersByCampaign (Long campaignId);
+
+    Optional<VPCampaignVouchers> findVoucherByProductIdandCampaignId(@Param("campaignId") Long campaignid, @Param("productId")String productid);
+
+
 }

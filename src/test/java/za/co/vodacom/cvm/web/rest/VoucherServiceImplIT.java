@@ -246,31 +246,33 @@ public class VoucherServiceImplIT {
             .andExpect(jsonPath("$.[*].collectPoint").value(hasItem(vPVouchers1.getCollectionPoint())))
             .andExpect(jsonPath("$.[*].expiryDate").value(hasItem(sameInstant(vPVouchers1.getExpiryDate()))))
             .andExpect(jsonPath("$.[*].trxId").value(hasItem(voucherAllocationRequest1.getTrxId())));
-    }/*@Test
+    }
+
+    @Test
     public void issueOnlineVoucher() throws Exception {
-        voucherAllocationRequest.setProductId(PRODUCT_ID2);
+        voucherAllocationRequest1.setProductId(PRODUCT_ID2);
         restVoucherMockMvc
             .perform(
                 post(ALLOCATION_API_URL)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(voucherAllocationRequest))
+                    .content(TestUtil.convertObjectToJsonBytes(voucherAllocationRequest1))
             )
             .andExpect(status().isOk());
-
     }
+
     @Test
     public void returnVoucher() throws Exception {
         restVoucherMockMvc
             .perform(
                 post(ALLOCATION_API_URL)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(voucherAllocationRequest))
+                    .content(TestUtil.convertObjectToJsonBytes(voucherAllocationRequest1))
             )
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))*/
-    // .andExpect(jsonPath("$.[*].voucherId").value(hasItem(vPVouchers.getId().intValue())))
-    // .andExpect(jsonPath("$.[*].voucherDescription").value(hasItem(DEFAULT_BATCH_ID)))
-    // .andExpect(jsonPath("$.[*].trxId").value(hasItem(DEFAULT_FILE_ID)))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
+        //            .andExpect(jsonPath("$.[*].voucherId").value(hasItem(vPVouchers.getId().intValue())))
+        //            .andExpect(jsonPath("$.[*].voucherDescription").value(hasItem(DEFAULT_BATCH_ID)))
+        //            .andExpect(jsonPath("$.[*].trxId").value(hasItem(DEFAULT_FILE_ID)))
 
-    //}
+    }
 }

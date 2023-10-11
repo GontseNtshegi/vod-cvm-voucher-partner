@@ -52,9 +52,9 @@ spring:
       # it can be set to any label, branch or commit of the configuration source Git repository
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://cvm-voucher.cluster-ceu0h3kuwvxu.af-south-1.rds.amazonaws.com:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
-    username: voucher-user-prod
-    password: '{cipher}3be46d45cf1b386156769d87113198f89249e0f45123f4b29aa3a3d2e9cc82693617b850de68534cc29a7efe1550b924'
+    url: jdbc:mysql://localhost:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: root
+    password:
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -162,17 +162,26 @@ application:
     internal: '^270[4-8][0-9][0-9][0-9]000[0-9]*'
     external: '^27[4-8][0-9]*'
   coupons:
-    url: https://za-vsp.wigroup.co/cvs-issuer/rest
+    url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     name: wigroup-coupons
-    apiId: VodaSummerShake
-    apiPassword: '{cipher}ab485734e1e9b763beb7101a463cabb3457ea427f13daa13606dc0571777bd12'
+    apiId: ????
+    apiPassword: ????
   giftCards:
-    url: https://za-vsp.wigroup.co/cvs-issuer/rest/giftcards
-    name: wigroup-giftcards
-    apiId: ADVANCEME
-    apiPassword: '{cipher}d936d30962db8d9081a621270be8ded2c3d98cc12b314dffd99e13f5c7c376e5'
+    url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
+    defaults:
+      name: wigroup-giftcards
+      apiId: ????
+      apiPassword: ????
+    campaign10:
+      name: wigroup-giftcards-10
+      apiId: ????
+      apiPassword: ????
   encryption:
     key: WSKLTDC7RXD22B81
+  proxyHost: http://vcacmang%40vodacom:V0d4f0n3%402020@zamdh13001p1.vodacom.corp:8080
+  proxyPort: 8080
+  proxyUser: vcacmang%40vodacom
+  proxyPassword: V0d4f0n3%402020
 jasypt:
   encryptor:
     password: CVMicroservices

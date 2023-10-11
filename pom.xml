@@ -7,7 +7,7 @@
 
     <groupId>za.co.vodacom.cvm</groupId>
     <artifactId>cp-voucher-partner</artifactId>
-    <version>2.4.102-SNAPSHOT</version>
+    <version>2.3.29</version>
     <packaging>jar</packaging>
     <name>Voucherpartner</name>
 
@@ -359,6 +359,7 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>1.7.6</version>
         </dependency>
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
@@ -386,6 +387,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-batch</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
 
     <build>
@@ -786,10 +794,10 @@
                                 <message>You are running an older version of Maven. JHipster requires at least Maven ${maven.version}</message>
                                 <version>[${maven.version},)</version>
                             </requireMavenVersion>
-                            <requireJavaVersion>
-                                <message>You are running an incompatible version of Java. JHipster supports JDK 8 to 15.</message>
-                                <version>[1.8,16)</version>
-                            </requireJavaVersion>
+                            <!--<requireJavaVersion>
+                                <message>You are running an incompatible version of Java. JHipster supports JDK 17 to 11.</message>
+                                <version>[17,18),[16,17),[15,16),[14,15),[13,14),[12,13),[11,12)</version>
+                            </requireJavaVersion>-->
                         </rules>
                     </configuration>
                 </plugin>
@@ -983,6 +991,27 @@
             </properties>
         </profile>
         <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-undertow</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-devtools</artifactId>
+                    <optional>true</optional>
+                </dependency>
+            </dependencies>
+            <properties>
+                <!-- default Spring profiles -->
+                <spring.profiles.active>local${profile.tls}${profile.no-liquibase}</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
             <id>prod</id>
             <dependencies>
                 <dependency>
@@ -1063,7 +1092,49 @@
             </build>
             <properties>
                 <!-- default Spring profiles -->
-                <spring.profiles.active>test{profile.api-docs}${profile.tls}${profile.no-liquibase}</spring.profiles.active>
+                <spring.profiles.active>test${profile.api-docs}${profile.tls}${profile.no-liquibase}</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>staging</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-undertow</artifactId>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>target/classes/static/</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>build-info</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>pl.project13.maven</groupId>
+                        <artifactId>git-commit-id-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <!-- default Spring profiles -->
+                <spring.profiles.active>staging${profile.api-docs}${profile.tls}${profile.no-liquibase}</spring.profiles.active>
             </properties>
         </profile>
         <profile>

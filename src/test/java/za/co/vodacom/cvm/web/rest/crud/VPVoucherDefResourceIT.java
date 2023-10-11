@@ -72,6 +72,9 @@ class VPVoucherDefResourceIT {
     private static final ZonedDateTime DEFAULT_MODIFIED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_MODIFIED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
+    private static final String DEFAULT_COLLECTION_POINT = "AAAAAAAAAA";
+    private static final String UPDATED_COLLECTION_POINT = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/v2/api/vp-voucher-defs";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -108,7 +111,8 @@ class VPVoucherDefResourceIT {
             .validityPeriod(DEFAULT_VALIDITY_PERIOD)
             .cacheQuantity(DEFAULT_CACHE_QUANTITY)
             .encryptedYN(DEFAULT_ENCRYPTED_YN)
-            .modifiedDate(DEFAULT_MODIFIED_DATE);
+            .modifiedDate(DEFAULT_MODIFIED_DATE)
+            .collectionPoint(DEFAULT_COLLECTION_POINT);
         return vPVoucherDef;
     }
 
@@ -131,7 +135,8 @@ class VPVoucherDefResourceIT {
             .validityPeriod(UPDATED_VALIDITY_PERIOD)
             .cacheQuantity(UPDATED_CACHE_QUANTITY)
             .encryptedYN(UPDATED_ENCRYPTED_YN)
-            .modifiedDate(UPDATED_MODIFIED_DATE);
+            .modifiedDate(UPDATED_MODIFIED_DATE)
+            .collectionPoint(UPDATED_COLLECTION_POINT);
         return vPVoucherDef;
     }
 
@@ -167,7 +172,7 @@ class VPVoucherDefResourceIT {
         assertThat(testVPVoucherDef.getModifiedDate()).isEqualTo(DEFAULT_MODIFIED_DATE);
     }
 
-    //@Test
+    @Test
     @Transactional
     void createVPVoucherDefWithExistingId() throws Exception {
         // Create the VPVoucherDef with an existing ID
@@ -185,7 +190,7 @@ class VPVoucherDefResourceIT {
         assertThat(vPVoucherDefList).hasSize(databaseSizeBeforeCreate);
     }
 
-    //@Test
+    @Test
     @Transactional
     void checkProductIdIsRequired() throws Exception {
         int databaseSizeBeforeTest = vPVoucherDefRepository.findAll().size();
@@ -202,7 +207,7 @@ class VPVoucherDefResourceIT {
         assertThat(vPVoucherDefList).hasSize(databaseSizeBeforeTest);
     }
 
-    //@Test
+    @Test
     @Transactional
     void checkDescriptionIsRequired() throws Exception {
         int databaseSizeBeforeTest = vPVoucherDefRepository.findAll().size();
@@ -219,7 +224,7 @@ class VPVoucherDefResourceIT {
         assertThat(vPVoucherDefList).hasSize(databaseSizeBeforeTest);
     }
 
-    //@Test
+    @Test
     @Transactional
     void checkTypeIsRequired() throws Exception {
         int databaseSizeBeforeTest = vPVoucherDefRepository.findAll().size();
@@ -236,7 +241,7 @@ class VPVoucherDefResourceIT {
         assertThat(vPVoucherDefList).hasSize(databaseSizeBeforeTest);
     }
 
-    //@Test
+    @Test
     @Transactional
     void checkCategoryIsRequired() throws Exception {
         int databaseSizeBeforeTest = vPVoucherDefRepository.findAll().size();
@@ -253,7 +258,7 @@ class VPVoucherDefResourceIT {
         assertThat(vPVoucherDefList).hasSize(databaseSizeBeforeTest);
     }
 
-    //@Test
+    @Test
     @Transactional
     void checkVendorIsRequired() throws Exception {
         int databaseSizeBeforeTest = vPVoucherDefRepository.findAll().size();
@@ -270,7 +275,7 @@ class VPVoucherDefResourceIT {
         assertThat(vPVoucherDefList).hasSize(databaseSizeBeforeTest);
     }
 
-    //@Test
+    @Test
     @Transactional
     void checkValidityPeriodIsRequired() throws Exception {
         int databaseSizeBeforeTest = vPVoucherDefRepository.findAll().size();
@@ -287,7 +292,7 @@ class VPVoucherDefResourceIT {
         assertThat(vPVoucherDefList).hasSize(databaseSizeBeforeTest);
     }
 
-    //@Test
+    @Test
     @Transactional
     void checkCacheQuantityIsRequired() throws Exception {
         int databaseSizeBeforeTest = vPVoucherDefRepository.findAll().size();
@@ -304,7 +309,7 @@ class VPVoucherDefResourceIT {
         assertThat(vPVoucherDefList).hasSize(databaseSizeBeforeTest);
     }
 
-    //@Test
+    @Test
     @Transactional
     void checkEncryptedYNIsRequired() throws Exception {
         int databaseSizeBeforeTest = vPVoucherDefRepository.findAll().size();
@@ -321,7 +326,7 @@ class VPVoucherDefResourceIT {
         assertThat(vPVoucherDefList).hasSize(databaseSizeBeforeTest);
     }
 
-    //@Test
+    @Test
     @Transactional
     void getAllVPVoucherDefs() throws Exception {
         // Initialize the database
@@ -347,7 +352,7 @@ class VPVoucherDefResourceIT {
             .andExpect(jsonPath("$.[*].modifiedDate").value(hasItem(sameInstant(DEFAULT_MODIFIED_DATE))));
     }
 
-    //@Test
+    @Test
     @Transactional
     void getVPVoucherDef() throws Exception {
         // Initialize the database
@@ -373,14 +378,14 @@ class VPVoucherDefResourceIT {
             .andExpect(jsonPath("$.modifiedDate").value(sameInstant(DEFAULT_MODIFIED_DATE)));
     }
 
-    //@Test
+    @Test
     @Transactional
     void getNonExistingVPVoucherDef() throws Exception {
         // Get the vPVoucherDef
         restVPVoucherDefMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
-    //@Test
+    @Test
     @Transactional
     void putNewVPVoucherDef() throws Exception {
         // Initialize the database
@@ -472,7 +477,7 @@ class VPVoucherDefResourceIT {
         assertThat(vPVoucherDefList).hasSize(databaseSizeBeforeUpdate);
     }
 
-    //@Test
+    @Test
     @Transactional
     void putWithMissingIdPathParamVPVoucherDef() throws Exception {
         int databaseSizeBeforeUpdate = vPVoucherDefRepository.findAll().size();
@@ -488,7 +493,7 @@ class VPVoucherDefResourceIT {
         assertThat(vPVoucherDefList).hasSize(databaseSizeBeforeUpdate);
     }
 
-    //@Test
+    @Test
     @Transactional
     void partialUpdateVPVoucherDefWithPatch() throws Exception {
         // Initialize the database
@@ -533,7 +538,7 @@ class VPVoucherDefResourceIT {
         assertThat(testVPVoucherDef.getModifiedDate()).isEqualTo(DEFAULT_MODIFIED_DATE);
     }
 
-    //@Test
+    @Test
     @Transactional
     void fullUpdateVPVoucherDefWithPatch() throws Exception {
         // Initialize the database
@@ -585,7 +590,7 @@ class VPVoucherDefResourceIT {
         assertThat(testVPVoucherDef.getModifiedDate()).isEqualTo(UPDATED_MODIFIED_DATE);
     }
 
-    //@Test
+    @Test
     @Transactional
     void patchNonExistingVPVoucherDef() throws Exception {
         int databaseSizeBeforeUpdate = vPVoucherDefRepository.findAll().size();
@@ -598,14 +603,14 @@ class VPVoucherDefResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(vPVoucherDef))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isNotFound());
 
         // Validate the VPVoucherDef in the database
         List<VPVoucherDef> vPVoucherDefList = vPVoucherDefRepository.findAll();
         assertThat(vPVoucherDefList).hasSize(databaseSizeBeforeUpdate);
     }
 
-    //@Test
+    @Test
     @Transactional
     void patchWithIdMismatchVPVoucherDef() throws Exception {
         int databaseSizeBeforeUpdate = vPVoucherDefRepository.findAll().size();
@@ -618,14 +623,14 @@ class VPVoucherDefResourceIT {
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(vPVoucherDef))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isNotFound());
 
         // Validate the VPVoucherDef in the database
         List<VPVoucherDef> vPVoucherDefList = vPVoucherDefRepository.findAll();
         assertThat(vPVoucherDefList).hasSize(databaseSizeBeforeUpdate);
     }
 
-    //@Test
+    @Test
     @Transactional
     void patchWithMissingIdPathParamVPVoucherDef() throws Exception {
         int databaseSizeBeforeUpdate = vPVoucherDefRepository.findAll().size();
@@ -643,7 +648,7 @@ class VPVoucherDefResourceIT {
         assertThat(vPVoucherDefList).hasSize(databaseSizeBeforeUpdate);
     }
 
-    //@Test
+    @Test
     @Transactional
     void deleteVPVoucherDef() throws Exception {
         // Initialize the database

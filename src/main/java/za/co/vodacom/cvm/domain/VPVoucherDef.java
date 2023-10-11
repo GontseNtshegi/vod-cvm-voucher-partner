@@ -27,7 +27,7 @@ public class VPVoucherDef implements Serializable {
     @Column(name = "product_id", length = 30, nullable = false, unique = true)
     private String id;
 
-   /* @NotNull
+    /* @NotNull
     @Size(max = 30)
     @Column(name = "product_id", length = 30, nullable = false, unique = true)
     private String productId;*/
@@ -269,6 +269,11 @@ public class VPVoucherDef implements Serializable {
         return collectionPoint;
     }
 
+    public VPVoucherDef collectionPoint(String collectionPoint) {
+        this.collectionPoint = collectionPoint;
+        return this;
+    }
+
     public void setCollectionPoint(String collectionPoint) {
         this.collectionPoint = collectionPoint;
     }
@@ -298,7 +303,7 @@ public class VPVoucherDef implements Serializable {
         return this;
     }*/
 
-   /* public VPVoucherDef removeProductId(VPVouchers vPVouchers) {
+    /* public VPVoucherDef removeProductId(VPVouchers vPVouchers) {
         this.productIds.remove(vPVouchers);
         vPVouchers.setProductId(null);
         return this;

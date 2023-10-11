@@ -25,7 +25,7 @@ import za.co.vodacom.cvm.web.rest.errors.BadRequestAlertException;
  */
 @RestController
 @RequestMapping("/v2/api")
-@Profile("crud")
+//@Profile("crud")
 public class VPVouchersResource {
 
     private final Logger log = LoggerFactory.getLogger(VPVouchersResource.class);
@@ -83,7 +83,7 @@ public class VPVouchersResource {
         if (vPVouchers.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-       /* if (!Objects.equals(id, vPVouchers.getId())) {
+        /* if (!Objects.equals(id, vPVouchers.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 

@@ -35,7 +35,7 @@ import za.co.vodacom.cvm.web.rest.crud.VPVouchersResource;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-class VPVouchersResourceIT {
+public class VPVouchersResourceIT {
 
     private static final Integer DEFAULT_BATCH_ID = 1;
     private static final Integer UPDATED_BATCH_ID = 2;
@@ -60,6 +60,10 @@ class VPVouchersResourceIT {
 
     private static final ZonedDateTime DEFAULT_END_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_END_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final ZonedDateTime TEST_END_DATE = ZonedDateTime.ofInstant(
+        Instant.ofEpochMilli(System.currentTimeMillis() + 240 * 60 * 1000),
+        ZoneOffset.systemDefault()
+    );
 
     private static final ZonedDateTime DEFAULT_EXPIRY_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_EXPIRY_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
@@ -115,6 +119,42 @@ class VPVouchersResourceIT {
             .expiryDate(DEFAULT_EXPIRY_DATE)
             .collectionPoint(DEFAULT_COLLECTION_POINT)
             .issuedDate(DEFAULT_ISSUED_DATE)
+            .reversedDate(DEFAULT_REVERSED_DATE)
+            .sourceTrxid(DEFAULT_SOURCE_TRXID)
+            .quantity(DEFAULT_QUANTITY);
+        return vPVouchers;
+    }
+
+    public static VPVouchers createTestEntity(EntityManager em) {
+        VPVouchers vPVouchers = new VPVouchers()
+            .batchId(DEFAULT_BATCH_ID)
+            .fileId(DEFAULT_FILE_ID)
+            .productId(DEFAULT_PRODUCT_ID)
+            .voucherCode(DEFAULT_VOUCHER_CODE)
+            .description(DEFAULT_DESCRIPTION)
+            .createDate(DEFAULT_CREATE_DATE)
+            .startDate(DEFAULT_START_DATE)
+            .endDate(TEST_END_DATE)
+            .expiryDate(DEFAULT_EXPIRY_DATE)
+            .collectionPoint(DEFAULT_COLLECTION_POINT)
+            .reversedDate(DEFAULT_REVERSED_DATE)
+            .sourceTrxid(DEFAULT_SOURCE_TRXID)
+            .quantity(DEFAULT_QUANTITY);
+        return vPVouchers;
+    }
+
+    public static VPVouchers createTestEntity(EntityManager em, String productId) {
+        VPVouchers vPVouchers = new VPVouchers()
+            .batchId(DEFAULT_BATCH_ID)
+            .fileId(DEFAULT_FILE_ID)
+            .productId(productId)
+            .voucherCode(DEFAULT_VOUCHER_CODE)
+            .description(DEFAULT_DESCRIPTION)
+            .createDate(DEFAULT_CREATE_DATE)
+            .startDate(DEFAULT_START_DATE)
+            .endDate(TEST_END_DATE)
+            .expiryDate(DEFAULT_EXPIRY_DATE)
+            .collectionPoint(DEFAULT_COLLECTION_POINT)
             .reversedDate(DEFAULT_REVERSED_DATE)
             .sourceTrxid(DEFAULT_SOURCE_TRXID)
             .quantity(DEFAULT_QUANTITY);

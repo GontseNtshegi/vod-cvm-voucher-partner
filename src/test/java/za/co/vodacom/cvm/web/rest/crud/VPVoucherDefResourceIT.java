@@ -34,7 +34,7 @@ import za.co.vodacom.cvm.web.rest.crud.VPVoucherDefResource;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-class VPVoucherDefResourceIT {
+public class VPVoucherDefResourceIT {
 
     private static final String DEFAULT_PRODUCT_ID = "AAAAAAAAAA";
     private static final String UPDATED_PRODUCT_ID = "BBBBBBBBBB";
@@ -44,6 +44,7 @@ class VPVoucherDefResourceIT {
 
     private static final String DEFAULT_TYPE = "AAAAAAAAAA";
     private static final String UPDATED_TYPE = "BBBBBBBBBB";
+    private static final String TEST_TYPE = "AAAAAAAAAA";
 
     private static final String DEFAULT_CATEGORY = "AAAAAAAAAA";
     private static final String UPDATED_CATEGORY = "BBBBBBBBBB";
@@ -103,6 +104,24 @@ class VPVoucherDefResourceIT {
             .id(DEFAULT_PRODUCT_ID)
             .description(DEFAULT_DESCRIPTION)
             .type(DEFAULT_TYPE)
+            .category(DEFAULT_CATEGORY)
+            .vendor(DEFAULT_VENDOR)
+            .extId(DEFAULT_EXT_ID)
+            .extSystem(DEFAULT_EXT_SYSTEM)
+            .templateId(DEFAULT_TEMPLATE_ID)
+            .validityPeriod(DEFAULT_VALIDITY_PERIOD)
+            .cacheQuantity(DEFAULT_CACHE_QUANTITY)
+            .encryptedYN(DEFAULT_ENCRYPTED_YN)
+            .modifiedDate(DEFAULT_MODIFIED_DATE)
+            .collectionPoint(DEFAULT_COLLECTION_POINT);
+        return vPVoucherDef;
+    }
+
+    public static VPVoucherDef createTestEntity(EntityManager em, String type) {
+        VPVoucherDef vPVoucherDef = new VPVoucherDef()
+            .id(DEFAULT_PRODUCT_ID)
+            .description(DEFAULT_DESCRIPTION)
+            .type(type)
             .category(DEFAULT_CATEGORY)
             .vendor(DEFAULT_VENDOR)
             .extId(DEFAULT_EXT_ID)

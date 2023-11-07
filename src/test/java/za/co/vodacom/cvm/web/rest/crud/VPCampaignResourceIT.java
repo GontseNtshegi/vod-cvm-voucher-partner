@@ -32,7 +32,7 @@ import za.co.vodacom.cvm.web.rest.crud.VPCampaignResource;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-class VPCampaignResourceIT {
+public class VPCampaignResourceIT {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss");
 
@@ -77,6 +77,14 @@ class VPCampaignResourceIT {
     public static VPCampaign createEntity(EntityManager em) {
         VPCampaign vPCampaign = new VPCampaign()
             .name(DEFAULT_NAME)
+            .startDate(LocalDateTime.from(DEFAULT_START_DATE))
+            .endDate(LocalDateTime.from(DEFAULT_END_DATE));
+        return vPCampaign;
+    }
+
+    public static VPCampaign createTestEntity(EntityManager em, String campaignName) {
+        VPCampaign vPCampaign = new VPCampaign()
+            .name(campaignName)
             .startDate(LocalDateTime.from(DEFAULT_START_DATE))
             .endDate(LocalDateTime.from(DEFAULT_END_DATE));
         return vPCampaign;

@@ -34,13 +34,14 @@ import za.co.vodacom.cvm.web.rest.crud.VPCampaignVouchersResource;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-class VPCampaignVouchersResourceIT {
+public class VPCampaignVouchersResourceIT {
 
     private static final Long DEFAULT_CAMPAIGN_ID = 3L;
     private static final Long UPDATED_CAMPAIGN_ID = 4L;
 
     private static final String DEFAULT_PRODUCT_ID = "AAAAAAAAAA1";
     private static final String UPDATED_PRODUCT_ID = "BBBBBBBBBB2";
+    private static final String TEST_PRODUCT_ID = "AAAAAAAAAA";
 
     private static final ZonedDateTime DEFAULT_CREATE_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_CREATE_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
@@ -50,6 +51,7 @@ class VPCampaignVouchersResourceIT {
 
     private static final String DEFAULT_ACTIVE_YN = "A";
     private static final String UPDATED_ACTIVE_YN = "B";
+    private static final String TEST_ACTIVE_YN = "Y";
 
     private static final String ENTITY_API_URL = "/v2/api/vp-campaign-vouchers";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -81,6 +83,16 @@ class VPCampaignVouchersResourceIT {
             .createDate(DEFAULT_CREATE_DATE)
             .modifiedDate(DEFAULT_MODIFIED_DATE)
             .activeYN(DEFAULT_ACTIVE_YN);
+        return vPCampaignVouchers;
+    }
+
+    public static VPCampaignVouchers createTestEntity(EntityManager em, Long campaignId) {
+        VPCampaignVouchers vPCampaignVouchers = new VPCampaignVouchers()
+            .campaignId(campaignId)
+            .productId(TEST_PRODUCT_ID)
+            .createDate(DEFAULT_CREATE_DATE)
+            .modifiedDate(DEFAULT_MODIFIED_DATE)
+            .activeYN(TEST_ACTIVE_YN);
         return vPCampaignVouchers;
     }
 

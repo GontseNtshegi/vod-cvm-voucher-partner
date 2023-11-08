@@ -14,6 +14,7 @@ import za.co.vodacom.cvm.repository.VPVouchersRepository;
 import za.co.vodacom.cvm.service.VPVouchersService;
 import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
 import za.co.vodacom.cvm.service.dto.product.Product;
+import za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO;
 
 /**
  * Service Implementation for managing {@link VPVouchers}.
@@ -163,6 +164,11 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     public List<QuantityDetailsDTO> getVoucherQuantity(Long campaignId, ZonedDateTime extDate) {
         log.debug("Request to get campaign vouchers quantities.");
         return vPVouchersRepository.getVoucherQuantity(campaignId,extDate);
+    }
+
+    @Override
+    public List<ProductQuantityDTO> getVouchersWithStatusA(String productId) {
+        return vPVouchersRepository.getVouchersWithStatusA(productId, PageRequest.of(0,1));
     }
 
 }

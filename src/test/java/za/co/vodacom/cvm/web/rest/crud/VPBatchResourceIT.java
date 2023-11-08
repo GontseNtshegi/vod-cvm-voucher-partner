@@ -34,7 +34,7 @@ import za.co.vodacom.cvm.web.rest.crud.VPBatchResource;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-class VPBatchResourceIT {
+public class VPBatchResourceIT {
 
     private static final ZonedDateTime DEFAULT_CREATE_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_CREATE_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
@@ -93,6 +93,19 @@ class VPBatchResourceIT {
             .createUser(DEFAULT_USER)
             .activateUser(DEFAULT_USER)
             .status(DEFAULT_STATUS);
+        return vPBatch;
+    }
+
+    public static VPBatch createTestEntity(EntityManager em, String status) {
+        VPBatch vPBatch = new VPBatch()
+            .createDate(DEFAULT_CREATE_DATE)
+            .loadDate(DEFAULT_LOAD_DATE)
+            .comment(DEFAULT_COMMENT)
+            .restrictedYN(DEFAULT_RESTRICTED_YN)
+            .name(DEFAULT_NAME)
+            .createUser(DEFAULT_USER)
+            .activateUser(DEFAULT_USER)
+            .status(status);
         return vPBatch;
     }
 

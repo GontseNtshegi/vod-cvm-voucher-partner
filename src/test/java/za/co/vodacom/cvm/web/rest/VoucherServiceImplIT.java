@@ -30,17 +30,11 @@ import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
 import za.co.vodacom.cvm.client.wigroup.api.GiftcardsDefaultApiClient;
 import za.co.vodacom.cvm.client.wigroup.model.*;
 import za.co.vodacom.cvm.config.Constants;
-import za.co.vodacom.cvm.domain.VPCampaign;
-import za.co.vodacom.cvm.domain.VPCampaignVouchers;
-import za.co.vodacom.cvm.domain.VPVoucherDef;
-import za.co.vodacom.cvm.domain.VPVouchers;
+import za.co.vodacom.cvm.domain.*;
 import za.co.vodacom.cvm.web.api.model.VoucherAllocationRequest;
 import za.co.vodacom.cvm.web.api.model.VoucherRedemptionRequest;
 import za.co.vodacom.cvm.web.api.model.VoucherReturnRequest;
-import za.co.vodacom.cvm.web.rest.crud.VPCampaignResourceIT;
-import za.co.vodacom.cvm.web.rest.crud.VPCampaignVouchersResourceIT;
-import za.co.vodacom.cvm.web.rest.crud.VPVoucherDefResourceIT;
-import za.co.vodacom.cvm.web.rest.crud.VPVouchersResourceIT;
+import za.co.vodacom.cvm.web.rest.crud.*;
 
 @IntegrationTest
 @AutoConfigureMockMvc
@@ -69,6 +63,7 @@ public class VoucherServiceImplIT {
     private static final String DEFAULT_VOUCHER_VENDOR = "AAAAAAAAAA";
     private static final String DEFAULT_COLLECTION_POINT = "AAAAAAAAAA";
     private static final String DEFAULT_ENCRYPTED_YN = "A";
+    private static final String DEFAULT_BATCH_STATUS = "A";
 
     private static final ZonedDateTime DEFAULT_START_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime DEFAULT_END_DATE = ZonedDateTime.ofInstant(
@@ -100,12 +95,28 @@ public class VoucherServiceImplIT {
     public void createDTO(EntityManager em, String type, String campaignName) {
         log.info("Enter createDTO");
 
-        // Ensure default VPVouchers exists
+        // Ensure default VPBatch exists
+        if (TestUtil.findAll(em, VPBatch.class).isEmpty()) {
+            VPBatch vpBatch = VPBatchResourceIT.createTestEntity(em, DEFAULT_BATCH_STATUS);
+            em.persist(vpBatch);
+            em.flush();
+        }
+        log.info("vpBatch  = {} ", TestUtil.findAll(em, VPBatch.class).toString());
+
+        // Ensure valid VPVouchers for valid batch
+        VPBatch vpBatch = TestUtil
+            .findAll(em, VPBatch.class)
+            .stream()
+            .filter(t -> t.getStatus().equals(DEFAULT_BATCH_STATUS))
+            .findFirst()
+            .get();
+
         if (TestUtil.findAll(em, VPVouchers.class).isEmpty()) {
-            VPVouchers vpVouchers = VPVouchersResourceIT.createTestEntity(em);
+            VPVouchers vpVouchers = VPVouchersResourceIT.createTestEntity(em, Math.toIntExact(vpBatch.getId()));
             em.persist(vpVouchers);
             em.flush();
         }
+        log.info("vpVouchers  = {} ", TestUtil.findAll(em, VPVouchers.class).toString());
 
         // Ensure default vpCampaign exists
         Optional<VPCampaign> vpCampaignOptional = TestUtil

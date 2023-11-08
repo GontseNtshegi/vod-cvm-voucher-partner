@@ -125,9 +125,9 @@ public class VPVouchersResourceIT {
         return vPVouchers;
     }
 
-    public static VPVouchers createTestEntity(EntityManager em) {
+    public static VPVouchers createTestEntity(EntityManager em, Integer batchId) {
         VPVouchers vPVouchers = new VPVouchers()
-            .batchId(DEFAULT_BATCH_ID)
+            .batchId(batchId)
             .fileId(DEFAULT_FILE_ID)
             .productId(DEFAULT_PRODUCT_ID)
             .voucherCode(DEFAULT_VOUCHER_CODE)

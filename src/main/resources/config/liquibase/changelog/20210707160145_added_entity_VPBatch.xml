@@ -22,6 +22,9 @@
             <column name="create_date" type="${datetimeType}">
                 <constraints nullable="false" />
             </column>
+            <column name="load_date" type="${datetimeType}">
+                <constraints nullable="false" />
+            </column>
             <column name="comment" type="varchar(100)">
                 <constraints nullable="false" />
             </column>

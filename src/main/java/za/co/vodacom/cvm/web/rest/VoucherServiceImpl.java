@@ -30,6 +30,8 @@ import za.co.vodacom.cvm.service.VPCampaignService;
 import za.co.vodacom.cvm.service.VPCampaignVouchersService;
 import za.co.vodacom.cvm.service.VPVoucherDefService;
 import za.co.vodacom.cvm.service.VPVouchersService;
+import za.co.vodacom.cvm.service.dto.product.Product;
+import za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO;
 import za.co.vodacom.cvm.utils.MSISDNConverter;
 import za.co.vodacom.cvm.utils.RSAEncryption;
 import za.co.vodacom.cvm.web.api.VoucherApiDelegate;
@@ -372,14 +374,22 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
             productId
         );
 
+        List<ProductQuantityDTO> availableVouchers = vpVouchersService.getVouchersWithStatusA(productId);
+
         // Vouchers found ?
         if (vpVouchers.isEmpty()) {
             throw new LockTimeoutException("Voucher not available", new Throwable());
         }
+        log.debug("Vouchers with status A : {}", availableVouchers);
 
-        log.info("Voucher available to issue for {}.", productId);
-        //issue voucher
-        vpVouchersService.issueVoucher(transactionId, vpVouchers.get(0).getId());
+        if(availableVouchers.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Voucher not available");
+        }{
+            log.info("Voucher available to issue for {}.", productId);
+            //issue voucher
+            vpVouchersService.issueVoucher(transactionId, vpVouchers.get(0).getId());
+        }
+
 
         return vpVouchers.get(0);
     }

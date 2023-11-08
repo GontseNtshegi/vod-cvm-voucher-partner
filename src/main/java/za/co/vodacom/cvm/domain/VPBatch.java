@@ -1,13 +1,12 @@
 package za.co.vodacom.cvm.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import java.io.Serializable;
+import java.time.ZonedDateTime;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.time.ZonedDateTime;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A VPBatch.
@@ -57,7 +56,6 @@ public class VPBatch implements Serializable {
     @Size(max = 100)
     @Column(name = "create_user", length = 100, nullable = false)
     private String createUser;
-
 
     @Size(max = 100)
     @Column(name = "activate_user", length = 100, nullable = false)
@@ -133,7 +131,6 @@ public class VPBatch implements Serializable {
         this.restrictedYN = restrictedYN;
     }
 
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -157,12 +154,22 @@ public class VPBatch implements Serializable {
         return deleteDate;
     }
 
+    public VPBatch deleteDate(ZonedDateTime deleteDate) {
+        this.deleteDate = deleteDate;
+        return this;
+    }
+
     public void setDeleteDate(ZonedDateTime deleteDate) {
         this.deleteDate = deleteDate;
     }
 
     public String getStatus() {
         return status;
+    }
+
+    public VPBatch status(String status) {
+        this.status = status;
+        return this;
     }
 
     public void setStatus(String status) {
@@ -173,12 +180,22 @@ public class VPBatch implements Serializable {
         return name;
     }
 
+    public VPBatch name(String name) {
+        this.name = name;
+        return this;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
     public String getCreateUser() {
         return createUser;
+    }
+
+    public VPBatch createUser(String createUser) {
+        this.createUser = createUser;
+        return this;
     }
 
     public void setCreateUser(String createUser) {
@@ -189,6 +206,11 @@ public class VPBatch implements Serializable {
         return activateUser;
     }
 
+    public VPBatch activateUser(String activateUser) {
+        this.activateUser = activateUser;
+        return this;
+    }
+
     public void setActivateUser(String activateUser) {
         this.activateUser = activateUser;
     }
@@ -197,24 +219,49 @@ public class VPBatch implements Serializable {
         return deleteUser;
     }
 
+    public VPBatch deleteUser(String deleteUser) {
+        this.deleteUser = deleteUser;
+        return this;
+    }
+
     public void setDeleteUser(String deleteUser) {
         this.deleteUser = deleteUser;
     }
 
     @Override
     public String toString() {
-        return "VPBatch{" +
-            "id=" + id +
-            ", createDate=" + createDate +
-            ", loadDate=" + loadDate +
-            ", comment='" + comment + '\'' +
-            ", restrictedYN='" + restrictedYN + '\'' +
-            ", deleteDate=" + deleteDate +
-            ", status='" + status + '\'' +
-            ", name='" + name + '\'' +
-            ", createUser='" + createUser + '\'' +
-            ", activateUser='" + activateUser + '\'' +
-            ", deleteUser='" + deleteUser + '\'' +
-            '}';
+        return (
+            "VPBatch{" +
+            "id=" +
+            id +
+            ", createDate=" +
+            createDate +
+            ", loadDate=" +
+            loadDate +
+            ", comment='" +
+            comment +
+            '\'' +
+            ", restrictedYN='" +
+            restrictedYN +
+            '\'' +
+            ", deleteDate=" +
+            deleteDate +
+            ", status='" +
+            status +
+            '\'' +
+            ", name='" +
+            name +
+            '\'' +
+            ", createUser='" +
+            createUser +
+            '\'' +
+            ", activateUser='" +
+            activateUser +
+            '\'' +
+            ", deleteUser='" +
+            deleteUser +
+            '\'' +
+            '}'
+        );
     }
 }

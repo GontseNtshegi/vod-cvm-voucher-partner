@@ -248,7 +248,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                                 )
                                                     : voucherCode;
                                         } catch (Exception e) {
-                                            log.error(e.getMessage());
+                                            log.error("There was an error issuing this voucher => ProductId:" + voucherAllocationRequest.getProductId() + "," + "Msisdn:" + voucherAllocationRequest.getMsisdn() + "Error Message:" + e.getMessage());
                                         }
                                         //set response
                                         voucherAllocationResponse.setCollectPoint(vpVoucherDef.getCollectionPoint());
@@ -325,7 +325,8 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                                 )
                                                     : voucherCode;
                                         } catch (Exception e) {
-                                            log.error(e.getMessage());
+                                            log.error("There was an error issuing this voucher => ProductId:" + voucherAllocationRequest.getProductId() + "," + "Msisdn:" + voucherAllocationRequest.getMsisdn() + "Error Message:" + e.getMessage());
+
                                         }
                                         //set response
                                         voucherAllocationResponse.setCollectPoint(vpVoucherDef.getCollectionPoint());

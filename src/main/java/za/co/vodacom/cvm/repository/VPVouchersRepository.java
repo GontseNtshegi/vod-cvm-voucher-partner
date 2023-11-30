@@ -1,10 +1,9 @@
 package za.co.vodacom.cvm.repository;
 
+import org.hibernate.LockOptions;
+import org.hibernate.cfg.AvailableSettings;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import za.co.vodacom.cvm.domain.VPVouchers;
@@ -12,6 +11,7 @@ import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
 import za.co.vodacom.cvm.service.dto.product.Product;
 import za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO;
 
+import javax.persistence.QueryHint;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -85,6 +85,8 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     )
     List<QuantityDetailsDTO> getVoucherQuantity(@Param("id") Long id, @Param("sysdate") ZonedDateTime sysdate);
     @Lock(PESSIMISTIC_WRITE)
+    @QueryHints({
+        @QueryHint(name = AvailableSettings.JPA_LOCK_TIMEOUT, value =  LockOptions.SKIP_LOCKED + "")})
     @Query(
         value = "select new za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO(v.id, v.productId," +
             "v.description ," +

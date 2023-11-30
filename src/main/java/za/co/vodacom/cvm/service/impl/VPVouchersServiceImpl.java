@@ -116,13 +116,13 @@ public class VPVouchersServiceImpl implements VPVouchersService {
         vPVouchersRepository.deleteById(id);
     }
 
-    @Override
-    // @Transactional
-    public Optional<VPVouchers> getValidVoucher(String productId) {
-        log.info("Request to get Valid VPVouchers");
-        log.debug("Request to get Valid VPVouchers : {}", productId);
-        return vPVouchersRepository.getValidVoucher(productId);
-    }
+//    @Override
+//    // @Transactional
+//    public Optional<VPVouchers> getValidVoucher(String productId) {
+//        log.info("Request to get Valid VPVouchers");
+//        log.debug("Request to get Valid VPVouchers : {}", productId);
+//        return vPVouchersRepository.getValidVoucher(productId);
+//    }
 
     @Override
     // @Transactional
@@ -168,6 +168,15 @@ public class VPVouchersServiceImpl implements VPVouchersService {
 
     @Override
     public List<ProductQuantityDTO> getVouchersWithStatusA(String productId) {
+        log.info("Request to get Valid VPVouchers");
+        log.debug("Request to get Valid VPVouchers : {}", productId);
+        return vPVouchersRepository.getVouchersWithStatusA(productId, PageRequest.of(0,1));
+    }
+
+    @Override
+    public List<ProductQuantityDTO> getValidVoucher(String productId) {
+        log.info("Request to get Valid VPVouchers");
+        log.debug("Request to get Valid VPVouchers : {}", productId);
         return vPVouchersRepository.getVouchersWithStatusA(productId, PageRequest.of(0,1));
     }
 

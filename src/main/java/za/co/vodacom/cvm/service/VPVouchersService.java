@@ -56,7 +56,7 @@ public interface VPVouchersService {
      * @param productId
      * @return
      */
-    Optional<VPVouchers> getValidVoucher(String productId);
+//    Optional<VPVouchers> getValidVoucher(String productId);
 
     /**
      * Get a valid voucher with lock
@@ -105,4 +105,5 @@ public interface VPVouchersService {
 
     List<ProductQuantityDTO> getVouchersWithStatusA(String productId);
 
+    List<ProductQuantityDTO> getValidVoucher(String productId);
 }

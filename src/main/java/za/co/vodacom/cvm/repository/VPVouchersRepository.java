@@ -25,11 +25,11 @@ import static javax.persistence.LockModeType.PESSIMISTIC_WRITE;
 @Repository
 public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
 
-    @Query(
-        value = "select * from vp_vouchers where product_id=:productId and start_date< sysdate() and end_date>sysdate() and issued_date is null limit 1",
-        nativeQuery = true
-    )
-    Optional<VPVouchers> getValidVoucher(@Param("productId") String productId);
+//    @Query(
+//        value = "select * from vp_vouchers where product_id=:productId and start_date< sysdate() and end_date>sysdate() and issued_date is null limit 1",
+//        nativeQuery = true
+//    )
+//    Optional<VPVouchers> getValidVoucher(@Param("productId") String productId);
 
     @Lock(PESSIMISTIC_WRITE)
     @Query(
@@ -90,7 +90,7 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
             "order by 1"
     )
     List<QuantityDetailsDTO> getVoucherQuantity(@Param("id") Long id, @Param("sysdate") ZonedDateTime sysdate);
-
+    @Lock(PESSIMISTIC_WRITE)
     @Query(
         value = "select new za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO(v.productId," +
             "v.description ," +
@@ -115,5 +115,30 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
 
     )
     List<ProductQuantityDTO> getVouchersWithStatusA(@Param("productId") String productId, Pageable pageable);
+
+    @Query(
+        value = "select new za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO(v.productId," +
+            "v.description ," +
+            " v.quantity ," +
+            " v.sourceTrxid , " +
+            "v.endDate ," +
+            " v.startDate , " +
+            "v.reversedDate , " +
+            " v.issuedDate," +
+            "v.expiryDate, " +
+            "v.createDate, " +
+            " v.collectionPoint ," +
+            " v.voucherCode ," +
+            "  v.fileId)" +
+            " from VPVouchers v, VPBatch b" +
+            " where v.productId=:productId " +
+            "and v.startDate< sysdate() " +
+            "and v.endDate> sysdate() " +
+            "and v.issuedDate is null " +
+            "and v.batchId = b.id " +
+            "and b.status ='A'"
+
+    )
+    List<ProductQuantityDTO> getValidVoucher(@Param("productId") String productId, Pageable pageable);
 
 }

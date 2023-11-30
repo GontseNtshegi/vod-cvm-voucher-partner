@@ -25,12 +25,6 @@ import static javax.persistence.LockModeType.PESSIMISTIC_WRITE;
 @Repository
 public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
 
-//    @Query(
-//        value = "select * from vp_vouchers where product_id=:productId and start_date< sysdate() and end_date>sysdate() and issued_date is null limit 1",
-//        nativeQuery = true
-//    )
-//    Optional<VPVouchers> getValidVoucher(@Param("productId") String productId);
-
     @Lock(PESSIMISTIC_WRITE)
     @Query(
         value = "select v from VPVouchers v where v.productId=:productId and v.startDate< CURRENT_TIMESTAMP and v.endDate>CURRENT_TIMESTAMP and v.issuedDate is null"

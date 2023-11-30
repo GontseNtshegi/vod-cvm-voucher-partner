@@ -116,14 +116,6 @@ public class VPVouchersServiceImpl implements VPVouchersService {
         vPVouchersRepository.deleteById(id);
     }
 
-//    @Override
-//    // @Transactional
-//    public Optional<VPVouchers> getValidVoucher(String productId) {
-//        log.info("Request to get Valid VPVouchers");
-//        log.debug("Request to get Valid VPVouchers : {}", productId);
-//        return vPVouchersRepository.getValidVoucher(productId);
-//    }
-
     @Override
     // @Transactional
     public List<VPVouchers> getValidVoucherWithLock(String productId) {

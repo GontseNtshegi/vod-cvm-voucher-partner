@@ -92,7 +92,7 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     List<QuantityDetailsDTO> getVoucherQuantity(@Param("id") Long id, @Param("sysdate") ZonedDateTime sysdate);
     @Lock(PESSIMISTIC_WRITE)
     @Query(
-        value = "select new za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO(v.productId," +
+        value = "select new za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO(v.id, v.productId," +
             "v.description ," +
             " v.quantity ," +
             " v.sourceTrxid , " +
@@ -117,7 +117,7 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     List<ProductQuantityDTO> getVouchersWithStatusA(@Param("productId") String productId, Pageable pageable);
 
     @Query(
-        value = "select new za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO(v.productId," +
+        value = "select new za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO(v.id, v.productId," +
             "v.description ," +
             " v.quantity ," +
             " v.sourceTrxid , " +

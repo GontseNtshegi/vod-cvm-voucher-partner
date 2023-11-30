@@ -164,7 +164,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                     voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                     voucherAllocationResponse.setVoucherCode(voucher.getVoucherCode());
                                     voucherAllocationResponse.setVoucherDescription(vpVoucherDef.getDescription());
-                                    voucherAllocationResponse.setVoucherId(voucher.getFileId().longValue());
+                                    voucherAllocationResponse.setVoucherId(voucher.getId());
                                     voucherAllocationResponse.setVoucherType(vpVoucherDef.getType());
                                     voucherAllocationResponse.setVoucherVendor(vpVoucherDef.getVendor());
                                     voucherAllocationResponse.setEncryptedYN(vpVoucherDef.getEncryptedYN());
@@ -202,7 +202,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                         voucherAllocationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                         voucherAllocationResponse.setVoucherCode(voucherCode);
                                         voucherAllocationResponse.setVoucherDescription(vpVoucherDef.getDescription());
-                                        voucherAllocationResponse.setVoucherId(vpVoucher.getFileId().longValue());
+                                        voucherAllocationResponse.setVoucherId(vpVoucher.getId());
                                         voucherAllocationResponse.setVoucherType(vpVoucherDef.getType());
                                         voucherAllocationResponse.setVoucherVendor(vpVoucherDef.getVendor());
                                         voucherAllocationResponse.setEncryptedYN(vpVoucherDef.getEncryptedYN());

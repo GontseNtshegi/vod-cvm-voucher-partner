@@ -6,6 +6,8 @@ import java.time.ZonedDateTime;
 
 @Getter
 public class ProductQuantityDTO {
+
+    Long id;
     String productId;
     Integer quantity;
     String sourceTrxid;
@@ -20,7 +22,8 @@ public class ProductQuantityDTO {
     String voucherCode;
     Integer fileId;
 
-    public ProductQuantityDTO(String productId,  String description, Integer quantity, String sourceTrxid, ZonedDateTime endDate, ZonedDateTime startDate, ZonedDateTime reversedDate, ZonedDateTime issuedDate,  ZonedDateTime expiryDate, ZonedDateTime createDate,String collectionPoint, String voucherCode, Integer fileId) {
+    public ProductQuantityDTO(Long id, String productId, String description, Integer quantity, String sourceTrxid, ZonedDateTime endDate, ZonedDateTime startDate, ZonedDateTime reversedDate, ZonedDateTime issuedDate,  ZonedDateTime expiryDate, ZonedDateTime createDate,String collectionPoint, String voucherCode, Integer fileId) {
+        this.id = id;
         this.productId = productId;
         this.quantity = quantity;
         this.sourceTrxid = sourceTrxid;
@@ -34,6 +37,14 @@ public class ProductQuantityDTO {
         this.createDate = createDate;
         this.voucherCode = voucherCode;
         this.fileId = fileId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getProductId() {

@@ -379,6 +379,10 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
             throw new LockTimeoutException("Voucher not available", new Throwable());
         }
 
+        log.info("Voucher available to issue for {}.", productId);
+        //issue voucher
+        vpVouchersService.issueVoucher(transactionId, vpVouchers.get(0).getId());
+
         return vpVouchers.get(0);
     }
 

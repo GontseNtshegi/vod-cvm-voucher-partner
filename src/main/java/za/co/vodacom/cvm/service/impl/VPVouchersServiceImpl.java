@@ -169,7 +169,7 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     public List<ProductQuantityDTO> getValidVoucher(String productId) {
         log.info("Request to get Valid VPVouchers");
         log.debug("Request to get Valid VPVouchers : {}", productId);
-        return vPVouchersRepository.getVouchersWithStatusA(productId, PageRequest.of(0,1));
+        return vPVouchersRepository.getValidVoucher(productId, PageRequest.of(0,1));
     }
 
 }

@@ -32,7 +32,7 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     List<VPVouchers> getValidVoucherWithLock(@Param("productId") String productId, Pageable pageable);
 
     @Modifying
-    @Query(value = "update vp_vouchers set issued_date = sysdate() + INTERVAL 2 HOUR, source_trxid=:incomingTrxId where id=:id", nativeQuery = true)
+    @Query(value = "update vp_vouchers set issued_date = sysdate(), source_trxid=:incomingTrxId where id=:id", nativeQuery = true)
     void issueVoucher(@Param("incomingTrxId") String incomingTrxId, @Param("id") Long id);
 
     @Query(

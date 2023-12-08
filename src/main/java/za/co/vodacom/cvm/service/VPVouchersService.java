@@ -104,5 +104,5 @@ public interface VPVouchersService {
      * @param productId
      * @return
      */
-    List<ProductQuantityDTO> getValidVoucher(String productId);
+    Optional<VPVouchers> getValidVoucher(String productId);
 }

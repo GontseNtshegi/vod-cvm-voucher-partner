@@ -12,11 +12,11 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import sun.security.validator.ValidatorException;
 import za.co.vodacom.cvm.client.wigroup.model.CouponsDelResponse;
 import za.co.vodacom.cvm.client.wigroup.model.CouponsGetResponse;
 import za.co.vodacom.cvm.client.wigroup.model.CouponsRequest;
 import za.co.vodacom.cvm.client.wigroup.model.CouponsResponse;
+import javax.net.ssl.SSLHandshakeException;
 
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
@@ -38,7 +38,7 @@ public interface CouponsApi {
      *         or Method Not Allowed (status code 405)
      *         or Internal Server Error (status code 500)
      */
-    @Retryable(value = ValidatorException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
+    @Retryable(value = SSLHandshakeException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
     @ApiOperation(
         value = "Customer voucher reservation",
         nickname = "updateVoucherToReserved",
@@ -78,7 +78,7 @@ public interface CouponsApi {
      *         or Method Not Allowed (status code 405)
      *         or Internal Server Error (status code 500)
      */
-    @Retryable(value = ValidatorException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
+    @Retryable(value = SSLHandshakeException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
     @ApiOperation(
         value = "Return a voucher which was issued",
         nickname = "updateVoucherToReturned",
@@ -115,7 +115,7 @@ public interface CouponsApi {
      *         or Method Not Allowed (status code 405)
      *         or Internal Server Error (status code 500)
      */
-    @Retryable(value = ValidatorException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
+    @Retryable(value = SSLHandshakeException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
     @ApiOperation(
         value = "Check whether the given voucher based product has stock.",
         nickname = "updateVoucherToValid",

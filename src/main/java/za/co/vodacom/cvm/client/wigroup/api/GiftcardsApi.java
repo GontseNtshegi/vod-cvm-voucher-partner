@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import sun.security.validator.ValidatorException;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsBalanceResponse;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsRedeemResponse;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsRequest;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsResponse;
+import javax.net.ssl.SSLHandshakeException;
 
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",
@@ -41,7 +41,7 @@ public interface GiftcardsApi {
      *         or Method Not Allowed (status code 405)
      *         or Internal Server Error (status code 500)
      */
-    @Retryable(value = ValidatorException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
+    @Retryable(value = SSLHandshakeException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
     @ApiOperation(
         value = "Customer voucher redemption",
         nickname = "redeemGiftcard",
@@ -80,7 +80,7 @@ public interface GiftcardsApi {
      *         or Method Not Allowed (status code 405)
      *         or Internal Server Error (status code 500)
      */
-    @Retryable(value = ValidatorException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
+    @Retryable(value = SSLHandshakeException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
     @ApiOperation(
         value = "Customer voucher reservation",
         nickname = "updateVoucherToReserved",
@@ -120,7 +120,7 @@ public interface GiftcardsApi {
      *         or Method Not Allowed (status code 405)
      *         or Internal Server Error (status code 500)
      */
-    @Retryable(value = ValidatorException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
+    @Retryable(value = SSLHandshakeException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
     @ApiOperation(
         value = "Customer voucher balance view",
         nickname = "viewGiftcard",

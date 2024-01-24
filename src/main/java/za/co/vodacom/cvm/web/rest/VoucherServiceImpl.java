@@ -144,7 +144,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                             log.debug(vpVoucherDef.toString());
                             switch (vpVoucherDef.getType()) {
                                 case Constants.VOUCHER:
-                                    VPVouchers voucher = getAndIssueVoucher(voucherAllocationRequest.getProductId(), voucherAllocationRequest.getTrxId());
+                                    ProductQuantityDTO voucher = getAndIssueVoucher(voucherAllocationRequest.getProductId(), voucherAllocationRequest.getTrxId());
 
                                     //set response
                                     voucherAllocationResponse.setCollectPoint(voucher.getCollectionPoint() != null && !voucher.getCollectionPoint().isEmpty() ? voucher.getCollectionPoint(): vpVoucherDef.getCollectionPoint());
@@ -173,11 +173,11 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                     break;
                                 case Constants.GENERIC_VOUCHER:
                                     //get valid voucher
-                                    Optional<VPVouchers> vpVouchersGen = vpVouchersService.getValidVoucher(
+                                    List<ProductQuantityDTO> vpVouchersGen = vpVouchersService.getValidVoucher(
                                         voucherAllocationRequest.getProductId()
                                     );
-                                    if (vpVouchersGen.isPresent()) { //voucher found
-                                        VPVouchers vpVoucher = vpVouchersGen.get();
+                                    if (!vpVouchersGen.isEmpty()) { //voucher found
+                                        ProductQuantityDTO vpVoucher = vpVouchersGen.get(0);
                                         log.debug(vpVoucher.toString());
                                         log.info(vpVoucher.toString());
                                         OffsetDateTime expiryDate = vpVoucher.getExpiryDate() != null
@@ -370,9 +370,9 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
     @Retryable(maxAttempts = 2, value = RuntimeException.class)
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
-    public VPVouchers getAndIssueVoucher(String productId, String transactionId) {
+    public ProductQuantityDTO getAndIssueVoucher(String productId, String transactionId) {
 
-        List<VPVouchers> vpVouchers = vpVouchersService.getValidVoucherWithLock(productId);
+        List<ProductQuantityDTO> vpVouchers = vpVouchersService.getVouchersWithStatusA(productId);
 
         // Vouchers found ?
         if (vpVouchers.isEmpty()) {

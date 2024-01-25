@@ -99,7 +99,7 @@ public class ProductServiceImpl implements ProductApiDelegate {
                                         );
                                         productValidationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                         productValidationResponse.setVoucherDescription(vpVoucherDef.getDescription());
-                                        productValidationResponse.setVoucherQuantity(BigDecimal.valueOf(vpVouchers.getCount()));
+                                        productValidationResponse.setVoucherQuantity(vpVouchers.getCount());
                                         productValidationResponse.setVoucherType(vpVoucherDef.getType());
                                         productValidationResponse.setVoucherVendor(vpVoucherDef.getVendor());
                                     });
@@ -111,7 +111,7 @@ public class ProductServiceImpl implements ProductApiDelegate {
                                         productValidationResponse.setMinExpiry(vpVouchers.getMinEndDateTime().toOffsetDateTime());
                                         productValidationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                         productValidationResponse.setVoucherDescription(vpVoucherDef.getDescription());
-                                        productValidationResponse.setVoucherQuantity(BigDecimal.valueOf(vpVouchers.getCount()));
+                                        productValidationResponse.setVoucherQuantity(vpVouchers.getCount());
                                         productValidationResponse.setVoucherType(vpVoucherDef.getType());
                                         productValidationResponse.setVoucherVendor(vpVoucherDef.getVendor());
                                     });
@@ -119,7 +119,7 @@ public class ProductServiceImpl implements ProductApiDelegate {
                                     productValidationResponse.setMinExpiry(null);
                                     productValidationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                     productValidationResponse.setVoucherDescription(vpVoucherDef.getDescription());
-                                    productValidationResponse.setVoucherQuantity(BigDecimal.ZERO);
+                                    productValidationResponse.setVoucherQuantity(Long.valueOf(0));
                                     productValidationResponse.setVoucherType(vpVoucherDef.getType());
                                     productValidationResponse.setVoucherVendor(vpVoucherDef.getVendor());
                                 }
@@ -128,7 +128,7 @@ public class ProductServiceImpl implements ProductApiDelegate {
                                 productValidationResponse.setMinExpiry(null);
                                 productValidationResponse.setVoucherCategory(vpVoucherDef.getCategory());
                                 productValidationResponse.setVoucherDescription(vpVoucherDef.getDescription());
-                                productValidationResponse.setVoucherQuantity(BigDecimal.ONE);
+                                productValidationResponse.setVoucherQuantity(Long.valueOf(1));
                                 productValidationResponse.setVoucherType(vpVoucherDef.getType());
                                 productValidationResponse.setVoucherVendor(vpVoucherDef.getVendor());
                                 break;

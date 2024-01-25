@@ -1,5 +1,6 @@
 package za.co.vodacom.cvm.config;
 
+import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import za.co.vodacom.cvm.config.pojos.Coupons;
 import za.co.vodacom.cvm.config.pojos.Encryption;
@@ -23,6 +24,7 @@ public class ApplicationProperties {
     public Integer proxyPort;
     public String proxyUser;
     public String proxyPassword;
+    private List<String> allocationAllowed;
 
     public Msisdn getMsisdn() {
         return msisdn;
@@ -88,17 +90,40 @@ public class ApplicationProperties {
         this.proxyPassword = proxyPassword;
     }
 
+    public List<String> getAllocationAllowed() {
+        return allocationAllowed;
+    }
+
+    public void setAllocationAllowed(List<String> allocationAllowed) {
+        this.allocationAllowed = allocationAllowed;
+    }
+
     @Override
     public String toString() {
-        return "ApplicationProperties{" +
-            "coupons=" + coupons +
-            ", giftCards=" + giftCards +
-            ", encryption=" + encryption +
-            ", msisdn=" + msisdn +
-            ", proxyHost='" + proxyHost + '\'' +
-            ", proxyPort=" + proxyPort +
-            ", proxyUser='" + proxyUser + '\'' +
-            ", proxyPassword='" + proxyPassword + '\'' +
-            '}';
+        return (
+            "ApplicationProperties{" +
+            "coupons=" +
+            coupons +
+            ", giftCards=" +
+            giftCards +
+            ", encryption=" +
+            encryption +
+            ", msisdn=" +
+            msisdn +
+            ", proxyHost='" +
+            proxyHost +
+            '\'' +
+            ", proxyPort=" +
+            proxyPort +
+            ", proxyUser='" +
+            proxyUser +
+            '\'' +
+            ", proxyPassword='" +
+            proxyPassword +
+            '\'' +
+            ", allocationAllowed=" +
+            allocationAllowed +
+            '}'
+        );
     }
 }

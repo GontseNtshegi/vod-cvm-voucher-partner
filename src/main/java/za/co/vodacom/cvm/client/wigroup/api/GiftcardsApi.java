@@ -6,6 +6,7 @@
 package za.co.vodacom.cvm.client.wigroup.api;
 
 import io.swagger.annotations.*;
+import javax.net.ssl.SSLHandshakeException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import sun.security.validator.ValidatorException;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsBalanceResponse;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsRedeemResponse;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsRequest;
@@ -41,7 +41,7 @@ public interface GiftcardsApi {
      *         or Method Not Allowed (status code 405)
      *         or Internal Server Error (status code 500)
      */
-    @Retryable(value = ValidatorException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
+    @Retryable(value = SSLHandshakeException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
     @ApiOperation(
         value = "Customer voucher redemption",
         nickname = "redeemGiftcard",
@@ -80,7 +80,7 @@ public interface GiftcardsApi {
      *         or Method Not Allowed (status code 405)
      *         or Internal Server Error (status code 500)
      */
-    @Retryable(value = ValidatorException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
+    @Retryable(value = SSLHandshakeException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
     @ApiOperation(
         value = "Customer voucher reservation",
         nickname = "updateVoucherToReserved",
@@ -120,7 +120,7 @@ public interface GiftcardsApi {
      *         or Method Not Allowed (status code 405)
      *         or Internal Server Error (status code 500)
      */
-    @Retryable(value = ValidatorException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
+    @Retryable(value = SSLHandshakeException.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
     @ApiOperation(
         value = "Customer voucher balance view",
         nickname = "viewGiftcard",

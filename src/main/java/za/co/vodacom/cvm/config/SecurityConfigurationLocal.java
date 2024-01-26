@@ -63,6 +63,7 @@ public class SecurityConfigurationLocal extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/api/product/**").permitAll()
             .antMatchers("/api/voucher/return/{voucherId}").permitAll()
+            .antMatchers("/api/voucher/internal/**").permitAll()
             .antMatchers("/api/voucher/**").permitAll()
             .antMatchers("/api/**").permitAll()
             .antMatchers("/management/health").permitAll()

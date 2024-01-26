@@ -6,6 +6,7 @@
 package za.co.vodacom.cvm.client.wigroup.api;
 
 import io.swagger.annotations.*;
+import javax.net.ssl.SSLHandshakeException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,6 @@ import za.co.vodacom.cvm.client.wigroup.model.GiftCardsBalanceResponse;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsRedeemResponse;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsRequest;
 import za.co.vodacom.cvm.client.wigroup.model.GiftCardsResponse;
-import javax.net.ssl.SSLHandshakeException;
 
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",

@@ -1,13 +1,12 @@
 package za.co.vodacom.cvm.service;
 
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
 import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.service.dto.campaign.QuantityDetailsDTO;
 import za.co.vodacom.cvm.service.dto.product.Product;
 import za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO;
-
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Service Interface for managing {@link VPVouchers}.
@@ -50,7 +49,6 @@ public interface VPVouchersService {
      * @param id the id of the entity.
      */
     void delete(Long id);
-
 
     /**
      * Get a valid voucher with lock

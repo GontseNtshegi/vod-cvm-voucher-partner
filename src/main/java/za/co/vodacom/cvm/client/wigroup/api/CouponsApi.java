@@ -6,6 +6,7 @@
 package za.co.vodacom.cvm.client.wigroup.api;
 
 import io.swagger.annotations.*;
+import javax.net.ssl.SSLHandshakeException;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
@@ -16,7 +17,6 @@ import za.co.vodacom.cvm.client.wigroup.model.CouponsDelResponse;
 import za.co.vodacom.cvm.client.wigroup.model.CouponsGetResponse;
 import za.co.vodacom.cvm.client.wigroup.model.CouponsRequest;
 import za.co.vodacom.cvm.client.wigroup.model.CouponsResponse;
-import javax.net.ssl.SSLHandshakeException;
 
 @javax.annotation.Generated(
     value = "org.openapitools.codegen.languages.SpringCodegen",

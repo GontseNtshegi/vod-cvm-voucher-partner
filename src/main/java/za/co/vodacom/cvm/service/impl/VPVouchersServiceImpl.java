@@ -44,52 +44,50 @@ public class VPVouchersServiceImpl implements VPVouchersService {
 
         return vPVouchersRepository
             .findById(vPVouchers.getId())
-            .map(
-                existingVPVouchers -> {
-                    if (vPVouchers.getBatchId() != null) {
-                        existingVPVouchers.setBatchId(vPVouchers.getBatchId());
-                    }
-                    if (vPVouchers.getFileId() != null) {
-                        existingVPVouchers.setFileId(vPVouchers.getFileId());
-                    }
-                    if (vPVouchers.getId() != null) {
-                        //existingVPVouchers.setProductId(vPVouchers.getId (vPVouchers.getVoucherCode() != null) {
-                        // existingVPVouchers.setVoucherCode(vPVouchers.getVoucherCode());
-                    }
-                    if (vPVouchers.getDescription() != null) {
-                        existingVPVouchers.setDescription(vPVouchers.getDescription());
-                    }
-                    if (vPVouchers.getCreateDate() != null) {
-                        existingVPVouchers.setCreateDate(vPVouchers.getCreateDate());
-                    }
-                    if (vPVouchers.getStartDate() != null) {
-                        existingVPVouchers.setStartDate(vPVouchers.getStartDate());
-                    }
-                    if (vPVouchers.getEndDate() != null) {
-                        existingVPVouchers.setEndDate(vPVouchers.getEndDate());
-                    }
-                    if (vPVouchers.getExpiryDate() != null) {
-                        existingVPVouchers.setExpiryDate(vPVouchers.getExpiryDate());
-                    }
-                    if (vPVouchers.getCollectionPoint() != null) {
-                        existingVPVouchers.setCollectionPoint(vPVouchers.getCollectionPoint());
-                    }
-                    if (vPVouchers.getIssuedDate() != null) {
-                        existingVPVouchers.setIssuedDate(vPVouchers.getIssuedDate());
-                    }
-                    if (vPVouchers.getReversedDate() != null) {
-                        existingVPVouchers.setReversedDate(vPVouchers.getReversedDate());
-                    }
-                    if (vPVouchers.getSourceTrxid() != null) {
-                        existingVPVouchers.setSourceTrxid(vPVouchers.getSourceTrxid());
-                    }
-                    if (vPVouchers.getQuantity() != null) {
-                        existingVPVouchers.setQuantity(vPVouchers.getQuantity());
-                    }
-
-                    return existingVPVouchers;
+            .map(existingVPVouchers -> {
+                if (vPVouchers.getBatchId() != null) {
+                    existingVPVouchers.setBatchId(vPVouchers.getBatchId());
                 }
-            )
+                if (vPVouchers.getFileId() != null) {
+                    existingVPVouchers.setFileId(vPVouchers.getFileId());
+                }
+                if (vPVouchers.getId() != null) {
+                    //existingVPVouchers.setProductId(vPVouchers.getId (vPVouchers.getVoucherCode() != null) {
+                    // existingVPVouchers.setVoucherCode(vPVouchers.getVoucherCode());
+                }
+                if (vPVouchers.getDescription() != null) {
+                    existingVPVouchers.setDescription(vPVouchers.getDescription());
+                }
+                if (vPVouchers.getCreateDate() != null) {
+                    existingVPVouchers.setCreateDate(vPVouchers.getCreateDate());
+                }
+                if (vPVouchers.getStartDate() != null) {
+                    existingVPVouchers.setStartDate(vPVouchers.getStartDate());
+                }
+                if (vPVouchers.getEndDate() != null) {
+                    existingVPVouchers.setEndDate(vPVouchers.getEndDate());
+                }
+                if (vPVouchers.getExpiryDate() != null) {
+                    existingVPVouchers.setExpiryDate(vPVouchers.getExpiryDate());
+                }
+                if (vPVouchers.getCollectionPoint() != null) {
+                    existingVPVouchers.setCollectionPoint(vPVouchers.getCollectionPoint());
+                }
+                if (vPVouchers.getIssuedDate() != null) {
+                    existingVPVouchers.setIssuedDate(vPVouchers.getIssuedDate());
+                }
+                if (vPVouchers.getReversedDate() != null) {
+                    existingVPVouchers.setReversedDate(vPVouchers.getReversedDate());
+                }
+                if (vPVouchers.getSourceTrxid() != null) {
+                    existingVPVouchers.setSourceTrxid(vPVouchers.getSourceTrxid());
+                }
+                if (vPVouchers.getQuantity() != null) {
+                    existingVPVouchers.setQuantity(vPVouchers.getQuantity());
+                }
+
+                return existingVPVouchers;
+            })
             .map(vPVouchersRepository::save);
     }
 
@@ -121,7 +119,7 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     public List<VPVouchers> getValidVoucherWithLock(String productId) {
         log.info("Request to get Valid VPVouchers");
         log.debug("Request to get Valid VPVouchers : {}", productId);
-        return vPVouchersRepository.getValidVoucherWithLock(productId, (Pageable) PageRequest.of(0,1));
+        return vPVouchersRepository.getValidVoucherWithLock(productId, (Pageable) PageRequest.of(0, 1));
     }
 
     @Override
@@ -155,21 +153,20 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     @Override
     public List<QuantityDetailsDTO> getVoucherQuantity(Long campaignId, ZonedDateTime extDate) {
         log.debug("Request to get campaign vouchers quantities.");
-        return vPVouchersRepository.getVoucherQuantity(campaignId,extDate);
+        return vPVouchersRepository.getVoucherQuantity(campaignId, extDate);
     }
 
     @Override
     public List<ProductQuantityDTO> getVouchersWithStatusA(String productId) {
         log.info("Request to get Valid VPVouchers");
         log.debug("Request to get Valid VPVouchers : {}", productId);
-        return vPVouchersRepository.getVouchersWithStatusA(productId, PageRequest.of(0,1));
+        return vPVouchersRepository.getVouchersWithStatusA(productId, PageRequest.of(0, 1));
     }
 
     @Override
-    public List<ProductQuantityDTO>  getValidVoucher(String productId) {
+    public List<ProductQuantityDTO> getValidVoucher(String productId) {
         log.info("Request to get Valid VPVouchers");
         log.debug("Request to get Valid VPVouchers : {}", productId);
-        return vPVouchersRepository.getValidVoucher(productId, PageRequest.of(0,1));
+        return vPVouchersRepository.getValidVoucher(productId, PageRequest.of(0, 1));
     }
-
 }

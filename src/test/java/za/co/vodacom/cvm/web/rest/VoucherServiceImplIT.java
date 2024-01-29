@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import za.co.vodacom.cvm.IntegrationTest;
 import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
+import za.co.vodacom.cvm.client.wigroup.api.GiftcardsCampaign10ApiClient;
 import za.co.vodacom.cvm.client.wigroup.api.GiftcardsDefaultApiClient;
 import za.co.vodacom.cvm.client.wigroup.model.*;
 import za.co.vodacom.cvm.config.Constants;
@@ -79,6 +81,8 @@ public class VoucherServiceImplIT {
     public static final String GENERIC_VOUCHER = "GenericVoucher";
     public static final String ONLINE_VOUCHER = "OnlineVoucher";
     public static final String ONLINE_GIFT_CARD = "OnlineGiftcard";
+    private static final String DEFAULT_SERVICE = "cp-test";
+    private static final String INVALID_SERVICE = "cp-another-test";
 
     @Autowired
     private MockMvc restVoucherMockMvc;
@@ -88,6 +92,9 @@ public class VoucherServiceImplIT {
 
     @MockBean
     GiftcardsDefaultApiClient giftcardsDefaultApiClient;
+
+    @MockBean
+    GiftcardsCampaign10ApiClient giftcardsCampaign10ApiClient;
 
     @Autowired
     private EntityManager em;
@@ -326,6 +333,12 @@ public class VoucherServiceImplIT {
         return new ResponseEntity<>(giftCardsResponse, HttpStatus.OK);
     }
 
+    HttpHeaders createHeaders(String serviceName) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("allocationService", serviceName);
+        return headers;
+    }
+
     @BeforeEach
     public void initTest() {}
 
@@ -349,6 +362,56 @@ public class VoucherServiceImplIT {
             .andExpect(jsonPath("$.collectPoint").value(DEFAULT_COLLECTION_POINT))
             .andExpect(jsonPath("$.trxId").value(DEFAULT_TRXID))
             .andExpect(jsonPath("$.encryptedYN").value(DEFAULT_ENCRYPTED_YN));
+    }
+
+    @Transactional
+    @Test
+    public void issueVoucherInternal() throws Exception {
+        createDTO(em, VOUCHER, DEFAULT_CAMPAIGN_NAME);
+        restVoucherMockMvc
+            .perform(
+                post("/api/voucher/internal/allocation")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(createVoucherAllocationRequest(DEFAULT_CAMPAIGN_NAME)))
+                    .headers(createHeaders(DEFAULT_SERVICE))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.voucherCode").value(DEFAULT_PRODUCT_ID))
+            .andExpect(jsonPath("$.voucherDescription").value(DEFAULT_VOUCHER_DESCRIPTION))
+            .andExpect(jsonPath("$.voucherType").value(VOUCHER))
+            .andExpect(jsonPath("$.voucherCategory").value(DEFAULT_VOUCHER_CATEGORY))
+            .andExpect(jsonPath("$.voucherVendor").value(DEFAULT_VOUCHER_VENDOR))
+            .andExpect(jsonPath("$.collectPoint").value(DEFAULT_COLLECTION_POINT))
+            .andExpect(jsonPath("$.trxId").value(DEFAULT_TRXID))
+            .andExpect(jsonPath("$.encryptedYN").value(DEFAULT_ENCRYPTED_YN));
+    }
+
+    @Transactional
+    @Test
+    public void issueVoucherInternalInvalidService() throws Exception {
+        createDTO(em, VOUCHER, DEFAULT_CAMPAIGN_NAME);
+        restVoucherMockMvc
+            .perform(
+                post("/api/voucher/internal/allocation")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(createVoucherAllocationRequest(DEFAULT_CAMPAIGN_NAME)))
+                    .headers(createHeaders(INVALID_SERVICE))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Transactional
+    @Test
+    public void issueVoucherInternalNoHeader() throws Exception {
+        createDTO(em, VOUCHER, DEFAULT_CAMPAIGN_NAME);
+        restVoucherMockMvc
+            .perform(
+                post("/api/voucher/internal/allocation")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(createVoucherAllocationRequest(DEFAULT_CAMPAIGN_NAME)))
+            )
+            .andExpect(status().isForbidden());
     }
 
     @Transactional
@@ -522,6 +585,7 @@ public class VoucherServiceImplIT {
     public void redeemVoucher() throws Exception {
         createDTO(em, ONLINE_GIFT_CARD, DEFAULT_CAMPAIGN_NAME);
         given(this.giftcardsDefaultApiClient.redeemGiftcard(ArgumentMatchers.any())).willReturn(createGiftCardsRedeemResponse());
+        given(this.giftcardsCampaign10ApiClient.redeemGiftcard(ArgumentMatchers.any())).willReturn(createGiftCardsRedeemResponse());
 
         restVoucherMockMvc
             .perform(
@@ -534,14 +598,4 @@ public class VoucherServiceImplIT {
             .andExpect(jsonPath("$.voucherCode").value(DEFAULT_STRING))
             .andExpect(jsonPath("$.expiryDate").value(DEFAULT_STRING));
     }
-    //    ResponseEntity<VoucherRedemptionResponse> redeemVoucher(Long voucherId, VoucherRedemptionRequest voucherRedemptionRequest)
-    //    @RequestMapping(
-    //        method = RequestMethod.POST,
-    //        value = "/voucher/redemption/{voucherId}",
-    //        produces = { "application/json" },
-    //        consumes = { "application/json" }
-    //    )
-    //    default ResponseEntity<VoucherRedemptionResponse> redeemVoucher(@ApiParam(value = "Issues a new voucher code against a gift card which has had a partial redemption",required=true) @PathVariable("voucherId") Long voucherId,@ApiParam(value = ""  )  @Valid @RequestBody(required = false) VoucherRedemptionRequest voucherRedemptionRequest) {
-    //        return getDelegate().redeemVoucher(voucherId, voucherRedemptionRequest);
-    //    }
 }

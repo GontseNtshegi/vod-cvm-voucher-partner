@@ -37,6 +37,41 @@ paths:
           description: Method Not Allowed
         '500':
           description: Internal Server Error
+  /voucher/internal/allocation:
+    post:
+      tags:
+        - voucher
+      summary: Customer voucher allocation
+      operationId: issueVoucherInternal
+      description: Reserve a voucher for a customer.
+      parameters:
+        - name: allocationService
+          in: header
+          description: allocationService
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoucherAllocationRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoucherAllocationResponse'
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '405':
+          description: Method Not Allowed
+        '500':
+          description: Internal Server Error
   /voucher/return/{voucherId}:
     put:
       tags:
@@ -547,7 +582,6 @@ paths:
         '500':
           description: Internal Server Error
 
-
 components:
   schemas:
     VoucherAllocationRequest:
@@ -671,7 +705,7 @@ components:
           description: The Type, eg GiftCard, OnlineVoucher
           type: string
         voucherCategory:
-          description: 'The categor, eg food'
+          description: 'The category, eg food'
           type: string
         voucherDescription:
           description: >-
@@ -680,7 +714,8 @@ components:
           type: string
         voucherQuantity:
           description: 'The available vouchers'
-          type: number
+          type: integer
+          format: int64
         voucherVendor:
           description: 'The vendor, eg Nandos'
           type: string
@@ -952,7 +987,7 @@ components:
           type: string
           example: '2021-03-03 16:40:35.796'
           description: The end date/time of the campaign
-        "products":
+        'products':
           type: array
           items:
             $ref: '#/components/schemas/VoucherProductResponseObject'
@@ -1061,7 +1096,6 @@ components:
         numFailed:
           type: number
           description: number of failed rows
-
 
     Problem:
       type: object

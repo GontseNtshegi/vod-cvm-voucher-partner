@@ -89,31 +89,11 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     )
     List<QuantityDetailsDTO> getVoucherQuantity(@Param("id") Long id, @Param("sysdate") ZonedDateTime sysdate);
 
-    @Lock(PESSIMISTIC_WRITE)
-    @QueryHints({ @QueryHint(name = AvailableSettings.JPA_LOCK_TIMEOUT, value = LockOptions.SKIP_LOCKED + "") })
     @Query(
-        value = "select new za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO(v.id, v.productId," +
-        "v.description ," +
-        " v.quantity ," +
-        " v.sourceTrxid , " +
-        "v.endDate ," +
-        " v.startDate , " +
-        "v.reversedDate , " +
-        " v.issuedDate," +
-        "v.expiryDate, " +
-        "v.createDate, " +
-        " v.collectionPoint ," +
-        " v.voucherCode ," +
-        "  v.fileId)" +
-        " from VPVouchers v, VPBatch b" +
-        " where v.productId=:productId " +
-        "and v.startDate< sysdate() " +
-        "and v.endDate> sysdate() " +
-        "and v.issuedDate is null " +
-        "and v.batchId = b.id " +
-        "and b.status ='A'"
+        value ="select * from vp_vouchers v inner join  vp_batch b  on b.id=v.batch_id  where v.product_Id=:productId and v.start_date< sysdate() and v.end_date> sysdate()and v.issued_date is null and v.batch_id =b.id and b.status ='A'\n" +
+            "limit 1 for update skip locked", nativeQuery = true
     )
-    List<ProductQuantityDTO> getVouchersWithStatusA(@Param("productId") String productId, Pageable pageable);
+    List<VPVouchers> getVouchersWithStatusA(@Param("productId") String productId);
 
     @Query(
         value = "select new za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO(v.id, v.productId," +

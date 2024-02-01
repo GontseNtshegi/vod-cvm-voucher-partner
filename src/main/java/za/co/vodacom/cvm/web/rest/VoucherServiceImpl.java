@@ -138,7 +138,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                         log.debug(vpVoucherDef.toString());
                         switch (vpVoucherDef.getType()) {
                             case Constants.VOUCHER:
-                                ProductQuantityDTO voucher = getAndIssueVoucher(
+                                VPVouchers voucher = getAndIssueVoucher(
                                     voucherAllocationRequest.getProductId(),
                                     voucherAllocationRequest.getTrxId()
                                 );
@@ -385,12 +385,12 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
     @Retryable(maxAttempts = 2, value = RuntimeException.class)
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
-    public ProductQuantityDTO getAndIssueVoucher(String productId, String transactionId) {
-        List<ProductQuantityDTO> vpVouchers = vpVouchersService.getVouchersWithStatusA(productId);
+    public VPVouchers getAndIssueVoucher(String productId, String transactionId) {
+        List<VPVouchers> vpVouchers = vpVouchersService.getVouchersWithStatusA(productId);
 
         // Vouchers found ?
         if (vpVouchers.isEmpty()) {
-            throw new LockTimeoutException("Voucher not available", new Throwable());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Voucher not available");
         }
 
         log.info("Voucher available to issue for {}.", productId);

@@ -1,5 +1,6 @@
 package za.co.vodacom.cvm.web.rest;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -9,6 +10,8 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +36,8 @@ import za.co.vodacom.cvm.client.wigroup.api.GiftcardsDefaultApiClient;
 import za.co.vodacom.cvm.client.wigroup.model.*;
 import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.*;
+import za.co.vodacom.cvm.service.VPVouchersService;
+import za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO;
 import za.co.vodacom.cvm.web.api.model.VoucherAllocationRequest;
 import za.co.vodacom.cvm.web.api.model.VoucherRedemptionRequest;
 import za.co.vodacom.cvm.web.api.model.VoucherReturnRequest;
@@ -95,6 +100,9 @@ public class VoucherServiceImplIT {
 
     @MockBean
     GiftcardsCampaign10ApiClient giftcardsCampaign10ApiClient;
+
+    @MockBean
+    VPVouchersService vpVouchersService;
 
     @Autowired
     private EntityManager em;
@@ -333,6 +341,69 @@ public class VoucherServiceImplIT {
         return new ResponseEntity<>(giftCardsResponse, HttpStatus.OK);
     }
 
+    List<VPVouchers> createVpVouchersList(){
+        VPVouchers vouchers = new VPVouchers();
+        vouchers.setId(DEFAULT_LONG);
+        vouchers.setVoucherCode(DEFAULT_STRING);
+        vouchers.setDescription(DEFAULT_VOUCHER_DESCRIPTION);
+        vouchers.setQuantity(DEFAULT_INTEGER);
+        vouchers.setBatchId(DEFAULT_INTEGER);
+        vouchers.setCollectionPoint(DEFAULT_COLLECTION_POINT);
+        vouchers.setCreateDate(DEFAULT_START_DATE);
+        vouchers.setEndDate(DEFAULT_END_DATE);
+        vouchers.setFileId(DEFAULT_INTEGER);
+        vouchers.setStartDate(DEFAULT_START_DATE);
+        vouchers.setSourceTrxid(DEFAULT_TRXID);
+        vouchers.setIssuedDate(DEFAULT_START_DATE);
+        vouchers.setReversedDate(DEFAULT_END_DATE);
+        List<VPVouchers> vouchersList = new ArrayList<>();
+        vouchersList.add(vouchers);
+        return vouchersList;
+    }
+
+    List<ProductQuantityDTO> createGenericVouchersList(){
+        List<ProductQuantityDTO> productQuantityDTOList = new ArrayList<>();
+        ProductQuantityDTO productQuantityDTO = new ProductQuantityDTO(
+            DEFAULT_LONG,
+            DEFAULT_PRODUCT_ID,
+            DEFAULT_VOUCHER_DESCRIPTION,
+            DEFAULT_INTEGER,
+            DEFAULT_TRXID,
+            DEFAULT_END_DATE,
+            DEFAULT_START_DATE,
+            DEFAULT_END_DATE,
+            DEFAULT_START_DATE,
+            DEFAULT_END_DATE,
+            DEFAULT_START_DATE,
+            DEFAULT_COLLECTION_POINT,
+            DEFAULT_STRING,
+            DEFAULT_INTEGER
+        );
+
+        productQuantityDTOList.add(productQuantityDTO);
+
+        return productQuantityDTOList;
+    }
+
+    Optional<VPVouchers> createVpVouchersToReturn(){
+        VPVouchers vouchers = new VPVouchers();
+        vouchers.setId(DEFAULT_LONG);
+        vouchers.setVoucherCode(DEFAULT_STRING);
+        vouchers.setDescription(DEFAULT_VOUCHER_DESCRIPTION);
+        vouchers.setQuantity(DEFAULT_INTEGER);
+        vouchers.setBatchId(DEFAULT_INTEGER);
+        vouchers.setCollectionPoint(DEFAULT_COLLECTION_POINT);
+        vouchers.setCreateDate(DEFAULT_START_DATE);
+        vouchers.setEndDate(DEFAULT_END_DATE);
+        vouchers.setFileId(DEFAULT_INTEGER);
+        vouchers.setStartDate(DEFAULT_START_DATE);
+        vouchers.setSourceTrxid(DEFAULT_TRXID);
+        vouchers.setIssuedDate(DEFAULT_START_DATE);
+        vouchers.setReversedDate(null);
+        vouchers.setProductId(DEFAULT_PRODUCT_ID);
+
+        return Optional.of(vouchers);
+    }
     HttpHeaders createHeaders(String serviceName) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("allocationService", serviceName);
@@ -345,6 +416,9 @@ public class VoucherServiceImplIT {
     @Transactional
     @Test
     public void issueVoucher() throws Exception {
+        given(this.vpVouchersService.getVouchersWithStatusA(ArgumentMatchers.any()))
+            .willReturn(createVpVouchersList());
+
         createDTO(em, VOUCHER, DEFAULT_CAMPAIGN_NAME);
         restVoucherMockMvc
             .perform(
@@ -367,6 +441,9 @@ public class VoucherServiceImplIT {
     @Transactional
     @Test
     public void issueVoucherInternal() throws Exception {
+        given(this.vpVouchersService.getVouchersWithStatusA(ArgumentMatchers.any()))
+            .willReturn(createVpVouchersList());
+
         createDTO(em, VOUCHER, DEFAULT_CAMPAIGN_NAME);
         restVoucherMockMvc
             .perform(
@@ -417,6 +494,9 @@ public class VoucherServiceImplIT {
     @Transactional
     @Test
     public void issueGenericVoucher() throws Exception {
+        given(this.vpVouchersService.getValidVoucher(ArgumentMatchers.any()))
+            .willReturn(createGenericVouchersList());
+
         createDTO(em, GENERIC_VOUCHER, DEFAULT_CAMPAIGN_NAME);
         restVoucherMockMvc
             .perform(
@@ -489,6 +569,10 @@ public class VoucherServiceImplIT {
     @Transactional
     @Test
     public void returnVoucher() throws Exception {
+
+        given(this.vpVouchersService.getValidVoucherForReturn(any(),any(),any()))
+            .willReturn(createVpVouchersToReturn());
+
         createDTO(em, VOUCHER, DEFAULT_CAMPAIGN_NAME);
 
         restVoucherMockMvc

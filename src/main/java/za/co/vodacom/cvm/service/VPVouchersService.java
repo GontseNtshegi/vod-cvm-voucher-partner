@@ -95,7 +95,7 @@ public interface VPVouchersService {
 
     List<QuantityDetailsDTO> getVoucherQuantity(Long campaignId, ZonedDateTime extDate);
 
-    List<ProductQuantityDTO> getVouchersWithStatusA(String productId);
+    List<VPVouchers> getVouchersWithStatusA(String productId);
 
     /**
      * Get a valid voucher

@@ -90,11 +90,27 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     List<QuantityDetailsDTO> getVoucherQuantity(@Param("id") Long id, @Param("sysdate") ZonedDateTime sysdate);
 
     @Query(
-        value ="select * from vp_vouchers v inner join  vp_batch b  on b.id=v.batch_id  where v.product_Id=:productId and v.start_date< sysdate() and v.end_date> sysdate()and v.issued_date is null and v.batch_id =b.id and b.status ='A'\n" +
-            "limit 1 for update skip locked", nativeQuery = true
+        value ="select *" +
+            "from vp_vouchers v inner join vp_batch b " +
+            "on b.id=v.batch_id " +
+            " where v.product_Id=:productId " +
+            "and v.start_date < sysdate()" +
+            " and v.end_date > sysdate() " +
+            "and v.issued_date is null and b.status ='A' limit 5", nativeQuery = true
+
+
     )
     List<VPVouchers> getVouchersWithStatusA(@Param("productId") String productId);
 
+
+    @Query(
+        value = "select * from vp_vouchers v " +
+            "where " +
+            "v.issued_date is null " +
+            "and id in (?1) " +
+            "limit 1 for update skip locked", nativeQuery = true
+    )
+List<VPVouchers> getVoucherSkipLocked(String productIds);
     @Query(
         value = "select new za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO(v.id, v.productId," +
         "v.description ," +

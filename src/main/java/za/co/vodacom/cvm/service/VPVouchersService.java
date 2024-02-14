@@ -103,4 +103,6 @@ public interface VPVouchersService {
      * @return
      */
     List<ProductQuantityDTO> getValidVoucher(String productId);
+
+    List<VPVouchers> getVoucherSkipLocked(String ProductIds);
 }

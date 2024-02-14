@@ -169,4 +169,9 @@ public class VPVouchersServiceImpl implements VPVouchersService {
         log.debug("Request to get Valid VPVouchers : {}", productId);
         return vPVouchersRepository.getValidVoucher(productId, PageRequest.of(0, 1));
     }
+
+    @Override
+    public List<VPVouchers> getVoucherSkipLocked(String ProductIds) {
+        return vPVouchersRepository.getVoucherSkipLocked(ProductIds);
+    }
 }

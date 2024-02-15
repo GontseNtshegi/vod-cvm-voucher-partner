@@ -419,6 +419,8 @@ public class VoucherServiceImplIT {
         given(this.vpVouchersService.getVouchersWithStatusA(ArgumentMatchers.any()))
             .willReturn(createVpVouchersList());
 
+        given(this.vpVouchersService.getVoucherSkipLocked(ArgumentMatchers.any()))
+            .willReturn(createVpVouchersList());
         createDTO(em, VOUCHER, DEFAULT_CAMPAIGN_NAME);
         restVoucherMockMvc
             .perform(
@@ -443,7 +445,8 @@ public class VoucherServiceImplIT {
     public void issueVoucherInternal() throws Exception {
         given(this.vpVouchersService.getVouchersWithStatusA(ArgumentMatchers.any()))
             .willReturn(createVpVouchersList());
-
+        given(this.vpVouchersService.getVoucherSkipLocked(ArgumentMatchers.any()))
+            .willReturn(createVpVouchersList());
         createDTO(em, VOUCHER, DEFAULT_CAMPAIGN_NAME);
         restVoucherMockMvc
             .perform(

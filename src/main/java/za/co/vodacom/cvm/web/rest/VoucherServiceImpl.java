@@ -10,9 +10,11 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.persistence.LockTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -386,18 +388,28 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
     @Retryable(maxAttempts = 2, value = RuntimeException.class)
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
     public VPVouchers getAndIssueVoucher(String productId, String transactionId) {
-        List<VPVouchers> vpVouchers = vpVouchersService.getVouchersWithStatusA(productId);
+        List<VPVouchers> vbVouchersList;
+        vbVouchersList = vpVouchersService.getVouchersWithStatusA(productId);
+        VPVouchers vouchers = new VPVouchers();
+        List<Long> productIdList = new ArrayList<>();
 
         // Vouchers found ?
-        if (vpVouchers.isEmpty()) {
+        if (vbVouchersList.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Voucher not available");
         }
 
-        log.info("Voucher available to issue for {}.", productId);
-        //issue voucher
-        vpVouchersService.issueVoucher(transactionId, vpVouchers.get(0).getId());
+        productIdList.addAll(vbVouchersList.stream().map(VPVouchers::getId).collect(Collectors.toList()));
+        List<VPVouchers> vpVouchers = vpVouchersService.getVoucherSkipLocked(
+            productIdList.toString().replaceAll("\\[", "").replaceAll("\\]",
+                ""));
 
-        return vpVouchers.get(0);
+        if(vpVouchers.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Voucher not available");
+        }
+        //issue voucher
+        vpVouchersService.issueVoucher(transactionId, vbVouchersList.get(0).getId());
+        vouchers = vbVouchersList.get(0);
+        return  vouchers;
     }
 
     @Transactional

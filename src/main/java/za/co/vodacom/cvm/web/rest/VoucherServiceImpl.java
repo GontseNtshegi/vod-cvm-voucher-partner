@@ -11,6 +11,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -392,20 +393,38 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
         vbVouchersList = vpVouchersService.getVouchersWithStatusA(productId);
         VPVouchers vouchers = new VPVouchers();
         List<Long> productIdList = new ArrayList<>();
-
+        List<VPVouchers> vpVouchers;
         // Vouchers found ?
         if (vbVouchersList.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Voucher not available");
         }
 
         productIdList.addAll(vbVouchersList.stream().map(VPVouchers::getId).collect(Collectors.toList()));
-        List<VPVouchers> vpVouchers = vpVouchersService.getVoucherSkipLocked(
-            productIdList.toString().replaceAll("\\[", "").replaceAll("\\]",
-                ""));
+
+        if(productIdList.size() > 3) {
+            log.debug("list of 12 product ids: {}", productIdList );
+            Collections.shuffle(productIdList);
+            int randomSeriesLength = 3;
+
+            List<Long> threeProductIds = productIdList.subList(0, randomSeriesLength);
+            log.debug("Selected to 3 in list : {}", threeProductIds);
+
+             vpVouchers = vpVouchersService.getVoucherSkipLocked(
+                threeProductIds.toString().replaceAll("\\[", "").replaceAll("\\]",
+                    ""));
+        }else{
+
+             vpVouchers = vpVouchersService.getVoucherSkipLocked(
+                productIdList.toString().replaceAll("\\[", "").replaceAll("\\]",
+                    ""));
+        }
+
 
         if(vpVouchers.isEmpty()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Voucher not available");
         }
+
+        log.debug("Limit 1 query returns: {}",vpVouchers);
         //issue voucher
         vpVouchersService.issueVoucher(transactionId, vbVouchersList.get(0).getId());
         vouchers = vbVouchersList.get(0);

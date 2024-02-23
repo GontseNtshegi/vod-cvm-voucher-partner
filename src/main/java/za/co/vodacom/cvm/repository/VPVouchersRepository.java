@@ -96,7 +96,7 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
             " where v.product_Id=:productId " +
             "and v.start_date < sysdate()" +
             " and v.end_date > sysdate() " +
-            "and v.issued_date is null and b.status ='A' limit 5", nativeQuery = true
+            "and v.issued_date is null and b.status ='A' limit 12", nativeQuery = true
 
 
     )

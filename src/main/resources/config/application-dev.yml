@@ -72,6 +72,11 @@ spring:
   thymeleaf:
     cache: false
   sleuth:
+    # https://github.com/spring-projects/spring-framework/issues/27844#issuescomment-1002866885
+    # https://github.com/spring-cloud/spring-cloud-sleuth/issues/2094
+    async:
+      enabled: false
+    enabled: true
     sampler:
       probability: 1 # report 100% of traces
   zipkin: # Use the "zipkin" Maven profile to have the Spring Cloud Zipkin dependencies
@@ -107,7 +112,7 @@ jhipster:
   # CORS is disabled by default on microservices, as you should access them through a gateway.
   # If you want to enable it, please uncomment the configuration below.
   # cors:
-  #   allowed-origins: "http://localhost:9000"
+  #   allowed-origins: "http://localhost:9000,https://localhost:9000"
   #   allowed-methods: "*"
   #   allowed-headers: "*"
   #   exposed-headers: "Authorization,Link,X-Total-Count"

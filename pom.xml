@@ -14,7 +14,7 @@
     <repositories>
       <repository>
         <id>maven-group</id>
-        <url>http://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/maven-group/</url>
+        <url>https://artifactory.orbit.prod.vodacom.co.za/artifactory/libs-release/</url>
       </repository>
         <!-- jhipster-needle-maven-repository -->
     </repositories>
@@ -23,7 +23,7 @@
         <!-- jhipster-needle-maven-plugin-repository -->
         <pluginRepository>
             <id>maven-group</id>
-            <url>http://nexus-cvm-microservices-prod.app.prod.cpt.ocp.vodacom.corp/repository/maven-group/</url>
+            <url>https://artifactory.orbit.prod.vodacom.co.za/artifactory/libs-release/</url>
         </pluginRepository>
     </pluginRepositories>
 
@@ -989,6 +989,112 @@
             </properties>
         </profile>
         <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-devtools</artifactId>
+                    <optional>true</optional>
+                </dependency>
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.testcontainers</groupId>
+                    <artifactId>mysql</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+
+                </plugins>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-failsafe-plugin</artifactId>
+                            <version>${maven-failsafe-plugin.version}</version>
+                            <configuration>
+                                <!-- Due to spring-boot repackage, without adding this property test classes are not found
+                                     See https://github.com/spring-projects/spring-boot/issues/6254 -->
+                                <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                                <!-- Force alphabetical order to have a reproducible build -->
+                                <runOrder>alphabetical</runOrder>
+                                <includes>
+                                    <include>**/*IT*</include>
+                                    <include>**/*IntTest*</include>
+                                </includes>
+                                <argLine>@{argLine} -Dspring.profiles.active=testdev</argLine>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>integration-test</id>
+                                    <goals>
+                                        <goal>integration-test</goal>
+                                    </goals>
+                                </execution>
+                                <execution>
+                                    <id>verify</id>
+                                    <goals>
+                                        <goal>verify</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.liquibase</groupId>
+                            <artifactId>liquibase-maven-plugin</artifactId>
+                            <version>${liquibase.version}</version>
+                            <configuration>
+                                <changeLogFile>${project.basedir}/src/main/resources/config/liquibase/master.xml</changeLogFile>
+                                <diffChangeLogFile>${project.basedir}/src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
+                                <driver>com.mysql.cj.jdbc.Driver</driver>
+                                <url>jdbc:mysql://localhost:3306/voucherpartner</url>
+                                <defaultSchemaName>voucherpartner</defaultSchemaName>
+                                <username>root</username>
+                                <password></password>
+                                <referenceUrl>hibernate:spring:za.co.vodacom.cvm.domain?dialect=org.hibernate.dialect.MySQL8Dialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>
+                                <verbose>true</verbose>
+                                <logging>debug</logging>
+                                <contexts>!test</contexts>
+                            </configuration>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>org.liquibase</groupId>
+                                    <artifactId>liquibase-core</artifactId>
+                                    <version>${liquibase.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.liquibase.ext</groupId>
+                                    <artifactId>liquibase-hibernate5</artifactId>
+                                    <version>${liquibase-hibernate5.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.springframework.boot</groupId>
+                                    <artifactId>spring-boot-starter-data-jpa</artifactId>
+                                    <version>${spring-boot.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>javax.validation</groupId>
+                                    <artifactId>validation-api</artifactId>
+                                    <version>${validation-api.version}</version>
+                                </dependency>
+                            </dependencies>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+            <properties>
+                <!-- default Spring profiles -->
+                <spring.profiles.active>local${profile.api-docs}${profile.tls}${profile.no-liquibase}</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
             <id>prod</id>
             <dependencies>
                 <dependency>
@@ -1108,6 +1214,250 @@
             <properties>
                 <!-- default Spring profiles -->
                 <spring.profiles.active>prod${profile.api-docs}${profile.tls}${profile.e2e}${profile.no-liquibase}</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.testcontainers</groupId>
+                    <artifactId>mysql</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                </dependency>
+            </dependencies>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-failsafe-plugin</artifactId>
+                            <version>${maven-failsafe-plugin.version}</version>
+                            <configuration>
+                                <!-- Due to spring-boot repackage, without adding this property test classes are not found
+                                     See https://github.com/spring-projects/spring-boot/issues/6254 -->
+                                <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                                <!-- Force alphabetical order to have a reproducible build -->
+                                <runOrder>alphabetical</runOrder>
+                                <includes>
+                                    <include>**/*IT*</include>
+                                    <include>**/*IntTest*</include>
+                                </includes>
+                                <argLine>@{argLine} -Dspring.profiles.active=testprod</argLine>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>integration-test</id>
+                                    <goals>
+                                        <goal>integration-test</goal>
+                                    </goals>
+                                </execution>
+                                <execution>
+                                    <id>verify</id>
+                                    <goals>
+                                        <goal>verify</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.liquibase</groupId>
+                            <artifactId>liquibase-maven-plugin</artifactId>
+                            <version>${liquibase.version}</version>
+                            <configuration>
+                                <changeLogFile>${project.basedir}/src/main/resources/config/liquibase/master.xml</changeLogFile>
+                                <diffChangeLogFile>${project.basedir}/src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
+                                <driver>com.mysql.cj.jdbc.Driver</driver>
+                                <url>jdbc:mysql://localhost:3306/voucherpartner</url>
+                                <defaultSchemaName>voucherpartner</defaultSchemaName>
+                                <username>root</username>
+                                <password></password>
+                                <referenceUrl>hibernate:spring:za.co.vodacom.cvm.domain?dialect=org.hibernate.dialect.MySQL8Dialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>
+                                <verbose>true</verbose>
+                                <logging>debug</logging>
+                                <contexts>!test</contexts>
+                            </configuration>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>org.liquibase</groupId>
+                                    <artifactId>liquibase-core</artifactId>
+                                    <version>${liquibase.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.liquibase.ext</groupId>
+                                    <artifactId>liquibase-hibernate5</artifactId>
+                                    <version>${liquibase-hibernate5.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.springframework.boot</groupId>
+                                    <artifactId>spring-boot-starter-data-jpa</artifactId>
+                                    <version>${spring-boot.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>javax.validation</groupId>
+                                    <artifactId>validation-api</artifactId>
+                                    <version>${validation-api.version}</version>
+                                </dependency>
+                            </dependencies>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>target/classes/static/</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>build-info</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>io.github.git-commit-id</groupId>
+                        <artifactId>git-commit-id-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <!-- default Spring profiles -->
+                <spring.profiles.active>test${profile.api-docs}${profile.tls}${profile.e2e}${profile.no-liquibase}</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>staging</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.testcontainers</groupId>
+                    <artifactId>mysql</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                </dependency>
+            </dependencies>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-failsafe-plugin</artifactId>
+                            <version>${maven-failsafe-plugin.version}</version>
+                            <configuration>
+                                <!-- Due to spring-boot repackage, without adding this property test classes are not found
+                                     See https://github.com/spring-projects/spring-boot/issues/6254 -->
+                                <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                                <!-- Force alphabetical order to have a reproducible build -->
+                                <runOrder>alphabetical</runOrder>
+                                <includes>
+                                    <include>**/*IT*</include>
+                                    <include>**/*IntTest*</include>
+                                </includes>
+                                <argLine>@{argLine} -Dspring.profiles.active=testprod</argLine>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>integration-test</id>
+                                    <goals>
+                                        <goal>integration-test</goal>
+                                    </goals>
+                                </execution>
+                                <execution>
+                                    <id>verify</id>
+                                    <goals>
+                                        <goal>verify</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.liquibase</groupId>
+                            <artifactId>liquibase-maven-plugin</artifactId>
+                            <version>${liquibase.version}</version>
+                            <configuration>
+                                <changeLogFile>${project.basedir}/src/main/resources/config/liquibase/master.xml</changeLogFile>
+                                <diffChangeLogFile>${project.basedir}/src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
+                                <driver>com.mysql.cj.jdbc.Driver</driver>
+                                <url>jdbc:mysql://localhost:3306/voucherpartner</url>
+                                <defaultSchemaName>voucherpartner</defaultSchemaName>
+                                <username>root</username>
+                                <password></password>
+                                <referenceUrl>hibernate:spring:za.co.vodacom.cvm.domain?dialect=org.hibernate.dialect.MySQL8Dialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>
+                                <verbose>true</verbose>
+                                <logging>debug</logging>
+                                <contexts>!test</contexts>
+                            </configuration>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>org.liquibase</groupId>
+                                    <artifactId>liquibase-core</artifactId>
+                                    <version>${liquibase.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.liquibase.ext</groupId>
+                                    <artifactId>liquibase-hibernate5</artifactId>
+                                    <version>${liquibase-hibernate5.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>org.springframework.boot</groupId>
+                                    <artifactId>spring-boot-starter-data-jpa</artifactId>
+                                    <version>${spring-boot.version}</version>
+                                </dependency>
+                                <dependency>
+                                    <groupId>javax.validation</groupId>
+                                    <artifactId>validation-api</artifactId>
+                                    <version>${validation-api.version}</version>
+                                </dependency>
+                            </dependencies>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>target/classes/static/</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>build-info</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>io.github.git-commit-id</groupId>
+                        <artifactId>git-commit-id-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <!-- default Spring profiles -->
+                <spring.profiles.active>staging${profile.api-docs}${profile.tls}${profile.e2e}${profile.no-liquibase}</spring.profiles.active>
             </properties>
         </profile>
         <profile>

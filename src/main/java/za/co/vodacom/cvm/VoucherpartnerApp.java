@@ -14,13 +14,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
-import org.springframework.retry.annotation.EnableRetry;
 import tech.jhipster.config.DefaultProfileUtil;
 import tech.jhipster.config.JHipsterConstants;
 import za.co.vodacom.cvm.config.ApplicationProperties;
+import za.co.vodacom.cvm.config.CRLFLogConverter;
 
 @SpringBootApplication
-@EnableRetry
 @EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
 public class VoucherpartnerApp {
 
@@ -86,6 +85,7 @@ public class VoucherpartnerApp {
             log.warn("The host name could not be determined, using `localhost` as fallback");
         }
         log.info(
+            CRLFLogConverter.CRLF_SAFE_MARKER,
             "\n----------------------------------------------------------\n\t" +
             "Application '{}' is running! Access URLs:\n\t" +
             "Local: \t\t{}://localhost:{}{}\n\t" +
@@ -107,6 +107,7 @@ public class VoucherpartnerApp {
             configServerStatus = "Not found or not setup for this application";
         }
         log.info(
+            CRLFLogConverter.CRLF_SAFE_MARKER,
             "\n----------------------------------------------------------\n\t" +
             "Config Server: \t{}\n----------------------------------------------------------",
             configServerStatus

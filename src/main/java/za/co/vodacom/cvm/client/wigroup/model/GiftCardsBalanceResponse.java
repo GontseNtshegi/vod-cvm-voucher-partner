@@ -1,14 +1,10 @@
 package za.co.vodacom.cvm.client.wigroup.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import za.co.vodacom.cvm.client.wigroup.model.GiftCardsBalanceResponseGiftcard;
-import org.openapitools.jackson.nullable.JsonNullable;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
 
 /**
  * GiftCardsBalanceResponse
@@ -109,7 +105,7 @@ public class GiftCardsBalanceResponse   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class GiftCardsBalanceResponse {\n");
-    
+
     sb.append("    giftcard: ").append(toIndentedString(giftcard)).append("\n");
     sb.append("    responseCode: ").append(toIndentedString(responseCode)).append("\n");
     sb.append("    responseDesc: ").append(toIndentedString(responseDesc)).append("\n");

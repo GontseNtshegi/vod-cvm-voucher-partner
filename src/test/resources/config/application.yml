@@ -94,16 +94,19 @@ jhipster:
 # More documentation is available at:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
-
-application:
 management:
   health:
     mail:
       enabled: false
+application:
+  msisdn:
+    internal: '^270[4-8][0-9][0-9][0-9]000[0-9]*'
+    external: '^27[4-8][0-9]*'
+  coupons:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     name: wigroup-coupons
-    apiId: dfd
-    apiPassword: sddsf
+    apiId: vodacomqa_voucher
+    apiPassword: test
   giftCards:
     url: https://za-vsp-int.wigroup.co/cvs-issuer/rest
     defaults:

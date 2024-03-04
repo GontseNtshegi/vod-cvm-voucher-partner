@@ -12,10 +12,11 @@ src/main/java/za/co/vodacom/cvm/client/wigroup/model/CouponsGetResponseCoupon.ja
 src/main/java/za/co/vodacom/cvm/client/wigroup/model/CouponsRequest.java
 src/main/java/za/co/vodacom/cvm/client/wigroup/model/CouponsResponse.java
 src/main/java/za/co/vodacom/cvm/client/wigroup/model/CouponsResponseCoupon.java
-src/main/java/za/co/vodacom/cvm/client/wigroup/model/GiftCardsRedeemResponse.java
-src/main/java/za/co/vodacom/cvm/client/wigroup/model/GiftCardsRedeemResponseToken.java
 src/main/java/za/co/vodacom/cvm/client/wigroup/model/GiftCardsBalanceResponse.java
 src/main/java/za/co/vodacom/cvm/client/wigroup/model/GiftCardsBalanceResponseGiftcard.java
+src/main/java/za/co/vodacom/cvm/client/wigroup/model/GiftCardsDelResponse.java
+src/main/java/za/co/vodacom/cvm/client/wigroup/model/GiftCardsRedeemResponse.java
+src/main/java/za/co/vodacom/cvm/client/wigroup/model/GiftCardsRedeemResponseToken.java
 src/main/java/za/co/vodacom/cvm/client/wigroup/model/GiftCardsRequest.java
 src/main/java/za/co/vodacom/cvm/client/wigroup/model/GiftCardsResponse.java
 src/main/java/za/co/vodacom/cvm/client/wigroup/model/GiftCardsResponseGiftcard.java

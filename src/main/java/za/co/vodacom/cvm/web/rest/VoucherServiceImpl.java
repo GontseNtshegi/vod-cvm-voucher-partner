@@ -518,6 +518,23 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                         throw new WiGroupException(couponsResponseResponseEntity.getBody().getResponseDesc(), Status.INTERNAL_SERVER_ERROR);
                     }
                     break;
+                case Constants.ONLINE_GIFT_CARD:
+                    //call wi group
+                    ResponseEntity<GiftCardsDelResponse> giftCardsDelResponseResponseEntity = giftcardsDefaultApiClient.expireGiftCards(voucherId);
+                    //success
+                    GiftCardsDelResponse giftCardsDelResponse = giftCardsDelResponseResponseEntity.getBody();
+                    if (
+                        giftCardsDelResponse.getResponseCode().equals(Constants.RESPONSE_CODE) ||
+                            giftCardsDelResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
+                    ) {
+                        //set response
+                        voucherReturnResponse.setVoucherDescription(vpVoucherDef.getDescription());
+                        voucherReturnResponse.setTrxId(voucherReturnRequest.getTrxId());
+                        voucherReturnResponse.setVoucherId(voucherId);
+                    } else { //failed
+                        throw new WiGroupException(giftCardsDelResponseResponseEntity.getBody().getResponseDesc(), Status.INTERNAL_SERVER_ERROR);
+                    }
+                    break;
             }
         } else { //productId not found
             throw new AllocationException("Invalid ProductId", Status.NOT_FOUND);

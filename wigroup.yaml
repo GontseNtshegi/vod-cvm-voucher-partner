@@ -304,21 +304,6 @@ components:
                         The mobile number. The mobile number must be presented in
                         International format.
                     type: string
-                numExpiryDays:
-                    description: If allowed by campaign the channel can override the default expiry days. It will still be capped by the default campaign value.
-                    type: integer
-                    format: int32
-                smsMessage:
-                    description: >-
-                        The message to override original sms message with. Used in request
-                        only.
-                    type: string
-                sendSMS:
-                    description: Indicates whether an SMS must be sent on issue or not.
-                    type: boolean
-                sendFollowUpSMS:
-                    description: Indicates whether a follow-up SMS must be sent if the user partially redeems their gift card
-                    type: boolean
                 stateId:
                     description: >-
                         The current state of the coupon. A (Active) D (Deactivated) E

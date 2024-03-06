@@ -61,6 +61,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
     VPFileLoad savedFileLoad;
 
+    @Autowired
     VPVouchersService vpVouchersService;
 
     BatchServiceImpl(VPBatchService vpBatchService, VPFileLoadService vpFileLoadService, VPVouchersService vpVouchersService) {
@@ -308,7 +309,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
         batchValidationResponse.setStatus(Constants.VALIDATION_STATUS_OK);
         batchValidationResponse.setStatusMessage(" ");
 
-        //checking if batchid is empty or whitespace
+        //checking if batchid is empty or contains whitespace
 
         if (batchId.isBlank()){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid batch ID");

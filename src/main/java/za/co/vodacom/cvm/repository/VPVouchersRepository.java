@@ -134,4 +134,15 @@ List<VPVouchers> getVoucherSkipLocked(String productIds);
         "and b.status ='A'"
     )
     List<ProductQuantityDTO> getValidVoucher(@Param("productId") String productId, Pageable pageable);
+
+
+    @Query(value = "select * from vp_vouchers w, vp_voucher_def z " +
+        "where w.product_id = z.product_id and z.vendor in  " +
+        "(select distinct d.vendor from vp_vouchers v, vp_voucher_def d  " +
+        "where v.batch_id= :batchId and v.product_id=d.product_id and d.type='Voucher') " +
+        "and start_date<now() " +
+        "and end_date>now() " +
+        "group by vendor, voucher_code " +
+        "having count(*)>1" , nativeQuery = true)
+    List<VPVouchers> getBatchValidation(@Param("batchId") String batchId);
 }

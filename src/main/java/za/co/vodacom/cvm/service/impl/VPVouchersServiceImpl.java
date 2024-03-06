@@ -174,4 +174,10 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     public List<VPVouchers> getVoucherSkipLocked(String ProductIds) {
         return vPVouchersRepository.getVoucherSkipLocked(ProductIds);
     }
+
+    @Override
+    public List<VPVouchers> getBatchValidation(String batchId) {
+        log.debug("Request to validate batch in VPVoucher with batch id : {}", batchId);
+        return vPVouchersRepository.getBatchValidation(batchId);
+    }
 }

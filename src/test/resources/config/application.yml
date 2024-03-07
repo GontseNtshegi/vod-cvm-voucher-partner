@@ -54,6 +54,19 @@ spring:
         size: 20
   thymeleaf:
     mode: HTML
+  batch:
+    job:
+      enabled: false
+  servlet:
+    multipart:
+      max-file-size: 512MB
+      max-request-size: 512MB
+  sleuth:
+    # https://github.com/spring-projects/spring-framework/issues/27844#issuescomment-1002866885
+    # https://github.com/spring-cloud/spring-cloud-sleuth/issues/2094
+    async:
+      enabled: false
+    enabled: true
 
 server:
   port: 10344

@@ -1,14 +1,12 @@
 package za.co.vodacom.cvm.client.wigroup.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.openapitools.jackson.nullable.JsonNullable;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import java.util.Objects;
 
 /**
  * GiftCards from WiGroup
@@ -36,11 +34,11 @@ public class GiftCardsRedeemResponseToken   {
    */
   public enum StateIdEnum {
     A("A"),
-    
+
     D("D"),
-    
+
     E("E"),
-    
+
     R("R");
 
     private String value;
@@ -220,7 +218,7 @@ public class GiftCardsRedeemResponseToken   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class GiftCardsRedeemResponseToken {\n");
-    
+
     sb.append("    userRef: ").append(toIndentedString(userRef)).append("\n");
     sb.append("    wiCode: ").append(toIndentedString(wiCode)).append("\n");
     sb.append("    createDate: ").append(toIndentedString(createDate)).append("\n");

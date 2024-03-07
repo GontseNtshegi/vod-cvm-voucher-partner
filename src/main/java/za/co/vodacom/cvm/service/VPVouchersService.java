@@ -105,4 +105,5 @@ public interface VPVouchersService {
     List<ProductQuantityDTO> getValidVoucher(String productId);
 
     List<VPVouchers> getVoucherSkipLocked(String ProductIds);
+    List<VPVouchers> getBatchValidation(String batchId);
 }

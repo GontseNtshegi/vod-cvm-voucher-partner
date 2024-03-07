@@ -115,10 +115,22 @@ class CampaignServiceIT {
         return  dtoList;
     }
 
-    private LinkDelinkRequest createLinkDelinkRequest(boolean isAddOnly, boolean isBoth) {
+    private LinkDelinkRequest createLinkDelinkRequest(boolean isRemoveOnly, boolean isBoth,boolean duplicated) {
         LinkDelinkRequest request = new LinkDelinkRequest();
+        if (isRemoveOnly){
+            request.setAddProducts(null);
+            request.setRemoveProducts(DEFAULT_STRINGS_RMV);
+        } else if (isBoth) {
+            if(duplicated){
+                request.setAddProducts(DEFAULT_STRINGS_ADD);
+                request.setRemoveProducts(DEFAULT_STRINGS_ADD);
+            }
             request.setAddProducts(DEFAULT_STRINGS_ADD);
             request.setRemoveProducts(DEFAULT_STRINGS_RMV);
+        }else {
+            request.setAddProducts(DEFAULT_STRINGS_ADD);
+            request.setRemoveProducts(null);
+        }
         return  request;
     }
 
@@ -198,8 +210,57 @@ class CampaignServiceIT {
             .willReturn(createCampaignVoucher());
         restMockMvc.
             perform(put("/api/campaign/products/{1}"
-                ,DEFAULT_CAMPAIGN_ID).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(createLinkDelinkRequest(true,false))))
+                ,DEFAULT_CAMPAIGN_ID).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(createLinkDelinkRequest(false,true,false))))
             .andExpect(status().isOk());
     }
 
+    @Test
+    void linkDelinkProductInvalidCampaign() throws Exception {
+        restMockMvc.
+            perform(put("/api/campaign/products/{1}"
+                ,DEFAULT_CAMPAIGN_ID).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(createLinkDelinkRequest(false,true,false))))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void linkDelinkProductEmptyAdd() throws Exception {
+        given(this.vpCampaignService.findOne(ArgumentMatchers.any()))
+            .willReturn(Optional.of(createCampaign()));
+        restMockMvc.
+            perform(put("/api/campaign/products/{1}"
+                ,DEFAULT_CAMPAIGN_ID).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(createLinkDelinkRequest(true,false,false))))
+            .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void linkDelinkProductInvalidProducts() throws Exception {
+        given(this.vpCampaignService.findOne(ArgumentMatchers.any()))
+            .willReturn(Optional.of(createCampaign()));
+        given(this.voucherDefService.getVouchersByProductId(ArgumentMatchers.any()))
+            .willReturn(0);
+        given(this.vpCampaignVouchersService.getVouchersByCampaign(ArgumentMatchers.any()))
+            .willReturn(List.of(createCampaignVoucher()));
+        given(this.vpCampaignVouchersService.findVoucherByProductIdandCampaignId(ArgumentMatchers.any(),ArgumentMatchers.any()))
+            .willReturn(Optional.of(createCampaignVoucher()));
+        given(this.vpCampaignVouchersService.save(ArgumentMatchers.any()))
+            .willReturn(createCampaignVoucher());
+        restMockMvc.
+            perform(put("/api/campaign/products/{1}"
+                ,DEFAULT_CAMPAIGN_ID).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(createLinkDelinkRequest(false,true,false))))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void linkDelinkProductNoVouchers() throws Exception {
+        given(this.vpCampaignService.findOne(ArgumentMatchers.any()))
+            .willReturn(Optional.of(createCampaign()));
+        given(this.voucherDefService.getVouchersByProductId(ArgumentMatchers.any()))
+            .willReturn(DEFAULT_INT);
+        given(this.vpCampaignVouchersService.save(ArgumentMatchers.any()))
+            .willReturn(createCampaignVoucher());
+        restMockMvc.
+            perform(put("/api/campaign/products/{1}"
+                ,DEFAULT_CAMPAIGN_ID).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(createLinkDelinkRequest(false,true,false))))
+            .andExpect(status().isNotFound());
+    }
 }

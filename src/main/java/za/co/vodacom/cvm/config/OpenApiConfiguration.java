@@ -28,7 +28,7 @@ public class OpenApiConfiguration {
             .builder()
             .group("openapi")
             .addOpenApiCustomiser(jhipsterOpenApiCustomizer)
-            .packagesToScan(API_FIRST_PACKAGE)
+            .packagesToScan(org.springdoc.core.Constants.ALL_PATTERN)
             .pathsToMatch(properties.getDefaultIncludePattern())
             .build();
     }

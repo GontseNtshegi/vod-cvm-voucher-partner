@@ -13,9 +13,11 @@ services:
       - SPRING_LIQUIBASE_URL=jdbc:mysql://voucherpartner-mysql:3306/voucherpartner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
       - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
   voucherpartner-mysql:
-    image: mysql:8.0.27
+    image: mysql:8.0.30
     # volumes:
     #   - ~/volumes/jhipster/voucherpartner/mysql/:/var/lib/mysql/
+    volumes:
+      - ./config/mysql:/etc/mysql/conf.d
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
       - MYSQL_DATABASE=voucherpartner
@@ -25,7 +27,7 @@ services:
       - 127.0.0.1:3306:3306
     command: mysqld --lower_case_table_names=1 --skip-ssl --character_set_server=utf8mb4 --explicit_defaults_for_timestamp
   jhipster-registry:
-    image: jhipster/jhipster-registry:v7.1.0
+    image: jhipster/jhipster-registry:v7.3.0
     volumes:
       - ./central-server-config:/central-config
     # When run with the "dev" Spring profile, the JHipster Registry will
@@ -39,7 +41,7 @@ services:
       - SPRING_SECURITY_USER_PASSWORD=admin
       - JHIPSTER_REGISTRY_PASSWORD=admin
       - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=native
-      - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_LOCATIONS=file:./central-config/localhost-config/
+      - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_LOCATIONS=file:./central-config/docker-config/
       # - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_TYPE=git
       # - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_URI=https://github.com/jhipster/jhipster-registry/
       # - SPRING_CLOUD_CONFIG_SERVER_COMPOSITE_0_SEARCH_PATHS=central-config

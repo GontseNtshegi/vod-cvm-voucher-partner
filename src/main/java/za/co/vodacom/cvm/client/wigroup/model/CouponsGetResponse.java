@@ -1,14 +1,10 @@
 package za.co.vodacom.cvm.client.wigroup.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
-import org.openapitools.jackson.nullable.JsonNullable;
-import za.co.vodacom.cvm.client.wigroup.model.CouponsGetResponseCoupon;
+import java.util.Objects;
 
 /**
  * CouponsGetResponse

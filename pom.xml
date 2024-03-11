@@ -7,7 +7,7 @@
 
     <groupId>za.co.vodacom.cvm</groupId>
     <artifactId>cp-voucher-partner</artifactId>
-    <version>2.11.0</version>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
     <name>Voucherpartner</name>
 

@@ -9,6 +9,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.shaded.org.yaml.snakeyaml.scanner.Constant;
 import za.co.vodacom.cvm.IntegrationTest;
+import za.co.vodacom.cvm.config.ApplicationProperties;
 import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPCampaign;
 import za.co.vodacom.cvm.domain.VPCampaignVouchers;
@@ -57,6 +58,8 @@ class ProductServiceIT {
     VPVouchersService vpVouchersService;
     @Autowired
     private MockMvc restMockMvc;
+    @Autowired
+    ApplicationProperties applicationProperties;
 /////////////////////////////////////////TEST METHODS
     private VPVoucherDef createVoucher(boolean isOnlineV,boolean  isGeneric) {
         VPVoucherDef vpVoucher = new VPVoucherDef();

@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import za.co.vodacom.cvm.IntegrationTest;
+import za.co.vodacom.cvm.config.ApplicationProperties;
 import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPCampaign;
 import za.co.vodacom.cvm.domain.VPCampaignVouchers;
@@ -54,6 +55,9 @@ class CampaignServiceIT {
     VPVouchersService vpVouchersService;
     @Autowired
     private MockMvc restMockMvc;
+
+    @Autowired
+    ApplicationProperties applicationProperties;
 
 
 //////////////////////////Tests

@@ -89,32 +89,28 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     )
     List<QuantityDetailsDTO> getVoucherQuantity(@Param("id") Long id, @Param("sysdate") ZonedDateTime sysdate);
 
-    @Lock(PESSIMISTIC_WRITE)
-    @QueryHints({ @QueryHint(name = AvailableSettings.JPA_LOCK_TIMEOUT, value = LockOptions.SKIP_LOCKED + "") })
     @Query(
-        value = "select new za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO(v.id, v.productId," +
-        "v.description ," +
-        " v.quantity ," +
-        " v.sourceTrxid , " +
-        "v.endDate ," +
-        " v.startDate , " +
-        "v.reversedDate , " +
-        " v.issuedDate," +
-        "v.expiryDate, " +
-        "v.createDate, " +
-        " v.collectionPoint ," +
-        " v.voucherCode ," +
-        "  v.fileId)" +
-        " from VPVouchers v, VPBatch b" +
-        " where v.productId=:productId " +
-        "and v.startDate< sysdate() " +
-        "and v.endDate> sysdate() " +
-        "and v.issuedDate is null " +
-        "and v.batchId = b.id " +
-        "and b.status ='A'"
-    )
-    List<ProductQuantityDTO> getVouchersWithStatusA(@Param("productId") String productId, Pageable pageable);
+        value ="select *" +
+            "from vp_vouchers v inner join vp_batch b " +
+            "on b.id=v.batch_id " +
+            " where v.product_Id=:productId " +
+            "and v.start_date < sysdate()" +
+            " and v.end_date > sysdate() " +
+            "and v.issued_date is null and b.status ='A' limit 12", nativeQuery = true
 
+
+    )
+    List<VPVouchers> getVouchersWithStatusA(@Param("productId") String productId);
+
+
+    @Query(
+        value = "select * from vp_vouchers v " +
+            "where " +
+            "v.issued_date is null " +
+            "and id in (?1) " +
+            "limit 1 for update skip locked", nativeQuery = true
+    )
+List<VPVouchers> getVoucherSkipLocked(String productIds);
     @Query(
         value = "select new za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO(v.id, v.productId," +
         "v.description ," +
@@ -138,4 +134,15 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
         "and b.status ='A'"
     )
     List<ProductQuantityDTO> getValidVoucher(@Param("productId") String productId, Pageable pageable);
+
+
+    @Query(value = "select * from vp_vouchers w, vp_voucher_def z " +
+        "where w.product_id = z.product_id and z.vendor in  " +
+        "(select distinct d.vendor from vp_vouchers v, vp_voucher_def d  " +
+        "where v.batch_id= :batchId and v.product_id=d.product_id and d.type='Voucher') " +
+        "and start_date<now() " +
+        "and end_date>now() " +
+        "group by vendor, voucher_code " +
+        "having count(*)>1" , nativeQuery = true)
+    List<VPVouchers> getBatchValidation(@Param("batchId") String batchId);
 }

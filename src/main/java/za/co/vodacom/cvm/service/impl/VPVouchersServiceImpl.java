@@ -157,10 +157,10 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     }
 
     @Override
-    public List<ProductQuantityDTO> getVouchersWithStatusA(String productId) {
+    public List<VPVouchers> getVouchersWithStatusA(String productId) {
         log.info("Request to get Valid VPVouchers");
         log.debug("Request to get Valid VPVouchers : {}", productId);
-        return vPVouchersRepository.getVouchersWithStatusA(productId, PageRequest.of(0, 1));
+        return vPVouchersRepository.getVouchersWithStatusA(productId);
     }
 
     @Override
@@ -168,5 +168,16 @@ public class VPVouchersServiceImpl implements VPVouchersService {
         log.info("Request to get Valid VPVouchers");
         log.debug("Request to get Valid VPVouchers : {}", productId);
         return vPVouchersRepository.getValidVoucher(productId, PageRequest.of(0, 1));
+    }
+
+    @Override
+    public List<VPVouchers> getVoucherSkipLocked(String ProductIds) {
+        return vPVouchersRepository.getVoucherSkipLocked(ProductIds);
+    }
+
+    @Override
+    public List<VPVouchers> getBatchValidation(String batchId) {
+        log.debug("Request to validate batch in VPVoucher with batch id : {}", batchId);
+        return vPVouchersRepository.getBatchValidation(batchId);
     }
 }

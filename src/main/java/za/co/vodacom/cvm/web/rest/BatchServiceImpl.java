@@ -17,6 +17,7 @@ import org.zalando.problem.Status;
 import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPBatch;
 import za.co.vodacom.cvm.domain.VPFileLoad;
+import za.co.vodacom.cvm.domain.VPVouchers;
 import za.co.vodacom.cvm.exception.BatchException;
 import za.co.vodacom.cvm.service.VPBatchService;
 import za.co.vodacom.cvm.service.VPFileLoadService;
@@ -60,6 +61,7 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
     VPFileLoad savedFileLoad;
 
+    @Autowired
     VPVouchersService vpVouchersService;
 
     BatchServiceImpl(VPBatchService vpBatchService, VPFileLoadService vpFileLoadService, VPVouchersService vpVouchersService) {
@@ -296,6 +298,36 @@ public class BatchServiceImpl implements BatchApiDelegate {
     public Integer batchIdValue() {//The incoming batchId
 
         return savedFileLoad.getBatchId();
+    }
+
+    @Override
+    public ResponseEntity<BatchValidationResponse> batchValidation(String batchId) {
+        BatchValidationResponse batchValidationResponse = new BatchValidationResponse();
+
+        //setting default fields
+
+        batchValidationResponse.setStatus(Constants.VALIDATION_STATUS_OK);
+        batchValidationResponse.setStatusMessage(" ");
+
+        //checking if batchid is empty or contains whitespace
+
+        if (batchId.isBlank()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid batch ID");
+        }
+
+        List<VPVouchers> batchValidation = vpVouchersService.getBatchValidation(batchId);
+
+        //checking if rows exist
+        if(batchValidation.isEmpty()){
+            batchValidationResponse.setStatusMessage(Constants.VALIDATION_STATUS_MSG_OK);
+        }
+        else {
+            batchValidationResponse.setStatus(Constants.VALIDATION_STATUS_WARN);
+            batchValidationResponse.setStatusMessage(Constants.VALIDATION_STATUS_MSG);
+        }
+
+
+        return new ResponseEntity<>(batchValidationResponse,HttpStatus.OK);
     }
 
 }

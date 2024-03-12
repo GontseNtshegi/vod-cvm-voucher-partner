@@ -10,9 +10,12 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.persistence.LockTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,7 +141,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                         log.debug(vpVoucherDef.toString());
                         switch (vpVoucherDef.getType()) {
                             case Constants.VOUCHER:
-                                ProductQuantityDTO voucher = getAndIssueVoucher(
+                                VPVouchers voucher = getAndIssueVoucher(
                                     voucherAllocationRequest.getProductId(),
                                     voucherAllocationRequest.getTrxId()
                                 );
@@ -385,19 +388,47 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
     @Retryable(maxAttempts = 2, value = RuntimeException.class)
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
-    public ProductQuantityDTO getAndIssueVoucher(String productId, String transactionId) {
-        List<ProductQuantityDTO> vpVouchers = vpVouchersService.getVouchersWithStatusA(productId);
-
+    public VPVouchers getAndIssueVoucher(String productId, String transactionId) {
+        List<VPVouchers> vbVouchersList;
+        vbVouchersList = vpVouchersService.getVouchersWithStatusA(productId);
+        VPVouchers vouchers = new VPVouchers();
+        List<Long> productIdList = new ArrayList<>();
+        List<VPVouchers> vpVouchers;
         // Vouchers found ?
-        if (vpVouchers.isEmpty()) {
-            throw new LockTimeoutException("Voucher not available", new Throwable());
+        if (vbVouchersList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Voucher not available");
         }
 
-        log.info("Voucher available to issue for {}.", productId);
-        //issue voucher
-        vpVouchersService.issueVoucher(transactionId, vpVouchers.get(0).getId());
+        productIdList.addAll(vbVouchersList.stream().map(VPVouchers::getId).collect(Collectors.toList()));
 
-        return vpVouchers.get(0);
+        if(productIdList.size() > 3) {
+            log.debug("list of 12 product ids: {}", productIdList );
+            Collections.shuffle(productIdList);
+            int randomSeriesLength = 3;
+
+            List<Long> threeProductIds = productIdList.subList(0, randomSeriesLength);
+            log.debug("Selected to 3 in list : {}", threeProductIds);
+
+             vpVouchers = vpVouchersService.getVoucherSkipLocked(
+                threeProductIds.toString().replaceAll("\\[", "").replaceAll("\\]",
+                    ""));
+        }else{
+
+             vpVouchers = vpVouchersService.getVoucherSkipLocked(
+                productIdList.toString().replaceAll("\\[", "").replaceAll("\\]",
+                    ""));
+        }
+
+
+        if(vpVouchers.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Voucher not available");
+        }
+
+        log.debug("Limit 1 query returns: {}",vpVouchers);
+        //issue voucher
+        vpVouchersService.issueVoucher(transactionId, vbVouchersList.get(0).getId());
+        vouchers = vbVouchersList.get(0);
+        return  vouchers;
     }
 
     @Transactional
@@ -485,6 +516,23 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                         voucherReturnResponse.setVoucherId(voucherId);
                     } else { //failed
                         throw new WiGroupException(couponsResponseResponseEntity.getBody().getResponseDesc(), Status.INTERNAL_SERVER_ERROR);
+                    }
+                    break;
+                case Constants.ONLINE_GIFT_CARD:
+                    //call wi group
+                    ResponseEntity<GiftCardsDelResponse> giftCardsDelResponseResponseEntity = giftcardsDefaultApiClient.expireGiftCards(voucherId);
+                    //success
+                    GiftCardsDelResponse giftCardsDelResponse = giftCardsDelResponseResponseEntity.getBody();
+                    if (
+                        giftCardsDelResponse.getResponseCode().equals(Constants.RESPONSE_CODE) ||
+                            giftCardsDelResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
+                    ) {
+                        //set response
+                        voucherReturnResponse.setVoucherDescription(vpVoucherDef.getDescription());
+                        voucherReturnResponse.setTrxId(voucherReturnRequest.getTrxId());
+                        voucherReturnResponse.setVoucherId(voucherId);
+                    } else { //failed
+                        throw new WiGroupException(giftCardsDelResponseResponseEntity.getBody().getResponseDesc(), Status.INTERNAL_SERVER_ERROR);
                     }
                     break;
             }

@@ -15,10 +15,10 @@
 
 logging:
   level:
-    ROOT: DEBUG
-    tech.jhipster: DEBUG
-    org.hibernate.SQL: DEBUG
-    za.co.vodacom.cvm: DEBUG
+    ROOT: INFO
+    tech.jhipster: INFO
+    org.hibernate.SQL: INFO
+    za.co.vodacom.cvm: INFO
 
 eureka:
   instance:
@@ -42,8 +42,8 @@ spring:
       uri: http://admin:${jhipster.registry.password}@localhost:8761/config
       # name of the config server's property source (file.yml) that we want to use
       name: voucherpartner
-      profile: dev
-      label: main # toggle to switch to a different version of the configuration as stored in git
+      profile: local
+      label: local # toggle to switch to a different version of the configuration as stored in git
       # it can be set to any label, branch or commit of the configuration source Git repository
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
@@ -72,6 +72,11 @@ spring:
   thymeleaf:
     cache: false
   sleuth:
+    # https://github.com/spring-projects/spring-framework/issues/27844#issuescomment-1002866885
+    # https://github.com/spring-cloud/spring-cloud-sleuth/issues/2094
+    async:
+      enabled: false
+    enabled: true
     sampler:
       probability: 1 # report 100% of traces
   zipkin: # Use the "zipkin" Maven profile to have the Spring Cloud Zipkin dependencies
@@ -103,11 +108,11 @@ jhipster:
       time-to-live-seconds: 3600
       backup-count: 1
   registry:
-    password: admin
+    password: password
   # CORS is disabled by default on microservices, as you should access them through a gateway.
   # If you want to enable it, please uncomment the configuration below.
   # cors:
-  #   allowed-origins: "http://localhost:9000"
+  #   allowed-origins: "http://localhost:9000,https://localhost:9000"
   #   allowed-methods: "*"
   #   allowed-headers: "*"
   #   exposed-headers: "Authorization,Link,X-Total-Count"
@@ -162,8 +167,6 @@ application:
   proxyPort: 8080
   proxyUser: vcacmang%40vodacom
   proxyPassword: V0d4f0n3%402020
-  allocationAllowed: # list of services allowed to send allocation requests
-    - cp-voucher-management
 jasypt:
   encryptor:
     password: CVMicroservices

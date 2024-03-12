@@ -1,14 +1,12 @@
 package za.co.vodacom.cvm.client.wigroup.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.openapitools.jackson.nullable.JsonNullable;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * GiftCardsRequest
@@ -27,28 +25,16 @@ public class GiftCardsRequest   {
   @JsonProperty("mobileNumber")
   private String mobileNumber;
 
-  @JsonProperty("numExpiryDays")
-  private Integer numExpiryDays;
-
-  @JsonProperty("smsMessage")
-  private String smsMessage;
-
-  @JsonProperty("sendSMS")
-  private Boolean sendSMS;
-
-  @JsonProperty("sendFollowUpSMS")
-  private Boolean sendFollowUpSMS;
-
   /**
    * The current state of the coupon. A (Active) D (Deactivated) E (Expired) R (Redeemed)
    */
   public enum StateIdEnum {
     A("A"),
-    
+
     D("D"),
-    
+
     E("E"),
-    
+
     R("R");
 
     private String value;
@@ -164,86 +150,6 @@ public class GiftCardsRequest   {
     this.mobileNumber = mobileNumber;
   }
 
-  public GiftCardsRequest numExpiryDays(Integer numExpiryDays) {
-    this.numExpiryDays = numExpiryDays;
-    return this;
-  }
-
-  /**
-   * If allowed by campaign the channel can override the default expiry days. It will still be capped by the default campaign value.
-   * @return numExpiryDays
-  */
-  @ApiModelProperty(value = "If allowed by campaign the channel can override the default expiry days. It will still be capped by the default campaign value.")
-
-
-  public Integer getNumExpiryDays() {
-    return numExpiryDays;
-  }
-
-  public void setNumExpiryDays(Integer numExpiryDays) {
-    this.numExpiryDays = numExpiryDays;
-  }
-
-  public GiftCardsRequest smsMessage(String smsMessage) {
-    this.smsMessage = smsMessage;
-    return this;
-  }
-
-  /**
-   * The message to override original sms message with. Used in request only.
-   * @return smsMessage
-  */
-  @ApiModelProperty(value = "The message to override original sms message with. Used in request only.")
-
-
-  public String getSmsMessage() {
-    return smsMessage;
-  }
-
-  public void setSmsMessage(String smsMessage) {
-    this.smsMessage = smsMessage;
-  }
-
-  public GiftCardsRequest sendSMS(Boolean sendSMS) {
-    this.sendSMS = sendSMS;
-    return this;
-  }
-
-  /**
-   * Indicates whether an SMS must be sent on issue or not.
-   * @return sendSMS
-  */
-  @ApiModelProperty(value = "Indicates whether an SMS must be sent on issue or not.")
-
-
-  public Boolean getSendSMS() {
-    return sendSMS;
-  }
-
-  public void setSendSMS(Boolean sendSMS) {
-    this.sendSMS = sendSMS;
-  }
-
-  public GiftCardsRequest sendFollowUpSMS(Boolean sendFollowUpSMS) {
-    this.sendFollowUpSMS = sendFollowUpSMS;
-    return this;
-  }
-
-  /**
-   * Indicates whether a follow-up SMS must be sent if the user partially redeems their gift card
-   * @return sendFollowUpSMS
-  */
-  @ApiModelProperty(value = "Indicates whether a follow-up SMS must be sent if the user partially redeems their gift card")
-
-
-  public Boolean getSendFollowUpSMS() {
-    return sendFollowUpSMS;
-  }
-
-  public void setSendFollowUpSMS(Boolean sendFollowUpSMS) {
-    this.sendFollowUpSMS = sendFollowUpSMS;
-  }
-
   public GiftCardsRequest stateId(StateIdEnum stateId) {
     this.stateId = stateId;
     return this;
@@ -279,31 +185,23 @@ public class GiftCardsRequest   {
         Objects.equals(this.balance, giftCardsRequest.balance) &&
         Objects.equals(this.userRef, giftCardsRequest.userRef) &&
         Objects.equals(this.mobileNumber, giftCardsRequest.mobileNumber) &&
-        Objects.equals(this.numExpiryDays, giftCardsRequest.numExpiryDays) &&
-        Objects.equals(this.smsMessage, giftCardsRequest.smsMessage) &&
-        Objects.equals(this.sendSMS, giftCardsRequest.sendSMS) &&
-        Objects.equals(this.sendFollowUpSMS, giftCardsRequest.sendFollowUpSMS) &&
         Objects.equals(this.stateId, giftCardsRequest.stateId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(campaignId, balance, userRef, mobileNumber, numExpiryDays, smsMessage, sendSMS, sendFollowUpSMS, stateId);
+    return Objects.hash(campaignId, balance, userRef, mobileNumber, stateId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class GiftCardsRequest {\n");
-    
+
     sb.append("    campaignId: ").append(toIndentedString(campaignId)).append("\n");
     sb.append("    balance: ").append(toIndentedString(balance)).append("\n");
     sb.append("    userRef: ").append(toIndentedString(userRef)).append("\n");
     sb.append("    mobileNumber: ").append(toIndentedString(mobileNumber)).append("\n");
-    sb.append("    numExpiryDays: ").append(toIndentedString(numExpiryDays)).append("\n");
-    sb.append("    smsMessage: ").append(toIndentedString(smsMessage)).append("\n");
-    sb.append("    sendSMS: ").append(toIndentedString(sendSMS)).append("\n");
-    sb.append("    sendFollowUpSMS: ").append(toIndentedString(sendFollowUpSMS)).append("\n");
     sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
     sb.append("}");
     return sb.toString();

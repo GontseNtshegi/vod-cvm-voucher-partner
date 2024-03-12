@@ -3,28 +3,28 @@ info:
     title: WiGroup API
     version: 1.0.0
 servers:
-- url: 'https://za-vsp-int.wigroup.co/cvs-issuer/rest'
-  description: Development server
-- url: 'https://za-vsp-int.wigroup.co/cvs-issuer/rest'
-  description: Development server with TLS Profile
+    - url: 'https://za-vsp-int.wigroup.co/cvs-issuer/rest'
+      description: Development server
+    - url: 'https://za-vsp-int.wigroup.co/cvs-issuer/rest'
+      description: Development server with TLS Profile
 paths:
     '/coupons/{issueWiCode}':
         post:
             tags:
-            - coupons
+                - coupons
             summary: Customer voucher reservation
             operationId: updateVoucherToReserved
             description: Reserve a voucher for a customer.
             parameters:
-            - name: issueWiCode
-              in: query
-              required: true
-              description: >-
-                  The original wigroup voucher id or VP_VOUCHER.ID used to issued the
-                  voucher
-              schema:
-                  type: boolean
-                  default: true
+                - name: issueWiCode
+                  in: query
+                  required: true
+                  description: >-
+                      The original wigroup voucher id or VP_VOUCHER.ID used to issued the
+                      voucher
+                  schema:
+                      type: boolean
+                      default: true
             requestBody:
                 content:
                     application/json:
@@ -50,20 +50,20 @@ paths:
     '/coupons/{id}':
         get:
             tags:
-            - coupons
+                - coupons
             summary: Return a voucher which was issued
             operationId: updateVoucherToReturned
             description: Return a voucher which was issued
             parameters:
-            - name: id
-              in: path
-              required: true
-              description: >-
-                  The original wigroup voucher id or VP_VOUCHER.ID used to issued the
-                  voucher
-              schema:
-                  type: integer
-                  format: int64
+                - name: id
+                  in: path
+                  required: true
+                  description: >-
+                      The original wigroup voucher id or VP_VOUCHER.ID used to issued the
+                      voucher
+                  schema:
+                      type: integer
+                      format: int64
             responses:
                 '200':
                     description: Successful Operation
@@ -84,18 +84,18 @@ paths:
     '/coupons/{idd}':
         delete:
             tags:
-            - coupons
+                - coupons
             summary: Check whether the given voucher based product has stock.
             operationId: updateVoucherToValid
             description: Check whether the given voucher based product has stock
             parameters:
-            - name: idd
-              in: path
-              required: true
-              description: The original wigroup voucher id
-              schema:
-                  type: integer
-                  format: int64
+                - name: idd
+                  in: path
+                  required: true
+                  description: The original wigroup voucher id
+                  schema:
+                      type: integer
+                      format: int64
             responses:
                 '200':
                     description: Successful Operation
@@ -220,6 +220,38 @@ paths:
                     description: Method Not Allowed
                 '500':
                     description: Internal Server Error
+    '/giftcards/{idd}':
+        delete:
+            tags:
+                - giftcards
+            summary: This call can be used to expire (delete) a wiGroup Gift Card
+            operationId: expireGiftCards
+            description: This call can be used to expire (delete) a wiGroup Gift Card
+            parameters:
+                -   name: idd
+                    in: path
+                    required: true
+                    description: The original wigroup voucher id
+                    schema:
+                        type: integer
+                        format: int64
+            responses:
+                '200':
+                    description: Successful Operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GiftCardsDelResponse'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad Request
+                '404':
+                    description: Not Found
+                '405':
+                    description: Method Not Allowed
+                '500':
+                    description: Internal Server Error
 components:
     schemas:
         CouponsRequest:
@@ -247,11 +279,11 @@ components:
                     description: Indicates whether an SMS must be sent on issue or not.
                     type: boolean
             required:
-            - campaignId
-            - userRef
-            - mobileNumber
-            - smsMessage
-            - sendSMS
+                - campaignId
+                - userRef
+                - mobileNumber
+                - smsMessage
+                - sendSMS
         GiftCardsRequest:
             type: object
             properties:
@@ -272,21 +304,6 @@ components:
                         The mobile number. The mobile number must be presented in
                         International format.
                     type: string
-                numExpiryDays:
-                    description: If allowed by campaign the channel can override the default expiry days. It will still be capped by the default campaign value.
-                    type: integer
-                    format: int32
-                smsMessage:
-                    description: >-
-                        The message to override original sms message with. Used in request
-                        only.
-                    type: string
-                sendSMS:
-                    description: Indicates whether an SMS must be sent on issue or not.
-                    type: boolean
-                sendFollowUpSMS:
-                    description: Indicates whether a follow-up SMS must be sent if the user partially redeems their gift card
-                    type: boolean
                 stateId:
                     description: >-
                         The current state of the coupon. A (Active) D (Deactivated) E
@@ -427,10 +444,10 @@ components:
                                 (Expired) R (Redeemed)
                             type: string
                             enum:
-                            - A
-                            - D
-                            - E
-                            - R
+                                - A
+                                - D
+                                - E
+                                - R
                         redeemedDate:
                             description: The date on which the coupon was redeemed (if it was expire)
                             type: string
@@ -652,6 +669,15 @@ components:
                     type: string
                 responseDesc:
                     description: The date by which the voucher has to be redeemed
+                    type: string
+        GiftCardsDelResponse:
+            type: object
+            properties:
+                responseCode:
+                    description: The response code
+                    type: string
+                responseDesc:
+                    description: The response description
                     type: string
         Problem:
             type: object

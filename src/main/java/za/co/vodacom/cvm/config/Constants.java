@@ -21,7 +21,7 @@ public final class Constants {
     public static final String VALIDATION_STATUS_OK = "OK";
     public static final String VALIDATION_STATUS_MSG_OK = "Valid batch, No duplicates found." ;
     public static final String VALIDATION_STATUS_WARN = "WARN" ;
-    public static final String VALIDATION_STATUS_MSG = "Duplicate vouchers found" ;
+    public static final String VALIDATION_STATUS_MSG = "Duplicate vouchers found : " ;
 
 
     private Constants() {}

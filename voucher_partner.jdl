@@ -63,7 +63,7 @@ entity VPVouchers {
   BatchId Integer required,
   FileId Integer,
   ProductId String maxlength(30) required,
-  VoucherCode String maxlength(60) required,
+  VoucherCode String maxlength(200) required,
   Description String maxlength(100) required,
   CreateDate ZonedDateTime required,
   StartDate ZonedDateTime required,

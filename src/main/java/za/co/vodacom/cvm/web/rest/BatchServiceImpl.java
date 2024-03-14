@@ -317,17 +317,34 @@ public class BatchServiceImpl implements BatchApiDelegate {
 
         List<VPVouchers> batchValidation = vpVouchersService.getBatchValidation(batchId);
 
+
+
         //checking if rows exist
         if(batchValidation.isEmpty()){
             batchValidationResponse.setStatusMessage(Constants.VALIDATION_STATUS_MSG_OK);
         }
         else {
             batchValidationResponse.setStatus(Constants.VALIDATION_STATUS_WARN);
-            batchValidationResponse.setStatusMessage(Constants.VALIDATION_STATUS_MSG);
+            batchValidationResponse.setStatusMessage(validationMessage(batchValidation));
         }
 
 
         return new ResponseEntity<>(batchValidationResponse,HttpStatus.OK);
     }
+    public static String validationMessage(List<VPVouchers> batchValidtionObject) {
+        StringBuilder message = new StringBuilder(Constants.VALIDATION_STATUS_MSG);
+
+        for (VPVouchers obj : batchValidtionObject) {
+            message.append(obj.getVoucherCode()).append(", ");
+        }
+
+        // Remove the trailing comma and space
+        if (message.length() > Constants.VALIDATION_STATUS_MSG.length()) {
+            message.delete(message.length() - 2, message.length());
+        }
+
+        return message.toString();
+    }
 
 }
+

@@ -1,13 +1,12 @@
 package za.co.vodacom.cvm.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import java.io.Serializable;
+import java.time.ZonedDateTime;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.time.ZonedDateTime;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A VPVouchers.
@@ -36,8 +35,8 @@ public class VPVouchers implements Serializable {
     private String productId;
 
     @NotNull
-    @Size(max = 60)
-    @Column(name = "voucher_code", length = 60, nullable = false)
+    @Size(max = 200)
+    @Column(name = "voucher_code", length = 200, nullable = false)
     private String voucherCode;
 
     @NotNull

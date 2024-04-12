@@ -426,8 +426,8 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
         log.debug("Limit 1 query returns: {}",vpVouchers);
         //issue voucher
-        vpVouchersService.issueVoucher(transactionId, vbVouchersList.get(0).getId());
-        vouchers = vbVouchersList.get(0);
+        vpVouchersService.issueVoucher(transactionId, vpVouchers.get(0).getId());
+        vouchers = vpVouchers.get(0);//always limited to 1
         return  vouchers;
     }
 

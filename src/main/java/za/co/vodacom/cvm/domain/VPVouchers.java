@@ -89,6 +89,10 @@ public class VPVouchers implements Serializable {
         return id;
     }
 
+    public String getIdString() {
+        return id+"";
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

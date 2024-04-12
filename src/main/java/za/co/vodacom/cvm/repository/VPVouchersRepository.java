@@ -99,17 +99,17 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
 
 
     )
-    List<VPVouchers> getVouchersWithStatusA(@Param("productId") String productId);
+    List<VPVouchers> getVouchersWithStatusA(@Param("productId") String productId); //TODO A: Cache this list to internal hazelcast, remove limit 12
 
 
     @Query(
         value = "select * from vp_vouchers v " +
             "where " +
             "v.issued_date is null " +
-            "and id in (?1) " +
+            "and id in (:productIds) " +
             "limit 1 for update skip locked", nativeQuery = true
     )
-List<VPVouchers> getVoucherSkipLocked(String productIds);
+List<VPVouchers> getVoucherSkipLocked(@Param("productIds") List<String> productIds);
     @Query(
         value = "select new za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO(v.id, v.productId," +
         "v.description ," +

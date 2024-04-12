@@ -171,7 +171,7 @@ public class VPVouchersServiceImpl implements VPVouchersService {
     }
 
     @Override
-    public List<VPVouchers> getVoucherSkipLocked(String ProductIds) {
+    public List<VPVouchers> getVoucherSkipLocked(List<String> ProductIds) {
         return vPVouchersRepository.getVoucherSkipLocked(ProductIds);
     }
 

@@ -392,31 +392,31 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
         List<VPVouchers> vbVouchersList;
         vbVouchersList = vpVouchersService.getVouchersWithStatusA(productId);
         VPVouchers vouchers = new VPVouchers();
-        List<Long> productIdList = new ArrayList<>();
+        List<String> productIdList = new ArrayList<>();
         List<VPVouchers> vpVouchers;
         // Vouchers found ?
         if (vbVouchersList.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Voucher not available");
         }
 
-        productIdList.addAll(vbVouchersList.stream().map(VPVouchers::getId).collect(Collectors.toList()));
+        productIdList.addAll(vbVouchersList.stream().map(VPVouchers::getIdString).collect(Collectors.toList()));
 
-        if(productIdList.size() > 3) {
+        if(productIdList.size() > 3) {//Todo A: This could be removed
             log.debug("list of 12 product ids: {}", productIdList );
             Collections.shuffle(productIdList);
             int randomSeriesLength = 3;
 
-            List<Long> threeProductIds = productIdList.subList(0, randomSeriesLength);
+            List<String> threeProductIds = productIdList.subList(0, randomSeriesLength);
             log.debug("Selected to 3 in list : {}", threeProductIds);
 
-             vpVouchers = vpVouchersService.getVoucherSkipLocked(
-                threeProductIds.toString().replaceAll("\\[", "").replaceAll("\\]",
-                    ""));
+             vpVouchers = vpVouchersService.getVoucherSkipLocked(threeProductIds);
+               /* threeProductIds.toString().replaceAll("\\[", "").replaceAll("\\]",
+                    ""));*/
         }else{
 
-             vpVouchers = vpVouchersService.getVoucherSkipLocked(
-                productIdList.toString().replaceAll("\\[", "").replaceAll("\\]",
-                    ""));
+             vpVouchers = vpVouchersService.getVoucherSkipLocked(productIdList);
+                /*productIdList.toString().replaceAll("\\[", "").replaceAll("\\]",
+                    ""));*/
         }
 
 

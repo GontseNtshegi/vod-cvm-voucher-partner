@@ -1,0 +1,129 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="tsotm001 (generated)" id="1712736714275-18">
+        <addPrimaryKey columnNames="product_id" constraintName="vp_voucher_defPK" tableName="vp_voucher_def"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-19">
+        <addUniqueConstraint columnNames="id" constraintName="UC_VP_USERSID_COL" tableName="vp_users"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-20">
+        <dropForeignKeyConstraint baseTableName="BATCH_JOB_EXECUTION_CONTEXT" constraintName="JOB_EXEC_CTX_FK"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-21">
+        <dropForeignKeyConstraint baseTableName="BATCH_JOB_EXECUTION_PARAMS" constraintName="JOB_EXEC_PARAMS_FK"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-22">
+        <dropForeignKeyConstraint baseTableName="BATCH_STEP_EXECUTION" constraintName="JOB_EXEC_STEP_FK"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-23">
+        <dropForeignKeyConstraint baseTableName="BATCH_JOB_EXECUTION" constraintName="JOB_INST_EXEC_FK"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-24">
+        <dropForeignKeyConstraint baseTableName="BATCH_STEP_EXECUTION_CONTEXT" constraintName="STEP_EXEC_CTX_FK"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-25">
+        <dropForeignKeyConstraint baseTableName="vp_campaign_vouchers" constraintName="fk_vp_campaign_vouchers__campaign_id"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-26">
+        <dropForeignKeyConstraint baseTableName="vp_vouchers" constraintName="fk_vp_vouchers_batch_id"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-27">
+        <dropUniqueConstraint constraintName="JOB_INST_UN" tableName="BATCH_JOB_INSTANCE"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-28">
+        <dropUniqueConstraint constraintName="UNIQUE_KEY_UN" tableName="BATCH_JOB_EXECUTION_SEQ"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-29">
+        <dropUniqueConstraint constraintName="UNIQUE_KEY_UN" tableName="BATCH_JOB_SEQ"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-30">
+        <dropUniqueConstraint constraintName="UNIQUE_KEY_UN" tableName="BATCH_STEP_EXECUTION_SEQ"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-31">
+        <dropTable tableName="BATCH_JOB_EXECUTION"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-32">
+        <dropTable tableName="BATCH_JOB_EXECUTION_CONTEXT"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-33">
+        <dropTable tableName="BATCH_JOB_EXECUTION_PARAMS"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-34">
+        <dropTable tableName="BATCH_JOB_EXECUTION_SEQ"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-35">
+        <dropTable tableName="BATCH_JOB_INSTANCE"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-36">
+        <dropTable tableName="BATCH_JOB_SEQ"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-37">
+        <dropTable tableName="BATCH_STEP_EXECUTION"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-38">
+        <dropTable tableName="BATCH_STEP_EXECUTION_CONTEXT"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-39">
+        <dropTable tableName="BATCH_STEP_EXECUTION_SEQ"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-40">
+        <dropTable tableName="vp_vouchers_old"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-41">
+        <dropColumn columnName="modified_by" tableName="vp_vouchers"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-42">
+        <dropColumn columnName="modified_date" tableName="vp_vouchers"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-1">
+        <addNotNullConstraint columnDataType="varchar(100)" columnName="activate_user" tableName="vp_batch" validate="true"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-2">
+        <addNotNullConstraint columnDataType="varchar(100)" columnName="collection_point" tableName="vp_voucher_def" validate="true"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-3">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="create_date" tableName="vp_batch" validate="true"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-4">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="create_date" tableName="vp_campaign_vouchers" validate="true"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-5">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="create_date" tableName="vp_file_load" validate="true"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-6">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="create_date" tableName="vp_users" validate="true"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-7">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="create_date" tableName="vp_vouchers" validate="true"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-8">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="end_date" tableName="vp_campaign" validate="true"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-9">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="end_date" tableName="vp_vouchers" validate="true"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-10">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="modified_date" tableName="vp_campaign_vouchers" validate="true"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-11">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="modified_date" tableName="vp_users" validate="true"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-12">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="reversed_date" tableName="vp_vouchers" validate="true"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-13">
+        <addNotNullConstraint columnDataType="datetime(6)" columnName="start_date" tableName="vp_vouchers" validate="true"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-14">
+        <dropDefaultValue columnDataType="varchar(1)" columnName="status" tableName="vp_batch"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-15">
+        <addNotNullConstraint columnDataType="varchar(200)" columnName="voucher_code" tableName="vp_vouchers" validate="true"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-16">
+        <dropUniqueConstraint constraintName="UC_VP_USERSUSER_ID_COL" tableName="vp_users"/>
+    </changeSet>
+    <changeSet author="tsotm001 (generated)" id="1712736714275-17">
+        <addUniqueConstraint columnNames="user_id" constraintName="UC_VP_USERSUSER_ID_COL" tableName="vp_users"/>
+    </changeSet>
+</databaseChangeLog>

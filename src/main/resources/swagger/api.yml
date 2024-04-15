@@ -613,7 +613,6 @@ paths:
         '500':
           description: Internal Server Error
 
-
 components:
   schemas:
     VoucherAllocationRequest:
@@ -694,6 +693,10 @@ components:
           type: string
         encryptedYN:
           description: 'Indicates Whether the returned voucher code is encrypted'
+          type: string
+        serialNumber:
+          description: 'Serial Number'
+          default: ''
           type: string
     VoucherReturnRequest:
       type: object
@@ -1135,7 +1138,6 @@ components:
           type: string
         statusMessage:
           type: string
-
 
     Problem:
       type: object

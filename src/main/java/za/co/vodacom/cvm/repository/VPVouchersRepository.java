@@ -89,27 +89,27 @@ public interface VPVouchersRepository extends JpaRepository<VPVouchers, Long> {
     List<QuantityDetailsDTO> getVoucherQuantity(@Param("id") Long id, @Param("sysdate") ZonedDateTime sysdate);
 
     @Query(
-        value ="select *" +
-            "from vp_vouchers v inner join vp_batch b " +
-            "on b.id=v.batch_id " +
-            " where v.product_Id=:productId " +
-            "and v.start_date < sysdate()" +
-            " and v.end_date > sysdate() " +
-            "and v.issued_date is null and b.status ='A' limit 12", nativeQuery = true
-
-
+        value = "select *" +
+        "from vp_vouchers v inner join vp_batch b " +
+        "on b.id=v.batch_id " +
+        " where v.product_Id=:productId " +
+        "and v.start_date < sysdate()" +
+        " and v.end_date > sysdate() " +
+        "and v.issued_date is null and b.status ='A' limit 12",
+        nativeQuery = true
     )
     List<VPVouchers> getVouchersWithStatusA(@Param("productId") String productId); //TODO A: Cache this list to internal hazelcast, remove limit 12
 
-
     @Query(
         value = "select * from vp_vouchers v " +
-            "where " +
-            "v.issued_date is null " +
-            "and id in (:productIds) " +
-            "limit 1 for update skip locked", nativeQuery = true
+        "where " +
+        "v.issued_date is null " +
+        "and id in (:productIds) " +
+        "limit 1 for update skip locked",
+        nativeQuery = true
     )
-List<VPVouchers> getVoucherSkipLocked(@Param("productIds") List<String> productIds);
+    List<VPVouchers> getVoucherSkipLocked(@Param("productIds") List<String> productIds);
+
     @Query(
         value = "select new za.co.vodacom.cvm.service.dto.product.ProductQuantityDTO(v.id, v.productId," +
         "v.description ," +
@@ -134,14 +134,16 @@ List<VPVouchers> getVoucherSkipLocked(@Param("productIds") List<String> productI
     )
     List<ProductQuantityDTO> getValidVoucher(@Param("productId") String productId, Pageable pageable);
 
-
-    @Query(value = "select * from vp_vouchers w, vp_voucher_def z " +
+    @Query(
+        value = "select * from vp_vouchers w, vp_voucher_def z " +
         "where w.product_id = z.product_id and z.vendor in  " +
         "(select distinct d.vendor from vp_vouchers v, vp_voucher_def d  " +
         "where v.batch_id= :batchId and v.product_id=d.product_id and d.type='Voucher') " +
         "and start_date<now() " +
         "and end_date>now() " +
         "group by vendor, voucher_code " +
-        "having count(*)>1" , nativeQuery = true)
+        "having count(*)>1",
+        nativeQuery = true
+    )
     List<VPVouchers> getBatchValidation(@Param("batchId") String batchId);
 }

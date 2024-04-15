@@ -26,6 +26,7 @@
     <include file="config/liquibase/changelog/20210707160146_added_entity_constraints_VPCampaignVouchers.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210707160148_added_entity_constraints_VPVouchers.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20230816085912_changelog.xml" relativeToChangelogFile="false"/>
+<!--    <include file="config/liquibase/changelog/20240410081112_changelog.xml" relativeToChangelogFile="false"/>-->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

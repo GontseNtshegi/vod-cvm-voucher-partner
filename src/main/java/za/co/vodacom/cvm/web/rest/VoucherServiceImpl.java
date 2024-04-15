@@ -170,6 +170,7 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                                 voucherAllocationResponse.setVoucherType(vpVoucherDef.getType());
                                 voucherAllocationResponse.setVoucherVendor(vpVoucherDef.getVendor());
                                 voucherAllocationResponse.setEncryptedYN(vpVoucherDef.getEncryptedYN());
+                                voucherAllocationResponse.setSerialNumber(voucher.getSerialNumber());
 
                                 log.debug(voucherAllocationResponse.toString());
                                 break;
@@ -401,34 +402,32 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
 
         productIdList.addAll(vbVouchersList.stream().map(VPVouchers::getIdString).collect(Collectors.toList()));
 
-        if(productIdList.size() > 3) {//Todo A: This could be removed
-            log.debug("list of 12 product ids: {}", productIdList );
+        if (productIdList.size() > 3) { //Todo A: This could be removed
+            log.debug("list of 12 product ids: {}", productIdList);
             Collections.shuffle(productIdList);
             int randomSeriesLength = 3;
 
             List<String> threeProductIds = productIdList.subList(0, randomSeriesLength);
             log.debug("Selected to 3 in list : {}", threeProductIds);
 
-             vpVouchers = vpVouchersService.getVoucherSkipLocked(threeProductIds);
-               /* threeProductIds.toString().replaceAll("\\[", "").replaceAll("\\]",
+            vpVouchers = vpVouchersService.getVoucherSkipLocked(threeProductIds);
+            /* threeProductIds.toString().replaceAll("\\[", "").replaceAll("\\]",
                     ""));*/
-        }else{
-
-             vpVouchers = vpVouchersService.getVoucherSkipLocked(productIdList);
-                /*productIdList.toString().replaceAll("\\[", "").replaceAll("\\]",
+        } else {
+            vpVouchers = vpVouchersService.getVoucherSkipLocked(productIdList);
+            /*productIdList.toString().replaceAll("\\[", "").replaceAll("\\]",
                     ""));*/
         }
 
-
-        if(vpVouchers.isEmpty()){
+        if (vpVouchers.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Voucher not available");
         }
 
-        log.debug("Limit 1 query returns: {}",vpVouchers);
+        log.debug("Limit 1 query returns: {}", vpVouchers);
         //issue voucher
         vpVouchersService.issueVoucher(transactionId, vpVouchers.get(0).getId());
-        vouchers = vpVouchers.get(0);//always limited to 1
-        return  vouchers;
+        vouchers = vpVouchers.get(0); //always limited to 1
+        return vouchers;
     }
 
     @Transactional
@@ -520,19 +519,24 @@ public class VoucherServiceImpl implements VoucherApiDelegate {
                     break;
                 case Constants.ONLINE_GIFT_CARD:
                     //call wi group
-                    ResponseEntity<GiftCardsDelResponse> giftCardsDelResponseResponseEntity = giftcardsDefaultApiClient.expireGiftCards(voucherId);
+                    ResponseEntity<GiftCardsDelResponse> giftCardsDelResponseResponseEntity = giftcardsDefaultApiClient.expireGiftCards(
+                        voucherId
+                    );
                     //success
                     GiftCardsDelResponse giftCardsDelResponse = giftCardsDelResponseResponseEntity.getBody();
                     if (
                         giftCardsDelResponse.getResponseCode().equals(Constants.RESPONSE_CODE) ||
-                            giftCardsDelResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
+                        giftCardsDelResponse.getResponseDesc().equalsIgnoreCase(Constants.RESPONSE_DESC)
                     ) {
                         //set response
                         voucherReturnResponse.setVoucherDescription(vpVoucherDef.getDescription());
                         voucherReturnResponse.setTrxId(voucherReturnRequest.getTrxId());
                         voucherReturnResponse.setVoucherId(voucherId);
                     } else { //failed
-                        throw new WiGroupException(giftCardsDelResponseResponseEntity.getBody().getResponseDesc(), Status.INTERNAL_SERVER_ERROR);
+                        throw new WiGroupException(
+                            giftCardsDelResponseResponseEntity.getBody().getResponseDesc(),
+                            Status.INTERNAL_SERVER_ERROR
+                        );
                     }
                     break;
             }

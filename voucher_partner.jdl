@@ -73,7 +73,8 @@ entity VPVouchers {
   IssuedDate ZonedDateTime,
   ReversedDate ZonedDateTime required,
   SourceTrxid String maxlength(60),
-  Quantity Integer required
+  Quantity Integer required,
+  SerialNumber String maxlength(100)
 }
 
 relationship OneToMany {

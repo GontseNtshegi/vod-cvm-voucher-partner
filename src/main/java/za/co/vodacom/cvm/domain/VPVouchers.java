@@ -79,6 +79,10 @@ public class VPVouchers implements Serializable {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
+    @Size(max = 100)
+    @Column(name = "serial_number", length = 100)
+    private String serialNumber;
+
     /* @ManyToOne
     @JsonIgnoreProperties(value = { "productIds", "productIds" }, allowSetters = true)
     private VPVoucherDef productId;*/
@@ -90,7 +94,7 @@ public class VPVouchers implements Serializable {
     }
 
     public String getIdString() {
-        return id+"";
+        return id + "";
     }
 
     public void setId(Long id) {
@@ -302,6 +306,18 @@ public class VPVouchers implements Serializable {
     }*/
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    public VPVouchers serialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+        return this;
+    }
 
     @Override
     public boolean equals(Object o) {

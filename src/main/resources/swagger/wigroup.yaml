@@ -17,7 +17,7 @@ paths:
             description: Reserve a voucher for a customer.
             parameters:
                 - name: issueWiCode
-                  in: query
+                  in: path
                   required: true
                   description: >-
                       The original wigroup voucher id or VP_VOUCHER.ID used to issued the
@@ -118,7 +118,7 @@ paths:
             tags:
                 - giftcards
             summary: Customer voucher reservation
-            operationId: updateVoucherToReserved
+            operationId: giftcard
             description: Reserve a voucher for a customer.
             parameters:
                 -   name: issueWiCode
@@ -161,7 +161,7 @@ paths:
             description: This call can be used to retrieve (get) a wiGroup Gift Card
             parameters:
                 - name: id
-                  in: query
+                  in: path
                   required: true
                   description: >-
                       The original wigroup voucher id or VP_VOUCHER.ID used to issued the
@@ -195,7 +195,7 @@ paths:
             description: issue a wicode against giftcard for length of giftcard expiry
             parameters:
                 -   name: id
-                    in: query
+                    in: path
                     required: true
                     description: >-
                         The original wigroup voucher id or VP_VOUCHER.ID used to issued the
@@ -242,6 +242,74 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GiftCardsDelResponse'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad Request
+                '404':
+                    description: Not Found
+                '405':
+                    description: Method Not Allowed
+                '500':
+                    description: Internal Server Error
+    '/couponcampaigns/{campaignId}':
+        get:
+            tags:
+                - couponscampaigns
+            summary: retrieve the single campaign’s details
+            operationId: retrieveCouponCampaign
+            description: retrieve the single campaign’s details
+            parameters:
+                - name: campaignId
+                  in: path
+                  required: true
+                  description: >-
+                      The original wigroup voucher id or VP_VOUCHER.ID used to issued the
+                      voucher
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                '200':
+                    description: Successful Operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CouponCampaignResponse'
+                '204':
+                    description: No content
+                '400':
+                    description: Bad Request
+                '404':
+                    description: Not Found
+                '405':
+                    description: Method Not Allowed
+                '500':
+                    description: Internal Server Error
+    '/giftcardcampaigns/{id}':
+        get:
+            tags:
+                - giftcardcampaigns
+            summary: returns all the active Gift Card campaigns which can be issue against
+            operationId: retrieveGiftcardCampaign
+            description: returns all the active Gift Card campaigns
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: >-
+                      The original wigroup voucher id or VP_VOUCHER.ID used to issued the
+                      voucher
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                '200':
+                    description: Successful Operation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GiftcardCampaignsResponse'
                 '204':
                     description: No content
                 '400':
@@ -679,6 +747,187 @@ components:
                 responseDesc:
                     description: The response description
                     type: string
+        CouponCampaignResponse:
+            type: object
+            properties:
+                couponCampaign:
+                    $ref: '#/components/schemas/CouponCampaigns'
+                responseCode:
+                    type: string
+                responseDesc:
+                    type: string
+        CouponCampaigns:
+            type: object
+            properties:
+                allowExpiryDateOverride:
+                    type: boolean
+                expiryDays:
+                    type: integer
+                totalViewed:
+                    type: integer
+                issueFromDate:
+                    type: string
+                    format: date-time
+                issueToDate:
+                    type: string
+                    format: date-time
+                redeemFromDate:
+                    type: string
+                    format: date-time
+                redeemToDate:
+                    type: string
+                    format: date-time
+                minBasketValue:
+                    type: integer
+                maxBasketValue:
+                    type: integer
+                maxRedemptionsPerUserPerDay:
+                    type: integer
+                id:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                description:
+                    type: string
+                termsAndConditions:
+                    type: string
+                imageURL:
+                    type: string
+                createDate:
+                    type: string
+                    format: date-time
+                requireUserRef:
+                    type: boolean
+                allowedUsersRestricted:
+                    type: boolean
+                maxNumberPerUser:
+                    type: integer
+                maxLivePerUser:
+                    type: integer
+                campaignType:
+                    type: string
+                minRank:
+                    type: integer
+                categories:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Categories'
+                maxAllowedToIssue:
+                    type: integer
+                maxAllowedToIssueDaily:
+                    type: integer
+                maxRedemptionRuleAmount:
+                    type: integer
+                discountType:
+                    type: string
+                percentageDiscount:
+                    type: integer
+                totalLive:
+                    type: integer
+                totalRedeemed:
+                    type: integer
+                totalExpired:
+                    type: integer
+                totalIssued:
+                    type: integer
+                totalIssuedToday:
+                    type: integer
+                campaignInfo:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CampaignInfo'
+                stateId:
+                    type: string
+
+        GiftcardCampaignsResponse:
+            type: object
+            properties:
+                giftcardCampaign:
+                    $ref: '#/components/schemas/GiftcardCampaigns'
+                responseCode:
+                    type: string
+                responseDesc:
+                    type: string
+        GiftcardCampaigns:
+            type: object
+            properties:
+                minValueAllowedToIssue:
+                    type: integer
+                maxValueAllowedToIssue:
+                    type: integer
+                totalAmountIssued:
+                    type: integer
+                totalAmountRedeemed:
+                    type: integer
+                id:
+                    type: integer
+                    format: int64
+                name:
+                    type: string
+                description:
+                    type: string
+                termsAndConditions:
+                    type: string
+                imageURL:
+                    type: string
+                createDate:
+                    type: string
+                    format: date-time
+                requireUserRef:
+                    type: boolean
+                allowedUsersRestricted:
+                    type: boolean
+                maxNumberPerUser:
+                    type: integer
+                maxLivePerUser:
+                    type: integer
+                campaignType:
+                    type: string
+                minRank:
+                    type: integer
+                categories:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Categories'
+                totalLive:
+                    type: integer
+                totalRedeemed:
+                    type: integer
+                totalExpired:
+                    type: integer
+                totalIssued:
+                    type: integer
+                campaignInfo:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CampaignInfo'
+                stateId:
+                    type: string
+                allowExpiryDateOverride:
+                    type: boolean
+                expiryDays:
+                    type: integer
+
+        Categories:
+            type: object
+            properties:
+                name:
+                    type: string
+                id:
+                    type: integer
+                rank:
+                    type: integer
+        CampaignInfo:
+            type: object
+            properties:
+                name:
+                    type: string
+                value:
+                    type: string
+
+
+
         Problem:
             type: object
             properties:

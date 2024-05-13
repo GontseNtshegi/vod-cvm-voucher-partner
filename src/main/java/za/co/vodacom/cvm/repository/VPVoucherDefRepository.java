@@ -25,4 +25,13 @@ public interface VPVoucherDefRepository extends JpaRepository<VPVoucherDef, Stri
     @Query(
         value="select count(id) from VPVoucherDef where id =:productId")
     int getVouchersByProductId(@Param("productId") String productID);
+
+    @Query(
+        value = "select * from vp_voucher_def d, vp_campaign c, vp_campaign_vouchers v where " +
+            "c.name= :campaign and v.campaign_id=c.id and v.product_id=d.product_id and d.product_id= :productId",
+        nativeQuery = true
+    )
+    Optional<VPVoucherDef> getVoucherDetails(@Param("campaign") String campaign,@Param("productId") String productId);
+
+
 }

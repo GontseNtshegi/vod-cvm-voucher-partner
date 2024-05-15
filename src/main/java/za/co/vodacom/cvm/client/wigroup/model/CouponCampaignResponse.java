@@ -2,7 +2,7 @@ package za.co.vodacom.cvm.client.wigroup.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import za.co.vodacom.webfrontend.client.wigroup.model.CouponCampaigns;
+import za.co.vodacom.cvm.client.wigroup.model.CouponCampaigns;
 
 import javax.annotation.Generated;
 import javax.validation.Valid;

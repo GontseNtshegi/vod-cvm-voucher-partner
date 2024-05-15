@@ -27,16 +27,16 @@ import za.co.vodacom.cvm.service.VPCampaignService;
 import za.co.vodacom.cvm.service.VPCampaignVouchersService;
 import za.co.vodacom.cvm.service.VPVoucherDefService;
 import za.co.vodacom.cvm.service.VPVouchersService;
-import za.co.vodacom.cvm.web.api.ApiUtil;
 import za.co.vodacom.cvm.web.api.ProductApiDelegate;
 import za.co.vodacom.cvm.web.api.model.ProductDetailsResponse;
 import za.co.vodacom.cvm.web.api.model.ProductListResponseObject;
 import za.co.vodacom.cvm.web.api.model.ProductValidationResponse;
 import za.co.vodacom.cvm.web.api.model.Transaction;
-import za.co.vodacom.webfrontend.client.wigroup.model.CouponCampaignResponse;
-import za.co.vodacom.webfrontend.client.wigroup.model.CouponCampaigns;
-import za.co.vodacom.webfrontend.client.wigroup.model.GiftcardCampaigns;
-import za.co.vodacom.webfrontend.client.wigroup.model.GiftcardCampaignsResponse;
+import za.co.vodacom.cvm.client.wigroup.model.CouponCampaignResponse;
+import za.co.vodacom.cvm.client.wigroup.model.CouponCampaigns;
+import za.co.vodacom.cvm.client.wigroup.model.GiftcardCampaigns;
+import za.co.vodacom.cvm.client.wigroup.model.GiftcardCampaignsResponse;
+
 
 import javax.validation.Valid;
 

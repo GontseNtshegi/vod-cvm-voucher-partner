@@ -3,8 +3,9 @@ package za.co.vodacom.cvm.client.wigroup.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.format.annotation.DateTimeFormat;
-import za.co.vodacom.webfrontend.client.wigroup.model.CampaignInfo;
-import za.co.vodacom.webfrontend.client.wigroup.model.Categories;
+import za.co.vodacom.cvm.client.wigroup.model.CampaignInfo;
+import za.co.vodacom.cvm.client.wigroup.model.Categories;
+
 
 import javax.annotation.Generated;
 import javax.validation.Valid;

@@ -128,4 +128,9 @@ public class VPVoucherDefServiceImpl implements VPVoucherDefService {
         log.info("Request to get Product count by productID in VPCampaignVouchers.");
         return vPVoucherDefRepository.getVouchersByProductId(productID);
     }
+
+    @Override
+    public Optional<VPVoucherDef> getVoucherDetails(String campaign, String productId) {
+        return vPVoucherDefRepository.getVoucherDetails(campaign,productId);
+    }
 }

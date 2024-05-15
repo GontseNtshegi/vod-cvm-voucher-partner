@@ -4,6 +4,7 @@ import brave.Tracer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +14,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import org.zalando.problem.Status;
-import za.co.vodacom.cvm.client.wigroup.api.CouponsApiClient;
+import za.co.vodacom.cvm.client.wigroup.api.*;
+
 import za.co.vodacom.cvm.config.Constants;
 import za.co.vodacom.cvm.domain.VPCampaign;
 import za.co.vodacom.cvm.domain.VPCampaignVouchers;
+import za.co.vodacom.cvm.domain.VPVoucherDef;
 import za.co.vodacom.cvm.exception.AllocationException;
 import za.co.vodacom.cvm.service.VPCampaignService;
 import za.co.vodacom.cvm.service.VPCampaignVouchersService;
@@ -25,8 +29,16 @@ import za.co.vodacom.cvm.service.VPVoucherDefService;
 import za.co.vodacom.cvm.service.VPVouchersService;
 import za.co.vodacom.cvm.web.api.ApiUtil;
 import za.co.vodacom.cvm.web.api.ProductApiDelegate;
+import za.co.vodacom.cvm.web.api.model.ProductDetailsResponse;
 import za.co.vodacom.cvm.web.api.model.ProductListResponseObject;
 import za.co.vodacom.cvm.web.api.model.ProductValidationResponse;
+import za.co.vodacom.cvm.web.api.model.Transaction;
+import za.co.vodacom.webfrontend.client.wigroup.model.CouponCampaignResponse;
+import za.co.vodacom.webfrontend.client.wigroup.model.CouponCampaigns;
+import za.co.vodacom.webfrontend.client.wigroup.model.GiftcardCampaigns;
+import za.co.vodacom.webfrontend.client.wigroup.model.GiftcardCampaignsResponse;
+
+import javax.validation.Valid;
 
 @Service
 public class ProductServiceImpl implements ProductApiDelegate {
@@ -47,7 +59,14 @@ public class ProductServiceImpl implements ProductApiDelegate {
 
     @Autowired
     CouponsApiClient couponsApiClient;
-
+    @Autowired
+    GiftcardsCampaign10ApiClient giftcardsCampaign10ApiClient;
+    @Autowired
+    GiftcardsDefaultApiClient giftcardsDefaultApiClient;
+    @Autowired
+    CouponscampaignsApiClient couponscampaignsApiClient;
+    @Autowired
+    GiftcardcampaignsApiClient giftcardcampaignsApiClient;
     @Autowired
     Tracer tracer;
 
@@ -175,4 +194,86 @@ public class ProductServiceImpl implements ProductApiDelegate {
 
         return new ResponseEntity<>(productListResponseObjects, HttpStatus.OK);
     }
+
+    public ResponseEntity<ProductDetailsResponse> getProductDetails(String productId,
+                                                                    String origin,
+                                                                    String campaign) {
+        ProductDetailsResponse productDetailsResponse = new ProductDetailsResponse();
+
+        log.debug("Product ID: {}, Origin: {}, Campaign: {}", productId, origin, campaign);
+        log.info("Product ID: {}, Origin: {}, Campaign: {}", productId, origin, campaign);
+
+        Optional<VPVoucherDef> voucherDetails = vpVoucherDefService.getVoucherDetails(campaign, productId);
+
+        if (!voucherDetails.isPresent()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+        else {
+            VPVoucherDef voucherDef = voucherDetails.orElseThrow();
+            //set product response
+            productDetailsResponse.setCategory(voucherDef.getCategory());
+            productDetailsResponse.setType(voucherDef.getType());
+            productDetailsResponse.setExtSystem(voucherDef.getExtSystem());
+            productDetailsResponse.setExtId(voucherDef.getExtId());
+            productDetailsResponse.setProductId(voucherDef.getId());
+            productDetailsResponse.setValidityPeriod(voucherDef.getValidityPeriod());
+            productDetailsResponse.setDescription(voucherDef.getDescription());
+            productDetailsResponse.setCollectPoint(voucherDef.getCollectionPoint());
+            productDetailsResponse.setVendor(voucherDef.getVendor());
+
+                if(Constants.WIROUP.equalsIgnoreCase(voucherDef.getExtSystem()) &&
+                    Constants.ONLINE_VOUCHER.equalsIgnoreCase(voucherDef.getType())) {
+                    // Make call to Wigroup For coupon Campaign
+                    ResponseEntity<CouponCampaignResponse> res = null;
+                    try {
+                        res = couponscampaignsApiClient.retrieveCouponCampaign(Long.valueOf(voucherDef.getExtId()));
+                    }catch (Exception e){
+                        log.error("Error encountered while making request to WiGroup {}", e.getMessage());
+                    }
+                    assert res != null;
+                    Transaction transaction = getTransaction(res);
+                    productDetailsResponse.setTransactionSummary(transaction);
+
+                }else if(Constants.ONLINE_GIFT_CARD.equalsIgnoreCase(voucherDef.getType())) {
+                    ResponseEntity<GiftcardCampaignsResponse> res = null;
+                    try {
+                        res = giftcardcampaignsApiClient.retrieveGiftcardCampaign(Long.valueOf(voucherDef.getExtId()));
+                    }catch (Exception e){
+                        log.error("Error encountered while making request to WiGroup {}", e.getMessage());
+                    }
+                    assert res != null;
+                    Transaction transaction = getGiftCardTransaction(res);
+
+                    productDetailsResponse.setTransactionSummary(transaction);
+                }
+
+            }
+
+        return new ResponseEntity<>(productDetailsResponse,HttpStatus.OK);
+    }
+
+    private static Transaction getTransaction(ResponseEntity<CouponCampaignResponse> res) {
+        Transaction transaction = new Transaction();
+        @Valid CouponCampaigns result = Objects.requireNonNull(res.getBody()).getCouponCampaign();
+        transaction.setExpiryDays(result.getExpiryDays());
+        transaction.setTotalIssuedToday(result.getTotalIssuedToday());
+        transaction.setTotalIssued(result.getTotalIssued());
+        transaction.setMaxAllowedToIssue(result.getMaxAllowedToIssue());
+        transaction.setMaxAllowedToIssueDaily(result.getMaxAllowedToIssueDaily());
+        transaction.setTotalLive(result.getTotalLive());
+        transaction.setTotalExpired(result.getTotalExpired());
+        transaction.setTotalRedeemed(result.getTotalRedeemed());
+        return transaction;
+    }
+    private static Transaction getGiftCardTransaction(ResponseEntity<GiftcardCampaignsResponse> res) {
+        var transaction = new Transaction();
+        @Valid GiftcardCampaigns result = Objects.requireNonNull(res.getBody()).getGiftcardCampaign();
+        transaction.setExpiryDays(result.getExpiryDays());
+        transaction.setTotalIssued(result.getTotalIssued());
+        transaction.setTotalLive(result.getTotalLive());
+        transaction.setTotalExpired(result.getTotalExpired());
+        transaction.setTotalRedeemed(result.getTotalRedeemed());
+        transaction.setTotalAmountRedeemed(result.getTotalAmountRedeemed());
+        return transaction;
+    }
+
+
 }

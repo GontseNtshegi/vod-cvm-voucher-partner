@@ -61,5 +61,6 @@ public interface VPVoucherDefService {
     Optional<List<VPVoucherDef>> getAll();
 
     int getVouchersByProductId(String productID);
+    Optional<VPVoucherDef> getVoucherDetails(String campaign, String productId);
 
 }

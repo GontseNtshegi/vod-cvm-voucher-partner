@@ -40,12 +40,12 @@ public class SecurityConfiguration {
             .csrf()
             .disable()
             .exceptionHandling()
-                .authenticationEntryPoint(problemSupport)
-                .accessDeniedHandler(problemSupport)
-        .and()
+            .authenticationEntryPoint(problemSupport)
+            .accessDeniedHandler(problemSupport)
+            .and()
             .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
             .authorizeRequests()
             .antMatchers("/api/authenticate").permitAll()
             .antMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
@@ -59,7 +59,7 @@ public class SecurityConfiguration {
             .antMatchers("/management/info").permitAll()
             .antMatchers("/management/prometheus").permitAll()
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
-        .and()
+            .and()
             .apply(securityConfigurerAdapter());
         return http.build();
         // @formatter:on

@@ -7,7 +7,7 @@
 
     <groupId>za.co.vodacom.cvm</groupId>
     <artifactId>cp-voucher-partner</artifactId>
-    <version>3.1.0</version>
+    <version>3.2.0</version>
     <packaging>jar</packaging>
     <name>Voucherpartner</name>
 
@@ -834,6 +834,23 @@
                                 <configOptions>
                                     <delegatePattern>true</delegatePattern>
                                     <title>voucherpartner</title>
+                                </configOptions>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>Wigroup</id>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                            <configuration>
+                                <inputSpec>${project.basedir}/src/main/resources/swagger/wigroup.yaml
+                                </inputSpec>
+                                <generatorName>spring</generatorName>
+                                <apiPackage>za.co.vodacom.client.wigroup</apiPackage>
+                                <modelPackage>za.co.vodacom.client.wigroup.model</modelPackage>
+                                <configOptions>
+                                    <interfaceOnly>false</interfaceOnly>
+                                    <library>spring-cloud</library>
                                 </configOptions>
                             </configuration>
                         </execution>

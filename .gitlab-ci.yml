@@ -1,5 +1,6 @@
 stages:
-    - build
+  - build
+  - merge
 
 build:
   stage: build
@@ -11,8 +12,18 @@ build:
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: never
-    - when: always  
+    - when: always
   trigger:
     include:
-    - project: 'vodacomsa/common-cicd-configs'
-      file: '/trigger.gitlab-ci.yml'
+      - project: 'vodacomsa/common-cicd-configs'
+        file: '/trigger.gitlab-ci.yml'
+
+merge_to_develop:
+  stage: merge
+  only:
+    - master
+  trigger:
+    include:
+      - project: 'vodacomsa/digital-engineering/cvm/microservices_cvm/shared-resources'
+        ref: 'master'
+        file: '/gitlab/master_dev_automerge.yml'

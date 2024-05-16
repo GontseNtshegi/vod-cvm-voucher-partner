@@ -11,7 +11,7 @@ paths:
   /voucher/allocation:
     post:
       tags:
-        - voucher
+        [voucher]
       summary: Customer voucher allocation
       operationId: issueVoucher
       description: Reserve a voucher for a customer.
@@ -27,20 +27,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VoucherAllocationResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /voucher/internal/allocation:
     post:
       tags:
-        - voucher
+        [voucher]
       summary: Customer voucher allocation
       operationId: issueVoucherInternal
       description: Reserve a voucher for a customer.
@@ -62,20 +65,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VoucherAllocationResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /voucher/return/{voucherId}:
     put:
       tags:
-        - voucher
+        [voucher]
       summary: Return a voucher which was issued
       operationId: returnVoucher
       description: Return a voucher which was issued
@@ -99,20 +104,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VoucherReturnResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /product/validation/{productId}:
     get:
       tags:
-        - product
+        [product]
       summary: Check whether the given voucher based product has stock.
       operationId: validateVoucher
       description: Check whether the given voucher based product has stock
@@ -142,20 +149,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductValidationResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /product/list:
     get:
       tags:
-        - product
+        [product]
       summary: Retrieves a list of all the voucher based products
       operationId: getProductList
       description: Retrieves a list of all the voucher based products
@@ -166,20 +175,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductListResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /voucher/redemption/{voucherId}:
     post:
       tags:
-        - voucher
+        [voucher]
       summary: Return a voucher which was issued
       operationId: redeemVoucher
       description: Redeem a voucher which was issued
@@ -203,20 +214,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VoucherRedemptionResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /voucher/balance/{voucherid}:
     get:
       tags:
-        - voucher
+        [voucher]
       summary: Retrieves the current balance for a Wigroup giftcard.
       operationId: voucherbalance
       description: Check the current balance for given voucher based on the voucherid
@@ -246,20 +259,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VoucherBalanceResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /voucher/validation/{couponId}/{productId}:
     get:
       tags:
-        - voucher
+        [voucher]
       summary: Checks validity of WiGroup vouchers being requested for refund
       operationId: voucherValidation
       description: Checks validity of WiGroup vouchers being requested for refund
@@ -284,21 +299,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VoucherValidationResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /batch/list/{period}:
     get:
       tags:
-        - batch
+        [batch]
       summary: Retrieves list of batches
       operationId: batchList
       description: Returns a list of batches
@@ -316,20 +333,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BatchListResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /batch/status/{batchId}:
     put:
       tags:
-        - batch
+        [batch]
       summary: Close a batch or mark it as deleted.
       operationId: batchStatus
       description: Close a batch or mark it as deleted.
@@ -353,20 +372,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BatchStatusResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /batch/details/{batchId}:
     get:
       tags:
-        - batch
+        [batch]
       summary: Returns the details of a specific batch
       operationId: batchDetails
       description: Returns the details of a specific batch
@@ -384,20 +405,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BatchDetailsResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /batch/upload/{batchId}:
     put:
       tags:
-        - batch
+        [batch]
       summary: Uploads a file containing voucher codes and links these to a batch
       operationId: batchUpload
       description: Uploads a file containing voucher codes and links these to a batch
@@ -420,20 +443,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BatchUploadResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /batch:
     post:
       tags:
-        - batch
+        [batch]
       summary: Creates a batch for the uploading of files
       operationId: batch
       description: Creates a batch for the uploading of files
@@ -449,20 +474,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BatchResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /campaign/list:
     get:
       tags:
-        - campaign
+        [campaign]
       summary: Retrieves a list of all the campaigns
       operationId: getCampaignList
       description: Retrieves a list of all the campaigns
@@ -473,20 +500,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CampaignListResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /campaign/products/{campaignId}:
     get:
       tags:
-        - campaign
+        [campaign]
       summary: Retrieve the voucher products linked to a campaign.
       operationId: getCampaignProducts
       description: Retrieve the voucher products linked to a campaign.
@@ -504,20 +533,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CampaignProductsResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /campaign/products/{campaignid}:
     put:
       tags:
-        - campaign
+        [campaign]
       summary: Link / Delink voucher products from a campaign.
       operationId: linkDelinkProduct
       description: Link / Delink voucher products from a campaign.
@@ -540,20 +571,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LinkDelinkResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /campaign/vouchers/quantities/{campaignId}:
     get:
       tags:
-        - campaign
+        [campaign]
       summary: Retrieve the list of voucher quantities available.
       operationId: getQuantities
       description: Retrieve the list of voucher quantities available.
@@ -571,20 +604,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/QuantitesResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /batch/validation:
     get:
       tags:
-        - batch
+        [batch]
       summary: validate duplicate voucher in a  given batch
       operationId: batchValidation
       description: validate duplicate voucher in a  given batch
@@ -602,21 +637,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BatchValidationResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /product/details/{productId}:
     get:
       tags:
-        - product
+        [product]
       summary: Check whether the given voucher based product has stock.
       operationId: getProductDetails
       description: Check whether the given voucher based product has stock
@@ -646,16 +683,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductDetailsResponse'
-        '204':
-          description: No content
-        '400':
-          description: Bad Request
-        '404':
-          description: Not Found
-        '405':
-          description: Method Not Allowed
-        '500':
-          description: Internal Server Error
+        '4xx':
+          description: client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5xx':
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   schemas:
@@ -1239,67 +1278,17 @@ components:
         expiryDays:
           type: integer
 
-
-    Problem:
+    Error:
       type: object
+      required:
+        - code
+        - message
       properties:
-        type:
-          type: string
-          format: uri
-          description: >
-            An absolute URI that identifies the problem type.  When
-            dereferenced,
-
-            it SHOULD provide human-readable documentation for the problem type
-
-            (e.g., using HTML).
-          default: 'about:blank'
-          example: 'https://zalando.github.io/problem/constraint-violation'
-        title:
-          type: string
-          description: >
-            A short, summary of the problem type. Written in english and
-            readable
-
-            for engineers (usually not suited for non technical stakeholders and
-
-            not localized);
-          example: Service Unavailable
-        status:
+        code:
           type: integer
           format: int32
-          description: >
-            The HTTP status code generated by the origin server for this
-            occurrence
-
-            of the problem.
-          minimum: 100
-          maximum: 600
-          exclusiveMaximum: true
-          example: 503
-        detail:
+        message:
           type: string
-          description: |
-            A human readable explanation specific to this occurrence of the
-            problem.
-          example: Connection to database timed out
-        instance:
-          type: string
-          format: uri
-          description: >
-            An absolute URI that identifies the specific occurrence of the
-            problem.
-
-            It may or may not yield further information if dereferenced.
-  responses:
-    Problem:
-      description: >-
-        error occurred - see status code and problem object for more
-        information.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
   securitySchemes:
     jwt:
       type: http

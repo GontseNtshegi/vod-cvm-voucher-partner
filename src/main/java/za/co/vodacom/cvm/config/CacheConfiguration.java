@@ -1,5 +1,7 @@
 package za.co.vodacom.cvm.config;
 
+import com.hazelcast.client.HazelcastClient;
+import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.*;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
@@ -7,6 +9,7 @@ import javax.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.info.GitProperties;
@@ -40,6 +43,9 @@ public class CacheConfiguration {
 
     private Registration registration;
 
+    @Value("${application.hazelcastService:}")
+    private String hazelcastService;
+
     public CacheConfiguration(Environment env, ServerProperties serverProperties, DiscoveryClient discoveryClient) {
         this.env = env;
         this.serverProperties = serverProperties;
@@ -71,43 +77,55 @@ public class CacheConfiguration {
             log.debug("Hazelcast already initialized");
             return hazelCastInstance;
         }
-        Config config = new Config();
-        config.setInstanceName("voucherpartner");
-        config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
-        if (this.registration == null) {
-            log.warn("No discovery service is set up, Hazelcast cannot create a cluster.");
-        } else {
-            // The serviceId is by default the application's name,
-            // see the "spring.application.name" standard Spring property
-            String serviceId = registration.getServiceId();
-            log.debug("Configuring Hazelcast clustering for instanceId: {}", serviceId);
-            // In development, everything goes through 127.0.0.1, with a different port
-            if (env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT))) {
-                log.debug(
-                    "Application is running with the \"dev\" profile, Hazelcast " + "cluster will only work with localhost instances"
-                );
 
-                config.getNetworkConfig().setPort(serverProperties.getPort() + 5701);
-                config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true);
-                for (ServiceInstance instance : discoveryClient.getInstances(serviceId)) {
-                    String clusterMember = "127.0.0.1:" + (instance.getPort() + 5701);
-                    log.debug("Adding Hazelcast (dev) cluster member {}", clusterMember);
-                    config.getNetworkConfig().getJoin().getTcpIpConfig().addMember(clusterMember);
-                }
-            } else { // Production configuration, one host per instance all using port 5701
-                config.getNetworkConfig().setPort(5701);
-                config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true);
-                for (ServiceInstance instance : discoveryClient.getInstances(serviceId)) {
-                    String clusterMember = instance.getHost() + ":5701";
-                    log.debug("Adding Hazelcast (prod) cluster member {}", clusterMember);
-                    config.getNetworkConfig().getJoin().getTcpIpConfig().addMember(clusterMember);
+        if(hazelcastService.isEmpty()) {
+            Config config = new Config();
+            config.setInstanceName("voucherpartner");
+            config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
+            if (this.registration == null) {
+                log.warn("No discovery service is set up, Hazelcast cannot create a cluster.");
+            } else {
+                // The serviceId is by default the application's name,
+                // see the "spring.application.name" standard Spring property
+                String serviceId = registration.getServiceId();
+                log.debug("Configuring Hazelcast clustering for instanceId: {}", serviceId);
+                // In development, everything goes through 127.0.0.1, with a different port
+                if (env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT))) {
+                    log.debug(
+                        "Application is running with the \"dev\" profile, Hazelcast " + "cluster will only work with localhost instances"
+                    );
+
+                    config.getNetworkConfig().setPort(serverProperties.getPort() + 5701);
+                    config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true);
+                    for (ServiceInstance instance : discoveryClient.getInstances(serviceId)) {
+                        String clusterMember = "127.0.0.1:" + (instance.getPort() + 5701);
+                        log.debug("Adding Hazelcast (dev) cluster member {}", clusterMember);
+                        config.getNetworkConfig().getJoin().getTcpIpConfig().addMember(clusterMember);
+                    }
+                } else { // Production configuration, one host per instance all using port 5701
+                    config.getNetworkConfig().setPort(5701);
+                    config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true);
+                    for (ServiceInstance instance : discoveryClient.getInstances(serviceId)) {
+                        String clusterMember = instance.getHost() + ":5701";
+                        log.debug("Adding Hazelcast (prod) cluster member {}", clusterMember);
+                        config.getNetworkConfig().getJoin().getTcpIpConfig().addMember(clusterMember);
+                    }
                 }
             }
+            config.setManagementCenterConfig(new ManagementCenterConfig());
+            config.addMapConfig(initializeDefaultMapConfig(jHipsterProperties));
+            config.addMapConfig(initializeDomainMapConfig(jHipsterProperties));
+            return Hazelcast.newHazelcastInstance(config);
+        } else {
+            log.debug("Configuring hazelcast on kubernetes");
+
+            ClientConfig config = new ClientConfig();
+            config.setInstanceName("voucherpartner");
+
+            config.getNetworkConfig().getKubernetesConfig().setEnabled(true).setProperty("service-dns", hazelcastService);
+
+            return HazelcastClient.newHazelcastClient(config);
         }
-        config.setManagementCenterConfig(new ManagementCenterConfig());
-        config.addMapConfig(initializeDefaultMapConfig(jHipsterProperties));
-        config.addMapConfig(initializeDomainMapConfig(jHipsterProperties));
-        return Hazelcast.newHazelcastInstance(config);
     }
 
     private MapConfig initializeDefaultMapConfig(JHipsterProperties jHipsterProperties) {

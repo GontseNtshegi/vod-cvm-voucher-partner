@@ -138,6 +138,7 @@ application:
   proxyPassword: V0d4f0n3%402020
   allocationAllowed: # list of services allowed to send allocation requests
     - cp-test
+  hazelcastService: vod-cvm-hazelcast
 jasypt:
   encryptor:
     password: CVMicroservices

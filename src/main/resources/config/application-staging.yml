@@ -64,6 +64,9 @@ spring:
         prepStmtCacheSqlLimit: 2048
         useServerPrepStmts: true
   jpa:
+    properties:
+      hibernate.cache.hazelcast.use_native_client: true
+      hibernate.cache.hazelcast.native_client_address: vod-cvm-hazelcast
   # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
   liquibase:
     contexts: prod
@@ -187,6 +190,7 @@ application:
   proxyPort: 8080
   proxyUser: vcacmang%40vodacom
   proxyPassword: V0d4f0n3%402020
+  hazelcastService: vod-cvm-hazelcast
 jasypt:
   encryptor:
     password: CVMicroservices

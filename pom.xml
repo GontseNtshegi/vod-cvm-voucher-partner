@@ -101,6 +101,9 @@
         <openapi-generator-maven-plugin.version>6.0.1</openapi-generator-maven-plugin.version>
         <properties-maven-plugin.version>1.1.0</properties-maven-plugin.version>
         <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
+        <hazelcast.version>5.2.3</hazelcast.version>
+        <!-- dependency version for second level cache for hibernate if being used -->
+        <hazelcast-hibernate.version>5.0.0</hazelcast-hibernate.version>
 
         <!-- jhipster-needle-maven-property -->
     </properties>
@@ -387,7 +390,17 @@
             <artifactId>springdoc-openapi-common</artifactId>
             <version>1.6.11</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast</artifactId>
+            <version>${hazelcast.version}</version>
+        </dependency>
+        <!-- dependency for second level cache for hibernate if being used -->
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-hibernate53</artifactId>
+            <version>${hazelcast-hibernate.version}</version>
+        </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
 
